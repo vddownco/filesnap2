@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;900&display=swap');
+@import '~@flaticon/flaticon-uicons/css/bold/rounded';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.title {
+    font-family: 'Noto Sans Mono', serif;
+
+    &-big {
+        box-shadow: 16px 16px 0 0 #86efac;
+    }
+
+    &-small {
+        box-shadow: 12px 12px 0 0 white;
+    }
+}
+
+form button {
+    box-shadow: 6px 6px 0 0 #86efac;
+}
+
+header > div {
+    border-radius: 0.4rem;
+}
+
+.gallery-grid {
+    .snap {
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        max-width: 100%;
+        border-radius: 0.4rem;
+        overflow: hidden;
+        position: relative;
+
+        &:not(.empty) {
+            cursor: pointer;
+        }
+
+        .check {
+            border-radius: 0 0 .4rem 0;
+            display: none;
+        }
+
+        &.selected {
+            border: .4rem solid #F87171;
+
+            .check {
+                display: inline;
+            }
+        }
+
+        .action {
+            border-radius: 0.4rem;
+        }
+
+        .snap-hover {
+            transition: ease-in-out 0.2s;
+            opacity: 0;
+        }
+
+        &:hover {
+            .snap-hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.infos {
+    font-weight: 900;
+    font-size: 18px;
+    border: 3px solid #292524;
+    border-radius: 0.4rem;
+    color: #292524;
+}
+
+.select {
+    font-weight: 900;
+    font-size: 18px;
+    border: 3px solid #292524;
+    border-radius: 0.4rem;
+    box-shadow: 0.1rem 0.1rem #292524;
+    color: #292524;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem 0 0.5rem;
+    cursor: pointer;
+
+    > option {
+        cursor: pointer;
+    }
+}
+
+.button {
+    @apply py-0.5 px-2;
+    font-weight: 900;
+    font-size: 18px;
+    border: 3px solid #292524;
+    border-radius: 0.4rem;
+    box-shadow: 0.1rem 0.1rem #292524;
+    color: #292524;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+
+    &.icon-button {
+        @apply p-1.5;
+        font-size: 25px;
+    }
+
+    &:hover {
+        transform: translate(-0.05em, -0.05em);
+        box-shadow: 0.15rem 0.15rem #292524;
+    }
+
+    &:active {
+        transform: translate(0.05rem, 0.05rem);
+        box-shadow: 0.05rem 0.05rem #292524;
+    }
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    position: static;
+    max-width: 260px;
+}
+
+.input-group label {
+    @apply bg-stone-50 text-stone-800;
+
+    font-weight: 700;
+    position: relative;
+    top: 0.75rem;
+    margin: 0 0 0 9px;
+    padding: 0 3px;
+    width: fit-content;
+}
+
+.input-group input {
+    @apply bg-stone-50 border-stone-800;
+
+    padding: 11px 10px;
+    border: 3px solid #292524;
+    border-radius: 6px;
+}
+
+.input-group input[type=text]:focus {
+    outline: none;
+}
+
+.tingle-modal {
+    background: rgb(41, 37, 36, .9);
+
+    .tingle-modal-box {
+        @apply bg-stone-50;
+        max-width: 500px;
+        width: fit-content;
+        border-radius: 0.6rem;
+
+        .tingle-modal-box__content {
+            @apply p-0 px-4 pt-4 bg-stone-50;
+            border-radius: 0.6rem;
+            text-align: center;
+        }
+
+        .tingle-modal-box__footer {
+            @apply px-6 py-4 bg-stone-50;
+            display: flex;
+            justify-content: center;
+            border-radius: 0.6rem;
+
+
+            button {
+                @apply mx-2
+            }
+        }
+    }
+}
+
+@keyframes fade-in-left {
+    0% {
+        opacity: 0;
+        transform: translateX(+5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fade-out-left {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-5px);
+    }
+}
+
+.link-in-left {
+    animation: fade-in-left .25s ease-out 0s 1 normal forwards;
+}
+
+.link-out-left {
+    animation: fade-out-left .25s ease-out 0s 1 normal forwards;
+}
+
+.menu {
+    overflow: hidden;
+    height: 0;
+
+    &.open {
+        height: auto;
+    }
+}
+
+.error {
+    min-height: 1.5rem;
+}
+
+.border-rounded {
+    border-radius: 0.4rem;
+}
+
+.api-key {
+    font-family: 'Courier New', serif;
+    filter: blur(4px);
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    &:hover {
+        filter: none;
+        user-select: auto;
+        -moz-user-select: auto;
+        -webkit-user-select: auto;
+    }
+}
+
+.notification {
+    position: fixed;
+    left: 50%;
+    bottom: -40px;
+    transform: translateX(-50%);
+    transition: bottom .25s;
+
+    &.show {
+        bottom: 20px;
+        transition: bottom .25s;
+    }
+}

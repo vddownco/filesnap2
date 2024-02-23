@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}gallery{% endblock %}
+
+{% block body_stimulus_controller %}{{ stimulus_controller('gallery') }}{% endblock %}
+
+{% block body_classes %}bg-stone-800{% endblock %}
+
+{% block body %}
+    {% include 'client/partials/user/gallery/header.html.twig' %}
+
+    {% if snaps|length > 0 %}
+        <div class="mt-[70px] xl:mt-[72px] gallery-grid grid sm:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-9 gap-2 flex-grow px-2 pb-2">
+            {% for snap in snaps %}
+                <div {{ stimulus_target('gallery', 'snap') }} data-snap-id="{{ snap.id }}" class="snap h-[220px] lg:min-h-[165px] lg:h-full" style="background-image: url({{ asset(path('client_snap_thumbnail', {'id': snap.id})) }})">
+                    <div {{ stimulus_action('gallery', 'select', 'click') }} class="z-10 absolute w-full h-full"></div>
+                    <div class="snap-hover flex flex-col items-end justify-end p-2 space-y-2">
+                        <div class="w-full flex justify-end">
+                            <a class="button icon-button z-20 bg-stone-50" target="_blank" href="{{ path('client_snap_file', {'id': snap.id}) }}">
+                                <i class="text-stone-800 flex fi fi-br-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                        <button {{ stimulus_action('gallery', 'copyLinkToClipboard', 'click') }} class="button icon-button z-20 bg-stone-50 p-1.5">
+                            <i class="text-stone-800 flex fi fi-br-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if empty_space_count > 0 %}
+                {% for i in 1..empty_space_count %}
+                    <div class="snap empty h-[220px] lg:min-h-[170px] lg:h-full"></div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="flex justify-center mt-24">
+            <p class="text-stone-50 text-xl">You don't have any snaps uploaded yet</p>
+        </div>
+    {% endif %}
+{% endblock %}

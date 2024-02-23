@@ -1,0 +1,37 @@
+{% extends 'client/partials/top-header.html.twig' %}
+
+{% block actions %}
+    {% if snaps|length > 0 %}
+        <button {{ stimulus_action('gallery', 'selectAll', 'click') }} class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-blue-300 select-none space-x-2">
+            <i class="text-stone-800 flex fi fi-br-check"></i>
+            <span>Select all</span>
+        </button>
+        <button {{ stimulus_action('gallery', 'unselectAll', 'click') }} class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-blue-300 select-none space-x-2">
+            <i class="text-stone-800 flex fi fi-br-cross"></i>
+            <span>Unselect all</span>
+        </button>
+        <button {{ stimulus_action('gallery', 'deleteSelected', 'click') }} class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-red-400 select-none space-x-2">
+            <i class="text-stone-800 flex fi fi-br-trash"></i>
+            <span>Delete selected</span>
+        </button>
+        <div class="flex space-x-2 xl:ml-10 2xl:ml-20">
+            <a {{ stimulus_target('menu', 'navigation') }} class="button py-1 px-3 bg-green-300 select-none space-x-2 {{ previous_page is null ? 'invisible' }}" {{ previous_page ? 'href=' ~ path('client_user_gallery', {'page': previous_page, 'open_menu': open_menu}) }}>
+                <i class="text-stone-800 flex fi fi-br-angle-left"></i>
+            </a>
+            <a {{ stimulus_target('menu', 'navigation') }} class="button py-1 px-3 bg-green-300 select-none space-x-2 {{ next_page is null ? 'invisible' }}" {{ next_page ? 'href=' ~ path('client_user_gallery', {'page': next_page, 'open_menu': open_menu}) }}>
+                <i class="text-stone-800 flex fi fi-br-angle-right"></i>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block navigation %}
+    <a class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-blue-300 select-none space-x-2" href="{{ path('client_user_settings') }}">
+        <i class="text-stone-800 flex fi fi-br-user"></i>
+        <span>Account settings</span>
+    </a>
+    <a data-turbo="false" class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-red-400 select-none space-x-2" href="{{ path('_logout_client') }}">
+        <span>Log out</span>
+        <i class="text-stone-800 flex fi fi-br-sign-out-alt"></i>
+    </a>
+{% endblock %}

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+
+  php:
+    container_name: php
+    image: filesnap:dev
+    volumes:
+      - ./docker_config/php.ini:/usr/local/etc/php/php.ini
+      - ./:/var/www
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:lts
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - '3306:3306'
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./:/var/www
+    ports:
+      - '8080:80'
+    depends_on:
+      - php
+
+volumes:
+  mariadb_data:
+

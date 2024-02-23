@@ -1,0 +1,14 @@
+{% extends 'client/partials/top-header.html.twig' %}
+
+{% block actions %}{% endblock %}
+
+{% block navigation %}
+    <a class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-blue-300 select-none space-x-2" href="{{ path('client_user_gallery') }}">
+        <i class="text-stone-800 flex fi fi-br-picture"></i>
+        <span>Gallery</span>
+    </a>
+    <a data-turbo="false" class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-red-400 select-none space-x-2" href="{{ path('_logout_client') }}">
+        <span>Log out</span>
+        <i class="text-stone-800 flex fi fi-br-sign-out-alt"></i>
+    </a>
+{% endblock %}
