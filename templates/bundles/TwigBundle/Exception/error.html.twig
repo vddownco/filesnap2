@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Komorebi {{ status_text }}{% endblock %}
+{% block page_title %}{{ status_text|lower }}{% endblock %}
 
 {% block body %}
     {% include 'client/partials/big-header.html.twig' %}
