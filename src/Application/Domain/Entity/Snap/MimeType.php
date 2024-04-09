@@ -8,14 +8,14 @@ use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
 enum MimeType: string
 {
     /** @var self[] */
-    public const array imageMimeTypes = [
+    public const imageMimeTypes = [
         self::ImageJpeg,
         self::ImagePng,
         self::ImageGif
     ];
 
     /** @var self[] */
-    public const array videoMimeTypes = [
+    public const videoMimeTypes = [
         self::VideoWebm,
         self::VideoMp4
     ];
