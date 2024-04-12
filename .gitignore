@@ -21,3 +21,4 @@ yarn-error.log
 /public/snap/
 /.idea/
 /.setup
+.DS_Store

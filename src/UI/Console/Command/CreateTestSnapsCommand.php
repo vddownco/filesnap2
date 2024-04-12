@@ -24,8 +24,8 @@ use Symfony\Component\HttpFoundation\File\File;
 #[AsCommand(name: 'app:create-test-snaps')]
 final class CreateTestSnapsCommand extends Command
 {
-    public const string ARGUMENT_EMAIL = 'email';
-    public const int NUMBER_OF_SNAPS_TO_CREATE = 125;
+    public const ARGUMENT_EMAIL = 'email';
+    public const NUMBER_OF_SNAPS_TO_CREATE = 125;
 
     /**
      * @var File[]
@@ -93,6 +93,11 @@ final class CreateTestSnapsCommand extends Command
                 'This command is for development purpose only. It will not execute outside of dev environment'
             );
 
+            return Command::FAILURE;
+        }
+
+        if ([] === $this->files) {
+            $output->writeln(sprintf('No files in %s/create_test_snaps_files/', $this->projectDirectory));
             return Command::FAILURE;
         }
 
