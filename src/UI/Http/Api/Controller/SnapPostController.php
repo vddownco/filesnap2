@@ -58,8 +58,6 @@ final class SnapPostController extends FilesnapAbstractController
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        dump(get_class($router));
-
         return $this->json(['url' => $snapUrl]);
     }
 }

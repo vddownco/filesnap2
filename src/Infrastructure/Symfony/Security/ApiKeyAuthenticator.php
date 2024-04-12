@@ -36,7 +36,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $headerValueStart = sprintf('%s ', self::AUTHORIZATION_HEADER_PREFIX);
+        $headerValueStart = self::AUTHORIZATION_HEADER_PREFIX . ' ';
         $authorizationHeader = $request->headers->get('Authorization');
 
         if (empty($authorizationHeader)) {

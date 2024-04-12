@@ -28,7 +28,6 @@ final class SnapFileController extends FilesnapAbstractController
         FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
         UpdateSnapLastSeenDateUseCase $updateSnapLastSeenDateUseCase,
         #[MapUuidFromBase58] Uuid $id
-
     ): BinaryFileResponse
     {
         $useCaseResponse = $findOneSnapByIdUseCase(new FindOneSnapByIdRequest($id));

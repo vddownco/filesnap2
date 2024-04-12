@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Security;
 
-use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailRequest;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailUseCase;
 use App\Application\UseCase\User\UpdatePasswordById\UpdateUserPasswordByIdRequest;
@@ -52,12 +51,18 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
     }
 
     /**
+     * This method should not block the login, that's why it does not throw anything
+     * cf PasswordUpgraderInterface::upgradePassword phpdoc
+     *
      * @param SecurityUser $user
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        ($this->updateUserPasswordByIdUseCase)(
-            new UpdateUserPasswordByIdRequest($user->getId(), $newHashedPassword)
-        );
+        try {
+            ($this->updateUserPasswordByIdUseCase)(
+                new UpdateUserPasswordByIdRequest($user->getId(), $newHashedPassword)
+            );
+        } catch (\Exception) {
+        }
     }
 }
