@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Domain\Entity\User;
@@ -19,8 +20,7 @@ final class User
         #[Persistence] private string $password,
         #[Persistence] private array $roles,
         #[Persistence] private Uuid $authorizationKey
-    )
-    {
+    ) {
     }
 
     public function getId(): Uuid
@@ -36,6 +36,7 @@ final class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -47,6 +48,7 @@ final class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -72,7 +74,7 @@ final class User
 
     public function addRole(UserRole $role): self
     {
-        if (false === in_array($role, $this->roles, true)) {
+        if (in_array($role, $this->roles, true) === false) {
             $this->roles[] = $role;
         }
 
@@ -87,6 +89,7 @@ final class User
     public function setAuthorizationKey(Uuid $authorizationKey): self
     {
         $this->authorizationKey = $authorizationKey;
+
         return $this;
     }
 }

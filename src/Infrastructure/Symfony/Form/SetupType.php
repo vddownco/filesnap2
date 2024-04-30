@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Form;
@@ -15,16 +16,16 @@ final class SetupType extends AbstractType
     {
         $builder
             ->add('adminEmail', EmailType::class, [
-                'required' => true
+                'required' => true,
             ])
             ->add('adminPlainPassword', PasswordType::class, [
                 'required' => true,
                 'constraints' => [
                     new PasswordStrength([
                         'minScore' => PasswordStrength::STRENGTH_STRONG,
-                        'message' => 'Your password is too weak, please type a stronger password.'
-                    ])
-                ]
+                        'message' => 'Your password is too weak, please type a stronger password.',
+                    ]),
+                ],
             ]);
     }
 }

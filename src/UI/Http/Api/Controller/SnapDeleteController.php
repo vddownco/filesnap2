@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Api\Controller;
@@ -28,8 +29,7 @@ final class SnapDeleteController extends FilesnapAbstractController
         DeleteSnapByIdUseCase $deleteSnapByIdUseCase,
         Request $request,
         #[MapUuidFromBase58] Uuid $id
-    ): Response
-    {
+    ): Response {
         $deleteSnapByIdUseCase(new DeleteSnapByIdRequest($id));
 
         return $this->emptyResponse();

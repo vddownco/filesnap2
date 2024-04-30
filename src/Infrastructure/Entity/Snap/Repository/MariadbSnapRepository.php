@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Entity\Snap\Repository;
 
 use App\Application\Domain\Entity\Snap\Factory\SnapFactory;
-use App\Application\Domain\Entity\Snap\Snap;
 use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
+use App\Application\Domain\Entity\Snap\Snap;
 use App\Infrastructure\Entity\MariadbTools;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
@@ -18,8 +19,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
     public function __construct(
         private Connection $connection,
         private SnapFactory $snapFactory
-    )
-    {
+    ) {
     }
 
     /**
@@ -38,7 +38,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             'original_filename' => $snap->getOriginalFilename(),
             'mime_type' => $snap->getMimeType()->value,
             'creation_date' => $snap->getCreationDate()->format(MariadbTools::DATETIME_FORMAT),
-            'last_seen_date' => $snap->getLastSeenDate()?->format(MariadbTools::DATETIME_FORMAT)
+            'last_seen_date' => $snap->getLastSeenDate()?->format(MariadbTools::DATETIME_FORMAT),
         ]);
     }
 
@@ -51,7 +51,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
 
         $this->connection->executeQuery($query, [
             'id' => $id->toRfc4122(),
-            'last_seen_date' => $lastSeenDate->format(MariadbTools::DATETIME_FORMAT)
+            'last_seen_date' => $lastSeenDate->format(MariadbTools::DATETIME_FORMAT),
         ]);
     }
 
@@ -69,7 +69,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
 
         $dbResult = $this->connection->fetchAssociative($query, ['id' => $id->toRfc4122()]);
 
-        if (false === $dbResult) {
+        if ($dbResult === false) {
             return null;
         }
 
@@ -78,6 +78,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
 
     /**
      * @return Snap[]
+     *
      * @throws Exception
      * @throws \Exception
      */
@@ -101,7 +102,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
         $dbResults = $statement->executeQuery()->fetchAllAssociative();
 
         return array_map(
-            fn(array $dbResult) => $this->createSnapEntity($dbResult),
+            fn (array $dbResult) => $this->createSnapEntity($dbResult),
             $dbResults
         );
     }

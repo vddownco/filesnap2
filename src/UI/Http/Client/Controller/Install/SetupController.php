@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\Install;
@@ -24,7 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
     name: 'client_install_setup',
     methods: [
         Request::METHOD_GET,
-        Request::METHOD_POST
+        Request::METHOD_POST,
     ]
 )]
 final class SetupController extends FilesnapAbstractController
@@ -38,8 +39,7 @@ final class SetupController extends FilesnapAbstractController
         private readonly CreateUserUseCase $createUserUseCase,
         private readonly KernelInterface $kernel,
         private readonly Filesystem $filesystem = new Filesystem()
-    )
-    {
+    ) {
         $this->application = new Application($this->kernel);
         $this->application->setAutoExit(false);
 
@@ -53,21 +53,19 @@ final class SetupController extends FilesnapAbstractController
     public function __invoke(
         #[Autowire(param: 'app.project_directory')] string $projectDirectory,
         Request $request
-    ): Response
-    {
+    ): Response {
         $setupFile = "$projectDirectory/.setup";
         $installAuthorized = $this->filesystem->exists($setupFile);
 
-        if (false === $installAuthorized) {
+        if ($installAuthorized === false) {
             return $this->redirectToRoute('client_login');
         }
 
         $form = $this->createForm(SetupType::class);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
-            if (false === defined('STDIN')) {
+            if (defined('STDIN') === false) {
                 define('STDIN', fopen('php://stdin', 'rb'));
             }
 
@@ -77,21 +75,22 @@ final class SetupController extends FilesnapAbstractController
             $postedData = $form->getData();
             $this->createAdminUser($postedData['adminEmail'], $postedData['adminPlainPassword']);
 
-            if (null === $this->error) {
+            if ($this->error === null) {
                 $this->filesystem->remove($setupFile);
+
                 return $this->redirectToRoute('client_login', ['setup_finished' => true]);
             }
         }
 
         return $this->render(parameters: [
             'form' => $form,
-            'error' => $this->error
+            'error' => $this->error,
         ]);
     }
 
     private function runCommand(ArrayInput $command): void
     {
-        if (null !== $this->error) {
+        if ($this->error !== null) {
             return;
         }
 
@@ -99,7 +98,7 @@ final class SetupController extends FilesnapAbstractController
             $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL);
             $executionStatus = $this->application->run($command, $output);
 
-            if (0 !== $executionStatus) {
+            if ($executionStatus !== 0) {
                 $this->error = $output->fetch();
             }
         } catch (\Exception $e) {
@@ -109,7 +108,7 @@ final class SetupController extends FilesnapAbstractController
 
     private function createAdminUser(string $email, string $plainPassword): void
     {
-        if (null !== $this->error) {
+        if ($this->error !== null) {
             return;
         }
 

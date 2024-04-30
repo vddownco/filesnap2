@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Routing;
@@ -20,8 +21,7 @@ class Router implements RouterInterface, WarmableInterface
     public function __construct(
         #[AutowireDecorated] private readonly RouterInterface $decoratedRouter,
         #[AutowireDecorated] private readonly WarmableInterface $decoratedWarmable
-    )
-    {
+    ) {
     }
 
     public function setContext(RequestContext $context): void
@@ -47,23 +47,23 @@ class Router implements RouterInterface, WarmableInterface
 
         $route = $this->getRouteCollection()->get($name);
 
-        if (null === $route) {
+        if ($route === null) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
         }
 
         $controllerClass = $route->getDefault('_controller');
 
-        if (null === $controllerClass) {
+        if ($controllerClass === null) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
         }
 
         $parametersToConvert = self::$controllersUuidMapParameters[$controllerClass] ?? null;
 
-        if ([] === $parametersToConvert) {
+        if ($parametersToConvert === []) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
         }
 
-        if (null !== $parametersToConvert) {
+        if ($parametersToConvert !== null) {
             return $this->decoratedRouter->generate(
                 $name,
                 $this->getConvertedParameters($parameters, $parametersToConvert),
@@ -79,17 +79,17 @@ class Router implements RouterInterface, WarmableInterface
 
         $parametersWithUuidMapping = array_filter(
             $invokeMethod->getParameters(),
-            static fn(\ReflectionParameter $parameter) => [] !== $parameter->getAttributes(MapUuidFromBase58::class)
+            static fn (\ReflectionParameter $parameter) => $parameter->getAttributes(MapUuidFromBase58::class) !== []
         );
 
         $parametersToConvert = array_map(
-            static fn(\ReflectionParameter $parameter) => $parameter->name,
+            static fn (\ReflectionParameter $parameter) => $parameter->name,
             $parametersWithUuidMapping
         );
 
         self::$controllersUuidMapParameters[$controllerClass] = $parametersToConvert;
 
-        if ([] === $parametersToConvert) {
+        if ($parametersToConvert === []) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
         }
 
@@ -115,15 +115,13 @@ class Router implements RouterInterface, WarmableInterface
         $convertedParameters = [];
 
         foreach ($parameters as $parameterName => $parameterValue) {
-            if (false === in_array($parameterName, $parametersToConvert, true)) {
+            if (in_array($parameterName, $parametersToConvert, true) === false) {
                 $convertedParameters[$parameterName] = $parameterValue;
                 continue;
             }
 
             if (false === ($parameterValue instanceof Uuid)) {
-                throw new \RuntimeException(
-                    "Value $parameterValue for parameter $parameterName is not a valid uuid."
-                );
+                throw new \RuntimeException("Value $parameterValue for parameter $parameterName is not a valid uuid.");
             }
 
             $convertedParameters[$parameterName] = $parameterValue->toBase58();

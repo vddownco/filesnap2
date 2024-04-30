@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\UseCase\User\Create;
@@ -13,9 +14,8 @@ final readonly class CreateUserRequest
     public function __construct(
         private string $email,
         private string $plainPassword,
-        private array  $roles,
-    )
-    {
+        private array $roles,
+    ) {
     }
 
     public function getEmail(): string

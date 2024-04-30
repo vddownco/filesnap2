@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Security;
@@ -20,13 +21,12 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
     public function __construct(
         private FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
         private UpdateUserPasswordByIdUseCase $updateUserPasswordByIdUseCase
-    )
-    {
+    ) {
     }
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        if (false === $this->supportsClass($user::class)) {
+        if ($this->supportsClass($user::class) === false) {
             throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
         }
 
@@ -35,7 +35,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
 
     public function supportsClass(string $class): bool
     {
-        return SecurityUser::class === $class || is_subclass_of($class, SecurityUser::class);
+        return $class === SecurityUser::class || is_subclass_of($class, SecurityUser::class);
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
@@ -43,7 +43,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
         $useCaseResponse = ($this->findOneUserByEmailUseCase)(new FindOneUserByEmailRequest($identifier));
         $user = $useCaseResponse->getUser();
 
-        if (null === $user) {
+        if ($user === null) {
             throw new UserNotFoundException();
         }
 
@@ -52,7 +52,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
 
     /**
      * This method should not block the login, that's why it does not throw anything
-     * cf PasswordUpgraderInterface::upgradePassword phpdoc
+     * cf PasswordUpgraderInterface::upgradePassword phpdoc.
      *
      * @param SecurityUser $user
      */

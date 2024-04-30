@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Domain\Entity\Snap;
@@ -11,13 +12,13 @@ enum MimeType: string
     public const array imageMimeTypes = [
         self::ImageJpeg,
         self::ImagePng,
-        self::ImageGif
+        self::ImageGif,
     ];
 
     /** @var self[] */
     public const array videoMimeTypes = [
         self::VideoWebm,
-        self::VideoMp4
+        self::VideoMp4,
     ];
 
     case ImageJpeg = 'image/jpeg';
@@ -33,7 +34,7 @@ enum MimeType: string
     {
         $enum = self::tryFrom($mimeType);
 
-        if (null === $enum) {
+        if ($enum === null) {
             throw new UnsupportedFileTypeException($mimeType);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\UseCase\User\UpdatePasswordById;
@@ -10,8 +11,7 @@ final readonly class UpdateUserPasswordByIdRequest
     public function __construct(
         private Uuid $id,
         private string $hashedPassword
-    )
-    {
+    ) {
     }
 
     public function getId(): Uuid

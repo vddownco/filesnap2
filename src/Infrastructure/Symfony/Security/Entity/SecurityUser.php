@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Security\Entity;
@@ -20,8 +21,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
         private string $password,
         private array $securityRoles,
         private Uuid $authorizationKey
-    )
-    {
+    ) {
     }
 
     public function getId(): Uuid
@@ -32,6 +32,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function setId(Uuid $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -43,6 +44,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -54,6 +56,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -63,7 +66,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function getRoles(): array
     {
         return array_map(
-            static fn(SecurityUserRole $role): string => RoleTools::fromSecurityUserRoleToString($role),
+            static fn (SecurityUserRole $role): string => RoleTools::fromSecurityUserRoleToString($role),
             $this->securityRoles
         );
     }
@@ -74,6 +77,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function setSecurityRoles(array $securityRoles): self
     {
         $this->securityRoles = $securityRoles;
+
         return $this;
     }
 
@@ -85,6 +89,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function setAuthorizationKey(Uuid $authorizationKey): self
     {
         $this->authorizationKey = $authorizationKey;
+
         return $this;
     }
 
@@ -104,7 +109,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
             $user->getEmail(),
             $user->getPassword(),
             array_map(
-                static fn(UserRole $role): SecurityUserRole => RoleTools::fromUserRoleToSecurityUserRole($role),
+                static fn (UserRole $role): SecurityUserRole => RoleTools::fromUserRoleToSecurityUserRole($role),
                 $user->getRoles()
             ),
             $user->getAuthorizationKey()

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\Create;
@@ -11,8 +12,6 @@ use App\Application\Domain\Entity\Snap\FileStorage\FileMetadata;
 use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
-use DateTime;
-use Exception;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class CreateSnapUseCase
@@ -21,15 +20,14 @@ final readonly class CreateSnapUseCase
         private SnapRepositoryInterface $snapRepository,
         private FileStorageInterface $fileStorage,
         private SnapFactory $snapFactory
-    )
-    {
+    ) {
     }
 
     /**
      * @throws UnsupportedFileTypeException
      * @throws FileSizeTooBigException
      * @throws FileNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function __invoke(CreateSnapRequest $request): CreateSnapResponse
     {
@@ -56,13 +54,13 @@ final readonly class CreateSnapUseCase
             userId: $request->getUserId(),
             originalFilename: $request->getFileOriginalName(),
             mimeType: $snapMimeType,
-            creationDate: new DateTime(),
+            creationDate: new \DateTime(),
             lastSeenDate: null
         );
 
         try {
             $this->snapRepository->create($snap);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->fileStorage->delete($snapId, $request->getUserId());
             throw $e;
         }

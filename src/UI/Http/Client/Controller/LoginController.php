@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
     name: 'client_login',
     methods: [
         Request::METHOD_GET,
-        Request::METHOD_POST
+        Request::METHOD_POST,
     ]
 )]
 final class LoginController extends FilesnapAbstractController
@@ -22,8 +23,7 @@ final class LoginController extends FilesnapAbstractController
     public function __invoke(
         AuthenticationUtils $authenticationUtils,
         #[MapQueryParameter(name: 'setup_finished')] ?bool $setupFinished
-    ): Response
-    {
+    ): Response {
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('client_user_gallery');
         }
@@ -34,7 +34,7 @@ final class LoginController extends FilesnapAbstractController
         return $this->render(parameters: [
             'last_username' => $lastUsername,
             'error' => $error,
-            'setup_finished' => $setupFinished
+            'setup_finished' => $setupFinished,
         ]);
     }
 }

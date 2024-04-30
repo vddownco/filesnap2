@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Console\Command;
@@ -36,8 +37,7 @@ final class CreateTestSnapsCommand extends Command
         private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
         #[Autowire(param: 'app.environment')] private readonly string $environment,
         #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory
-    )
-    {
+    ) {
         /** @var MimeType[] $authorizedMimeTypes */
         $authorizedMimeTypes = [...MimeType::imageMimeTypes, ...MimeType::videoMimeTypes];
         $authorizedExtensions = [];
@@ -49,9 +49,7 @@ final class CreateTestSnapsCommand extends Command
                 MimeType::ImageGif => ['gif'],
                 MimeType::VideoMp4 => ['mp4'],
                 MimeType::VideoWebm => ['webm'],
-                default => throw new \RuntimeException(
-                    "The mimetype $mimeType->name has no associated file extension(s)."
-                )
+                default => throw new \RuntimeException("The mimetype $mimeType->name has no associated file extension(s).")
             };
 
             $authorizedExtensions = [...$authorizedExtensions, ...$extensions];
@@ -67,7 +65,7 @@ final class CreateTestSnapsCommand extends Command
         );
 
         $this->files = array_map(
-            static fn(string $filePath) => new File($filePath),
+            static fn (string $filePath) => new File($filePath),
             $filePaths
         );
 
@@ -87,7 +85,7 @@ final class CreateTestSnapsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ('dev' !== $this->environment) {
+        if ($this->environment !== 'dev') {
             $output->writeln(
                 'This command is for development purpose only. It will not execute outside of dev environment'
             );
@@ -95,8 +93,9 @@ final class CreateTestSnapsCommand extends Command
             return Command::FAILURE;
         }
 
-        if ([] === $this->files) {
+        if ($this->files === []) {
             $output->writeln(sprintf('No files in %s/create_test_snaps_files/', $this->projectDirectory));
+
             return Command::FAILURE;
         }
 
@@ -105,8 +104,9 @@ final class CreateTestSnapsCommand extends Command
         );
         $user = $findUserUserCaseResponse->getUser();
 
-        if (null === $user) {
+        if ($user === null) {
             $output->writeln('No user existing with this email.');
+
             return Command::FAILURE;
         }
 
@@ -114,7 +114,7 @@ final class CreateTestSnapsCommand extends Command
         $filesArrayMinIndex = min($filesArrayIndexes);
         $filesArrayMaxIndex = max($filesArrayIndexes);
 
-        for ($i = 0; $i < self::NUMBER_OF_SNAPS_TO_CREATE; $i++) {
+        for ($i = 0; $i < self::NUMBER_OF_SNAPS_TO_CREATE; ++$i) {
             $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
             $file = $this->files[$randomIndex];
 

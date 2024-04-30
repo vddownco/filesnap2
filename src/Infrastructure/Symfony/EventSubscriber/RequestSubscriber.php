@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\EventSubscriber;
@@ -18,7 +19,7 @@ final readonly class RequestSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                ['addTwigGlobalOpenMenu', 10]
+                ['addTwigGlobalOpenMenu', 10],
             ],
         ];
     }
@@ -28,7 +29,7 @@ final readonly class RequestSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
 
-        if (null !== $route && str_starts_with($route, 'client_user_')) {
+        if ($route !== null && str_starts_with($route, 'client_user_')) {
             $this->twig->addGlobal('open_menu', $request->get('open_menu') ? true : null);
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\User\Ajax;
@@ -26,10 +27,9 @@ final class SnapDeleteController extends FilesnapAbstractController
     public function __invoke(
         DeleteSnapByIdUseCase $deleteSnapByIdUseCase,
         Request $request
-    ): Response
-    {
+    ): Response {
         $deleteRequests = array_map(
-            static fn(string $id) => new DeleteSnapByIdRequest(Uuid::fromString($id)),
+            static fn (string $id) => new DeleteSnapByIdRequest(Uuid::fromString($id)),
             $request->getPayload()->all('ids')
         );
 

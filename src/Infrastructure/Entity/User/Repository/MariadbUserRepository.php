@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Entity\User\Repository;
@@ -23,9 +24,9 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     public function save(User $user): void
     {
         $query = 'SELECT COUNT(id) FROM user WHERE id = :id';
-        $exists = (bool)$this->connection->fetchOne($query, ['id' => $user->getId()->toRfc4122()]);
+        $exists = (bool) $this->connection->fetchOne($query, ['id' => $user->getId()->toRfc4122()]);
 
-        if (true === $exists) {
+        if ($exists === true) {
             $this->update($user);
         } else {
             $this->insert($user);
@@ -40,7 +41,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
         $query = 'SELECT id, email, password, roles, authorization_key FROM user WHERE id = :id';
         $dbResult = $this->connection->fetchAssociative($query, ['id' => $id->toRfc4122()]);
 
-        if (false === $dbResult) {
+        if ($dbResult === false) {
             return null;
         }
 
@@ -55,7 +56,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
         $query = 'SELECT id, email, password, roles, authorization_key FROM user WHERE email = :email';
         $dbResult = $this->connection->fetchAssociative($query, ['email' => $email]);
 
-        if (false === $dbResult) {
+        if ($dbResult === false) {
             return null;
         }
 
@@ -78,7 +79,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
             ['authorization_key' => $authorizationKey->toRfc4122()]
         );
 
-        if (false === $dbResult) {
+        if ($dbResult === false) {
             return null;
         }
 
@@ -94,7 +95,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
 
         $this->connection->executeQuery($query, [
             'password' => $hashedPassword,
-            'id' => $id->toRfc4122()
+            'id' => $id->toRfc4122(),
         ]);
     }
 
@@ -107,7 +108,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
 
         $this->connection->executeQuery($query, [
             'authorization_key' => $authorizationKey->toRfc4122(),
-            'id' => $id->toRfc4122()
+            'id' => $id->toRfc4122(),
         ]);
     }
 
@@ -127,7 +128,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
             'roles' => $this->jsonEncodeRolesForInsert($user->getRoles()),
-            'authorization_key' => $user->getAuthorizationKey()->toRfc4122()
+            'authorization_key' => $user->getAuthorizationKey()->toRfc4122(),
         ]);
     }
 
@@ -147,7 +148,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
             'roles' => $this->jsonEncodeRolesForInsert($user->getRoles()),
-            'authorization_key' => $user->getAuthorizationKey()->toRfc4122()
+            'authorization_key' => $user->getAuthorizationKey()->toRfc4122(),
         ]);
     }
 
@@ -157,7 +158,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     private function createUserEntity(array $dbResult): User
     {
         $roles = array_map(
-            static fn(string $role): UserRole => RoleTools::fromStringToUserRole($role),
+            static fn (string $role): UserRole => RoleTools::fromStringToUserRole($role),
             json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR)
         );
 
@@ -172,13 +173,14 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
 
     /**
      * @param UserRole[] $roles
+     *
      * @throws \JsonException
      */
     private function jsonEncodeRolesForInsert(array $roles): string
     {
         return json_encode(
             array_map(
-                static fn(UserRole $role): string => RoleTools::fromUserRoleToString($role),
+                static fn (UserRole $role): string => RoleTools::fromUserRoleToString($role),
                 $roles
             ),
             JSON_THROW_ON_ERROR

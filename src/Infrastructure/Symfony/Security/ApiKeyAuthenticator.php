@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Security;
@@ -24,8 +25,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function __construct(
         private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase
-    )
-    {
+    ) {
     }
 
     public function supports(Request $request): ?bool
@@ -42,7 +42,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
             throw new CustomUserMessageAuthenticationException('No API key provided');
         }
 
-        if (false === str_starts_with($authorizationHeader, $headerValueStart)) {
+        if (str_starts_with($authorizationHeader, $headerValueStart) === false) {
             throw $this->createIncorrectApiKeyException();
         }
 
@@ -59,7 +59,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
         );
         $user = $useCaseResponse->getUser();
 
-        if (null === $user) {
+        if ($user === null) {
             throw $this->createIncorrectApiKeyException();
         }
 

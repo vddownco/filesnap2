@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\ArgumentResolver;
@@ -16,7 +17,7 @@ final class UuidFromBase58ValueResolver implements ValueResolverInterface
     {
         $attribute = $argument->getAttributesOfType(MapUuidFromBase58::class)[0] ?? null;
 
-        if (null === $attribute) {
+        if ($attribute === null) {
             return [];
         }
 

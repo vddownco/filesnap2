@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller;
@@ -27,12 +28,11 @@ final class SnapFileController extends FilesnapAbstractController
         FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
         UpdateSnapLastSeenDateUseCase $updateSnapLastSeenDateUseCase,
         #[MapUuidFromBase58] Uuid $id
-    ): BinaryFileResponse
-    {
+    ): BinaryFileResponse {
         $useCaseResponse = $findOneSnapByIdUseCase(new FindOneSnapByIdRequest($id));
         $snap = $useCaseResponse->getSnap();
 
-        if (null === $snap) {
+        if ($snap === null) {
             throw $this->createNotFoundException();
         }
 

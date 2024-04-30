@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Twig;
@@ -14,8 +15,8 @@ final class ProjectVersionExtension extends AbstractExtension
         return [
             new TwigFunction(
                 'project_version',
-                static fn(): string => InstalledVersions::getPrettyVersion('maximethiry/filesnap')
-            )
+                static fn (): string => InstalledVersions::getPrettyVersion('maximethiry/filesnap')
+            ),
         ];
     }
 }

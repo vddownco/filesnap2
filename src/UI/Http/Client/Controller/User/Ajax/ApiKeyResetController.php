@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\User\Ajax;
@@ -20,8 +21,7 @@ final class ApiKeyResetController extends FilesnapAbstractController
 {
     public function __invoke(
         UpdateUserAuthorizationKeyByIdUseCase $updateUserAuthorizationKeyByIdUseCase
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $useCaseResponse = $updateUserAuthorizationKeyByIdUseCase(
             new UpdateUserAuthorizationKeyByIdRequest(
                 $this->getAuthenticatedUser()->getId()

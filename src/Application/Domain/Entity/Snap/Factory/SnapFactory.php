@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Domain\Entity\Snap\Factory;
@@ -25,11 +26,10 @@ final readonly class SnapFactory
         MimeType $mimeType,
         \DateTimeInterface $creationDate,
         ?\DateTimeInterface $lastSeenDate
-    ): Snap
-    {
+    ): Snap {
         $file = $this->fileStorage->get($id, $userId);
 
-        if (null === $file) {
+        if ($file === null) {
             throw new FileNotFoundException($id);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\UseCase\User\Create;
@@ -13,8 +14,7 @@ final readonly class CreateUserUseCase
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private PasswordHasherInterface $passwordHasher
-    )
-    {
+    ) {
     }
 
     public function __invoke(CreateUserRequest $request): CreateUserResponse

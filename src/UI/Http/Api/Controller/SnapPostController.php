@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Api\Controller;
@@ -34,8 +35,7 @@ final class SnapPostController extends FilesnapAbstractController
         CreateSnapUseCase $createSnapUseCase,
         UrlGeneratorInterface $router,
         Request $request
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $uploadedFile = $request->files->get('file');
 
         if (false === ($uploadedFile instanceof UploadedFile)) {

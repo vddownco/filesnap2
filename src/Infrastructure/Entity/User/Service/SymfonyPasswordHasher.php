@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Entity\User\Service;
@@ -21,7 +22,7 @@ final class SymfonyPasswordHasher implements PasswordHasherInterface
 
     private function getFactory(): PasswordHasherFactoryInterface
     {
-        if (null !== self::$factory) {
+        if (self::$factory !== null) {
             return self::$factory;
         }
 

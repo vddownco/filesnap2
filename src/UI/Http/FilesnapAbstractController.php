@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http;
@@ -16,7 +17,7 @@ abstract class FilesnapAbstractController extends AbstractController
         /** @var SecurityUser|null $user */
         $user = $this->getUser();
 
-        if (null === $user) {
+        if ($user === null) {
             throw new HttpException(Response::HTTP_UNAUTHORIZED, 'No user authenticated');
         }
 
@@ -28,7 +29,7 @@ abstract class FilesnapAbstractController extends AbstractController
         return new Response(status: Response::HTTP_NO_CONTENT);
     }
 
-    protected function render(?string $view = null, array $parameters = [], Response $response = null): Response
+    protected function render(?string $view = null, array $parameters = [], ?Response $response = null): Response
     {
         if ($view !== null) {
             return parent::render($view, $parameters, $response);
@@ -41,20 +42,13 @@ abstract class FilesnapAbstractController extends AbstractController
         }
 
         if (count($routeAttributes) > 1) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Multiple routes defined for %s, you must precise the view to render with "view" parameter',
-                    static::class
-                )
-            );
+            throw new \RuntimeException(sprintf('Multiple routes defined for %s, you must precise the view to render with "view" parameter', static::class));
         }
 
         $routeName = $routeAttributes[0]->getArguments()['name'] ?? null;
 
         if ($routeName === null) {
-            throw new \RuntimeException(
-                sprintf('No route name argument defined on %s attribute in %s.', Route::class, static::class)
-            );
+            throw new \RuntimeException(sprintf('No route name argument defined on %s attribute in %s.', Route::class, static::class));
         }
 
         return parent::render(

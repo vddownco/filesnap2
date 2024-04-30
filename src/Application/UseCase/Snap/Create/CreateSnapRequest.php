@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\Create;
@@ -13,8 +14,7 @@ final readonly class CreateSnapRequest
         private string $fileMimeType,
         private string $filePath,
         private int $fileBytesSize
-    )
-    {
+    ) {
     }
 
     public function getUserId(): Uuid

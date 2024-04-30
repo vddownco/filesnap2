@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Domain\Entity\Snap;
@@ -19,8 +20,7 @@ final class Snap
         #[Persistence] private readonly \DateTimeInterface $creationDate,
         #[Persistence] private ?\DateTimeInterface $lastSeenDate,
         private readonly File $file
-    )
-    {
+    ) {
     }
 
     public function getId(): Uuid
@@ -56,6 +56,7 @@ final class Snap
     public function setLastSeenDate(?\DateTimeInterface $lastSeenDate): self
     {
         $this->lastSeenDate = $lastSeenDate;
+
         return $this;
     }
 

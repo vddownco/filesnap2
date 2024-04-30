@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Console\Command;
@@ -18,14 +19,13 @@ final class CreateTestUserCommand extends Command
     public function __construct(
         private readonly CreateUserUseCase $createUserUseCase,
         #[Autowire(param: 'app.environment')] private readonly string $environment
-    )
-    {
+    ) {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ('dev' !== $this->environment) {
+        if ($this->environment !== 'dev') {
             $output->writeln(
                 'This command is for development purpose only. It will not execute outside of dev environment'
             );

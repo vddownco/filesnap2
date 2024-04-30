@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\DeleteById;
@@ -12,8 +13,7 @@ final readonly class DeleteSnapByIdUseCase
     public function __construct(
         private SnapRepositoryInterface $snapRepository,
         private FileStorageInterface $fileStorage
-    )
-    {
+    ) {
     }
 
     /**
@@ -23,7 +23,7 @@ final readonly class DeleteSnapByIdUseCase
     {
         $snap = $this->snapRepository->findOneById($request->getId());
 
-        if (null === $snap) {
+        if ($snap === null) {
             throw new SnapNotFoundException($request->getId());
         }
 

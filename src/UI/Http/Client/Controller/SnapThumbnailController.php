@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller;
@@ -15,7 +16,7 @@ use Symfony\Component\Uid\Uuid;
 
 /**
  * This route is triggered only if the .thumbnail file for a Snap doesn't exist in public/snap
- * It generate the thumbnail and redirect to itself to let the server return the previously generated thumbnail file
+ * It generate the thumbnail and redirect to itself to let the server return the previously generated thumbnail file.
  */
 #[Route(
     path: '/snap/{id}.thumbnail',
@@ -30,12 +31,11 @@ final class SnapThumbnailController extends FilesnapAbstractController
         FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
         ThumbnailService $thumbnailService,
         #[MapUuidFromBase58] Uuid $id
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $useCaseResponse = $findOneSnapByIdUseCase(new FindOneSnapByIdRequest($id));
         $snap = $useCaseResponse->getSnap();
 
-        if (null === $snap) {
+        if ($snap === null) {
             throw $this->createNotFoundException();
         }
 

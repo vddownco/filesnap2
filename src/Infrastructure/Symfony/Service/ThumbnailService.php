@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Service;
@@ -15,8 +16,7 @@ final readonly class ThumbnailService
     public function __construct(
         #[Autowire(param: 'app.public_directory')] private string $publicDirectory,
         private Filesystem $filesystem = new Filesystem()
-    )
-    {
+    ) {
     }
 
     private function getThumbnailAbsolutePathDotThumbnail(Uuid $snapId): string
@@ -34,7 +34,7 @@ final readonly class ThumbnailService
 
         $thumbnailAbsolutePathDotThumbnail = $this->getThumbnailAbsolutePathDotThumbnail($snap->getId());
 
-        if (true === $snap->isImage()) {
+        if ($snap->isImage() === true) {
             $imagine = new Imagine();
             $imagineImage = $imagine->open($snap->getFile()->getAbsolutePath());
 
@@ -48,7 +48,7 @@ final readonly class ThumbnailService
                 $thumbnailAbsolutePathDotJpeg,
                 $thumbnailAbsolutePathDotThumbnail
             );
-        } elseif (true === $snap->isVideo()) {
+        } elseif ($snap->isVideo() === true) {
             $videoThumbnail = sprintf('%s/video_thumbnail.jpg', $this->publicDirectory);
 
             $this->filesystem->copy(

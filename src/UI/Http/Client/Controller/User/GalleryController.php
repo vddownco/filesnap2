@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\User;
@@ -27,9 +28,8 @@ final class GalleryController extends FilesnapAbstractController
         CountSnapsByUserUseCase $countSnapsByUserUseCase,
         FindSnapsByUserUseCase $findSnapsByUserUseCase,
         #[MapQueryParameter] ?int $page
-    ): Response
-    {
-        if (null === $page) {
+    ): Response {
+        if ($page === null) {
             $page = 1;
         } elseif ($page <= 0) {
             throw $this->createNotFoundException();
@@ -40,7 +40,7 @@ final class GalleryController extends FilesnapAbstractController
         $countUseCaseResponse = $countSnapsByUserUseCase(new CountSnapsByUserRequest($user->getId()));
 
         $snapsCount = $countUseCaseResponse->getCount();
-        $pageCount = (int)ceil($snapsCount / self::MAX_SNAPS_BY_PAGE);
+        $pageCount = (int) ceil($snapsCount / self::MAX_SNAPS_BY_PAGE);
 
         if (
             ($snapsCount > 0 && $page > $pageCount)
@@ -83,7 +83,7 @@ final class GalleryController extends FilesnapAbstractController
             'page' => $page,
             'next_page' => $nextPage,
             'previous_page' => $previousPage,
-            'empty_space_count' => $emptySpaceCount
+            'empty_space_count' => $emptySpaceCount,
         ]);
     }
 }

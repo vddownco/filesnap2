@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Entity\Snap\FileStorage;
@@ -19,8 +20,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
         #[Autowire(param: 'app.upload.bytes_max_filesize')] private int $uploadBytesMaxFilesize,
         private ThumbnailService $thumbnailService,
         private Filesystem $filesystem = new Filesystem()
-    )
-    {
+    ) {
     }
 
     public function getFileMaximumAuthorizedBytesSize(): int
@@ -37,7 +37,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
             $snapUserId->toBase58()
         );
 
-        if (false === $this->filesystem->exists($userPersonalUploadDirectory)) {
+        if ($this->filesystem->exists($userPersonalUploadDirectory) === false) {
             $this->filesystem->mkdir($userPersonalUploadDirectory);
         }
 
@@ -71,7 +71,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
             $snapId->toBase58()
         );
 
-        if (false === $this->filesystem->exists($filePath)) {
+        if ($this->filesystem->exists($filePath) === false) {
             return null;
         }
 
