@@ -15,8 +15,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * This route is triggered only if the .thumbnail file for a Snap doesn't exist in public/snap
- * It generate the thumbnail and redirect to itself to let the server return the previously generated thumbnail file.
+ * This route is triggered only if the .thumbnail file for a Snap doesn't exist in the public/snap/ directory.
+ * It generates the thumbnail and redirect to itself to let the server return the previously generated thumbnail file.
  */
 #[Route(
     path: '/snap/{id}.thumbnail',
