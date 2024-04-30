@@ -5,5 +5,5 @@ namespace App\Infrastructure\Entity;
 
 final readonly class MariadbTools
 {
-    public const DATETIME_FORMAT = 'Y-m-d H:i:s';
+    public const string DATETIME_FORMAT = 'Y-m-d H:i:s';
 }

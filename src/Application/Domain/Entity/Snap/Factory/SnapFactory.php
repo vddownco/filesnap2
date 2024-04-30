@@ -7,7 +7,6 @@ use App\Application\Domain\Entity\Snap\Exception\FileNotFoundException;
 use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Snap;
-use DateTimeInterface;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class SnapFactory
@@ -24,8 +23,8 @@ final readonly class SnapFactory
         Uuid $userId,
         string $originalFilename,
         MimeType $mimeType,
-        DateTimeInterface $creationDate,
-        ?DateTimeInterface $lastSeenDate
+        \DateTimeInterface $creationDate,
+        ?\DateTimeInterface $lastSeenDate
     ): Snap
     {
         $file = $this->fileStorage->get($id, $userId);

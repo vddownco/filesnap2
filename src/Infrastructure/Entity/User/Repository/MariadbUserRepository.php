@@ -9,7 +9,6 @@ use App\Application\Domain\Entity\User\UserRole;
 use App\Infrastructure\Symfony\Security\Entity\RoleTools;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use JsonException;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class MariadbUserRepository implements UserRepositoryInterface
@@ -19,8 +18,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws Exception
-     * @throws JsonException
+     * @throws Exception|\JsonException
      */
     public function save(User $user): void
     {
@@ -35,8 +33,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws JsonException
-     * @throws Exception
+     * @throws Exception|\JsonException
      */
     public function findOneById(Uuid $id): ?User
     {
@@ -51,8 +48,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws Exception
-     * @throws JsonException
+     * @throws Exception|\JsonException
      */
     public function findOneByEmail(string $email): ?User
     {
@@ -67,8 +63,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws Exception
-     * @throws JsonException
+     * @throws Exception|\JsonException
      */
     public function findOneByAuthorizationKey(Uuid $authorizationKey): ?User
     {
@@ -117,7 +112,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      * @throws Exception
      */
     private function insert(User $user): void
@@ -137,7 +132,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      * @throws Exception
      */
     private function update(User $user): void
@@ -157,7 +152,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function createUserEntity(array $dbResult): User
     {
@@ -177,7 +172,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
 
     /**
      * @param UserRole[] $roles
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function jsonEncodeRolesForInsert(array $roles): string
     {

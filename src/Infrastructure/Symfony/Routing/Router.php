@@ -4,10 +4,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Routing;
 
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionParameter;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
@@ -76,18 +72,18 @@ class Router implements RouterInterface, WarmableInterface
         }
 
         try {
-            $invokeMethod = (new ReflectionClass($controllerClass))->getMethod('__invoke');
-        } catch (ReflectionException) {
+            $invokeMethod = (new \ReflectionClass($controllerClass))->getMethod('__invoke');
+        } catch (\ReflectionException) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
         }
 
         $parametersWithUuidMapping = array_filter(
             $invokeMethod->getParameters(),
-            static fn(ReflectionParameter $parameter) => [] !== $parameter->getAttributes(MapUuidFromBase58::class)
+            static fn(\ReflectionParameter $parameter) => [] !== $parameter->getAttributes(MapUuidFromBase58::class)
         );
 
         $parametersToConvert = array_map(
-            static fn(ReflectionParameter $parameter) => $parameter->name,
+            static fn(\ReflectionParameter $parameter) => $parameter->name,
             $parametersWithUuidMapping
         );
 
@@ -125,7 +121,7 @@ class Router implements RouterInterface, WarmableInterface
             }
 
             if (false === ($parameterValue instanceof Uuid)) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     "Value $parameterValue for parameter $parameterName is not a valid uuid."
                 );
             }

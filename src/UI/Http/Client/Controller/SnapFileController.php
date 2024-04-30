@@ -9,7 +9,6 @@ use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateReques
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateUseCase;
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
 use App\UI\Http\FilesnapAbstractController;
-use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -40,7 +39,7 @@ final class SnapFileController extends FilesnapAbstractController
         $updateSnapLastSeenDateUseCase(
             new UpdateSnapLastSeenDateRequest(
                 $snap->getId(),
-                new DateTime()
+                new \DateTime()
             )
         );
 

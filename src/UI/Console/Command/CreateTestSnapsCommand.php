@@ -12,7 +12,6 @@ use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailRequest;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailUseCase;
 use Random\RandomException;
-use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,8 +23,8 @@ use Symfony\Component\HttpFoundation\File\File;
 #[AsCommand(name: 'app:create-test-snaps')]
 final class CreateTestSnapsCommand extends Command
 {
-    public const ARGUMENT_EMAIL = 'email';
-    public const NUMBER_OF_SNAPS_TO_CREATE = 125;
+    public const string ARGUMENT_EMAIL = 'email';
+    public const int NUMBER_OF_SNAPS_TO_CREATE = 125;
 
     /**
      * @var File[]
@@ -50,7 +49,7 @@ final class CreateTestSnapsCommand extends Command
                 MimeType::ImageGif => ['gif'],
                 MimeType::VideoMp4 => ['mp4'],
                 MimeType::VideoWebm => ['webm'],
-                default => throw new RuntimeException(
+                default => throw new \RuntimeException(
                     "The mimetype $mimeType->name has no associated file extension(s)."
                 )
             };

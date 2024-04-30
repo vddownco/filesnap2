@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 final class GalleryController extends FilesnapAbstractController
 {
-    public const MAX_SNAPS_BY_PAGE = 45;
+    public const int MAX_SNAPS_BY_PAGE = 45;
 
     public function __invoke(
         CountSnapsByUserUseCase $countSnapsByUserUseCase,

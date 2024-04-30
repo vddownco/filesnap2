@@ -6,7 +6,6 @@ namespace App\Infrastructure\Symfony\Security;
 use App\Application\UseCase\User\FindOneByAuthorizationKey\FindOneUserByAuthorizationKeyRequest;
 use App\Application\UseCase\User\FindOneByAuthorizationKey\FindOneUserByAuthorizationKeyUseCase;
 use App\Infrastructure\Symfony\Security\Entity\SecurityUser;
-use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +20,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class ApiKeyAuthenticator extends AbstractAuthenticator
 {
-    private const AUTHORIZATION_HEADER_PREFIX = 'ApiKey';
+    private const string AUTHORIZATION_HEADER_PREFIX = 'ApiKey';
 
     public function __construct(
         private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase
@@ -51,7 +50,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
         try {
             $apiKeyUuid = Uuid::fromBase58($apiKey);
-        } catch (InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             throw $this->createIncorrectApiKeyException();
         }
 

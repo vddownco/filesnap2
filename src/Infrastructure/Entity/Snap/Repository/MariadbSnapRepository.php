@@ -8,8 +8,6 @@ use App\Application\Domain\Entity\Snap\Snap;
 use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
 use App\Infrastructure\Entity\MariadbTools;
-use DateTime;
-use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
@@ -47,7 +45,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
     /**
      * @throws Exception
      */
-    public function updateLastSeenDate(Uuid $id, DateTimeInterface $lastSeenDate): void
+    public function updateLastSeenDate(Uuid $id, \DateTimeInterface $lastSeenDate): void
     {
         $query = 'UPDATE snap SET last_seen_date = :last_seen_date WHERE id = :id';
 
@@ -138,8 +136,8 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             userId: Uuid::fromString($dbResult['user_id']),
             originalFilename: $dbResult['original_filename'],
             mimeType: MimeType::fromString($dbResult['mime_type']),
-            creationDate: new DateTime($dbResult['creation_date']),
-            lastSeenDate: $dbResult['last_seen_date'] ? new DateTime($dbResult['last_seen_date']) : null
+            creationDate: new \DateTime($dbResult['creation_date']),
+            lastSeenDate: $dbResult['last_seen_date'] ? new \DateTime($dbResult['last_seen_date']) : null
         );
     }
 }

@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace App\UI\Http;
 
 use App\Infrastructure\Symfony\Security\Entity\SecurityUser;
-use ReflectionAttribute;
-use ReflectionClass;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -33,24 +30,18 @@ abstract class FilesnapAbstractController extends AbstractController
 
     protected function render(?string $view = null, array $parameters = [], Response $response = null): Response
     {
-        if (null !== $view) {
+        if ($view !== null) {
             return parent::render($view, $parameters, $response);
         }
 
-        $class = new ReflectionClass(static::class);
+        $routeAttributes = (new \ReflectionClass(static::class))->getAttributes(Route::class);
 
-        /** @var ReflectionAttribute[] $routeAttributes */
-        $routeAttributes = array_values(array_filter(
-            $class->getAttributes(),
-            static fn(ReflectionAttribute $attribute) => Route::class === $attribute->getName()
-        ));
-
-        if (true === empty($routeAttributes)) {
-            throw new RuntimeException(sprintf('No %s attribute for %s.', Route::class, static::class));
+        if ($routeAttributes === []) {
+            throw new \RuntimeException(sprintf('No %s attribute for %s.', Route::class, static::class));
         }
 
         if (count($routeAttributes) > 1) {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 sprintf(
                     'Multiple routes defined for %s, you must precise the view to render with "view" parameter',
                     static::class
@@ -58,11 +49,10 @@ abstract class FilesnapAbstractController extends AbstractController
             );
         }
 
-        $routeAttribute = $routeAttributes[0];
-        $routeName = $routeAttribute->getArguments()['name'] ?? null;
+        $routeName = $routeAttributes[0]->getArguments()['name'] ?? null;
 
-        if (null === $routeName) {
-            throw new RuntimeException(
+        if ($routeName === null) {
+            throw new \RuntimeException(
                 sprintf('No route name argument defined on %s attribute in %s.', Route::class, static::class)
             );
         }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\ArgumentResolver;
 
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
-use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -25,7 +24,7 @@ final class UuidFromBase58ValueResolver implements ValueResolverInterface
 
         try {
             $uuid = Uuid::fromBase58($originalValue);
-        } catch (InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             throw new NotFoundHttpException(sprintf('Invalid base 58 uuid "%s"', $originalValue));
         }
 

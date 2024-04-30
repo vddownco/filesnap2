@@ -8,7 +8,6 @@ use App\Application\UseCase\User\Create\CreateUserRequest;
 use App\Application\UseCase\User\Create\CreateUserUseCase;
 use App\Infrastructure\Symfony\Form\SetupType;
 use App\UI\Http\FilesnapAbstractController;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -49,7 +48,7 @@ final class SetupController extends FilesnapAbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function __invoke(
         #[Autowire(param: 'app.project_directory')] string $projectDirectory,
@@ -103,7 +102,7 @@ final class SetupController extends FilesnapAbstractController
             if (0 !== $executionStatus) {
                 $this->error = $output->fetch();
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error = $e->getMessage();
         }
     }
@@ -122,7 +121,7 @@ final class SetupController extends FilesnapAbstractController
                     [UserRole::User, UserRole::Admin]
                 )
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error = $e->getMessage();
         }
     }
