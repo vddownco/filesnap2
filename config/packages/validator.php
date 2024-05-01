@@ -8,6 +8,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
         'validation' => null,
     ]);
+
     if ($containerConfigurator->env() === 'test') {
         $containerConfigurator->extension('framework', [
             'validation' => [

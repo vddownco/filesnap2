@@ -8,6 +8,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
         'router' => null,
     ]);
+
     if ($containerConfigurator->env() === 'prod') {
         $containerConfigurator->extension('framework', [
             'router' => [

@@ -11,6 +11,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'profiling_collect_backtrace' => '%kernel.debug%',
         ],
     ]);
+
     if ($containerConfigurator->env() === 'test') {
         $containerConfigurator->extension('doctrine', [
             'dbal' => [
@@ -18,6 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ]);
     }
+
     if ($containerConfigurator->env() === 'prod') {
         $containerConfigurator->extension('framework', [
             'cache' => [

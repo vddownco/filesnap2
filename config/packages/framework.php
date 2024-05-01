@@ -9,6 +9,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'secret' => '%env(APP_SECRET)%',
         'session' => true,
     ]);
+
     if ($containerConfigurator->env() === 'test') {
         $containerConfigurator->extension('framework', [
             'test' => true,

@@ -59,6 +59,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
     ]);
+
     if ($containerConfigurator->env() === 'test') {
         $containerConfigurator->extension('security', [
             'password_hashers' => [
