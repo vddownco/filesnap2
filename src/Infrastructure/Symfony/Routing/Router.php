@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Routing;
 
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
+use App\Infrastructure\Symfony\Service\CacheService;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
@@ -17,6 +19,7 @@ use Symfony\Component\Uid\Uuid;
 class Router implements RouterInterface, WarmableInterface
 {
     private static array $controllersUuidMapParameters = [];
+    private static ?RouteCollection $routeCollection = null;
 
     public function __construct(
         #[AutowireDecorated] private readonly RouterInterface $decoratedRouter,
@@ -39,13 +42,16 @@ class Router implements RouterInterface, WarmableInterface
         return $this->decoratedRouter->getRouteCollection();
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         if (str_starts_with($name, '_')) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
         }
 
-        $route = $this->getRouteCollection()->get($name);
+        $route = $this->getCachedRouteCollection()->get($name);
 
         if ($route === null) {
             return $this->decoratedRouter->generate($name, $parameters, $referenceType);
@@ -128,5 +134,29 @@ class Router implements RouterInterface, WarmableInterface
         }
 
         return $convertedParameters;
+    }
+
+    /**
+     * VERY UGLY !!! But it will do until I find something better.
+     *
+     * @throws InvalidArgumentException
+     */
+    private function getCachedRouteCollection(): RouteCollection
+    {
+        if (self::$routeCollection !== null) {
+            return self::$routeCollection;
+        }
+
+        $cache = CacheService::getAdapter();
+        $routeCollectionItem = $cache->getItem('route_collection');
+
+        if ($routeCollectionItem->isHit() === true) {
+            return self::$routeCollection = $routeCollectionItem->get();
+        }
+
+        $routeCollectionItem->set($this->getRouteCollection());
+        $cache->save($routeCollectionItem);
+
+        return self::$routeCollection = $routeCollectionItem->get();
     }
 }

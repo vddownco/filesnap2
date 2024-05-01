@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\Uuid;
 
-final class UuidFromBase58ValueResolver implements ValueResolverInterface
+final readonly class UuidFromBase58ValueResolver implements ValueResolverInterface
 {
     public function resolve(Request $request, ArgumentMetadata $argument): array
     {

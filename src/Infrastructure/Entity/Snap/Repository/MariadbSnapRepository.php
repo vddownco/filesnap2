@@ -93,13 +93,19 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             OFFSET :offset
         ';
 
-        $statement = $this->connection->prepare($query);
-
-        $statement->bindValue('user_id', $userId->toRfc4122(), ParameterType::BINARY);
-        $statement->bindValue('offset', $offset, ParameterType::INTEGER);
-        $statement->bindValue('limit', $limit, ParameterType::INTEGER);
-
-        $dbResults = $statement->executeQuery()->fetchAllAssociative();
+        $dbResults = $this->connection->fetchAllAssociative(
+            $query,
+            [
+                'user_id' => $userId->toRfc4122(),
+                'limit' => $limit,
+                'offset' => $offset,
+            ],
+            [
+                'user_id' => ParameterType::STRING,
+                'limit' => ParameterType::INTEGER,
+                'offset' => ParameterType::INTEGER,
+            ]
+        );
 
         return array_map(
             fn (array $dbResult) => $this->createSnapEntity($dbResult),
