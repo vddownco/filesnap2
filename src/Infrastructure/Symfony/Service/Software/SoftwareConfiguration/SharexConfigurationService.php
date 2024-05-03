@@ -7,6 +7,7 @@ namespace App\Infrastructure\Symfony\Service\Software\SoftwareConfiguration;
 use App\Infrastructure\Symfony\Security\ApiKeyAuthenticator;
 use App\Infrastructure\Symfony\Security\Entity\SecurityUser;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final readonly class SharexConfigurationService implements SoftwareConfigurationInterface
@@ -20,7 +21,7 @@ final readonly class SharexConfigurationService implements SoftwareConfiguration
     /**
      * @throws \JsonException
      */
-    public function getConfigurationFile(SecurityUser $user): \SplFileInfo
+    public function getConfigurationFile(SecurityUser $user): File
     {
         $requestUrl = $this->router->generate(name: 'api_snap_post', referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
         $authorizationHeader = ApiKeyAuthenticator::AUTHORIZATION_HEADER_PREFIX . $user->getAuthorizationKey()->toBase58();
@@ -41,6 +42,6 @@ final readonly class SharexConfigurationService implements SoftwareConfiguration
         $tmpFilename = $this->filesystem->tempnam(sys_get_temp_dir(), 'sharex_configuration_', '.sxcu');
         $this->filesystem->appendToFile($tmpFilename, $json);
 
-        return new \SplFileInfo($tmpFilename);
+        return new File($tmpFilename);
     }
 }

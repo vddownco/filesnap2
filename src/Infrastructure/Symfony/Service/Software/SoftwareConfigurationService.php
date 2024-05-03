@@ -6,6 +6,7 @@ namespace App\Infrastructure\Symfony\Service\Software;
 
 use App\Infrastructure\Symfony\Security\Entity\SecurityUser;
 use App\Infrastructure\Symfony\Service\Software\SoftwareConfiguration\SharexConfigurationService;
+use Symfony\Component\HttpFoundation\File\File;
 
 final readonly class SoftwareConfigurationService
 {
@@ -16,7 +17,7 @@ final readonly class SoftwareConfigurationService
     /**
      * @throws \JsonException
      */
-    public function getConfigurationFile(Software $software, SecurityUser $user): \SplFileInfo
+    public function getConfigurationFile(Software $software, SecurityUser $user): File
     {
         return match ($software) {
             Software::Sharex => $this->sharexConfigurationService->getConfigurationFile($user),
