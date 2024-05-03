@@ -21,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class ApiKeyAuthenticator extends AbstractAuthenticator
 {
-    private const string AUTHORIZATION_HEADER_PREFIX = 'ApiKey';
+    public const string AUTHORIZATION_HEADER_PREFIX = 'ApiKey ';
 
     public function __construct(
         private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase
@@ -35,18 +35,17 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $headerValueStart = self::AUTHORIZATION_HEADER_PREFIX . ' ';
         $authorizationHeader = $request->headers->get('Authorization');
 
         if (empty($authorizationHeader)) {
             throw new CustomUserMessageAuthenticationException('No API key provided');
         }
 
-        if (str_starts_with($authorizationHeader, $headerValueStart) === false) {
+        if (str_starts_with($authorizationHeader, self::AUTHORIZATION_HEADER_PREFIX) === false) {
             throw $this->createIncorrectApiKeyException();
         }
 
-        $apiKey = substr($authorizationHeader, strlen($headerValueStart));
+        $apiKey = substr($authorizationHeader, strlen(self::AUTHORIZATION_HEADER_PREFIX));
 
         try {
             $apiKeyUuid = Uuid::fromBase58($apiKey);
