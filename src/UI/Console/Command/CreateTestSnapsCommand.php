@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\File;
 final class CreateTestSnapsCommand extends Command
 {
     public const string ARGUMENT_EMAIL = 'email';
-    public const int NUMBER_OF_SNAPS_TO_CREATE = 125;
+    public const string ARGUMENT_QUANTITY = 'quantity';
 
     /**
      * @var File[]
@@ -38,11 +38,9 @@ final class CreateTestSnapsCommand extends Command
         #[Autowire(param: 'app.environment')] private readonly string $environment,
         #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory
     ) {
-        /** @var MimeType[] $authorizedMimeTypes */
-        $authorizedMimeTypes = [...MimeType::imageMimeTypes, ...MimeType::videoMimeTypes];
         $authorizedExtensions = [];
 
-        foreach ($authorizedMimeTypes as $mimeType) {
+        foreach (MimeType::cases() as $mimeType) {
             $extensions = match ($mimeType) {
                 MimeType::ImageJpeg => ['jpg', 'jpeg'],
                 MimeType::ImagePng => ['png'],
@@ -74,7 +72,18 @@ final class CreateTestSnapsCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument(self::ARGUMENT_EMAIL, InputArgument::REQUIRED, 'The account email.');
+        $this->addArgument(
+            self::ARGUMENT_EMAIL,
+            InputArgument::REQUIRED,
+            'The account email.'
+        );
+
+        $this->addArgument(
+            self::ARGUMENT_QUANTITY,
+            InputArgument::OPTIONAL,
+            'The quantity of snaps to create.',
+            125
+        );
     }
 
     /**
@@ -99,6 +108,12 @@ final class CreateTestSnapsCommand extends Command
             return Command::FAILURE;
         }
 
+        if (is_numeric($input->getArgument(self::ARGUMENT_QUANTITY)) === false) {
+            $output->writeln('The quantity parameter must be a number.');
+
+            return Command::FAILURE;
+        }
+
         $findUserUserCaseResponse = ($this->findOneUserByEmailUseCase)(
             new FindOneUserByEmailRequest($input->getArgument(self::ARGUMENT_EMAIL))
         );
@@ -114,7 +129,7 @@ final class CreateTestSnapsCommand extends Command
         $filesArrayMinIndex = min($filesArrayIndexes);
         $filesArrayMaxIndex = max($filesArrayIndexes);
 
-        for ($i = 0; $i < self::NUMBER_OF_SNAPS_TO_CREATE; ++$i) {
+        for ($i = 0; $i < (int) $input->getArgument(self::ARGUMENT_QUANTITY); ++$i) {
             $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
             $file = $this->files[$randomIndex];
 
