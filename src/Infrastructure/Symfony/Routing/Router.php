@@ -126,7 +126,7 @@ class Router implements RouterInterface, WarmableInterface
                 continue;
             }
 
-            if (false === ($parameterValue instanceof Uuid)) {
+            if ($parameterValue instanceof Uuid === false) {
                 throw new \RuntimeException("Value $parameterValue for parameter $parameterName is not a valid uuid.");
             }
 

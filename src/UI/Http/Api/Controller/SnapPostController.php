@@ -38,7 +38,7 @@ final class SnapPostController extends FilesnapAbstractController
     ): JsonResponse {
         $uploadedFile = $request->files->get('file');
 
-        if (false === ($uploadedFile instanceof UploadedFile)) {
+        if ($uploadedFile instanceof UploadedFile === false) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Missing file in body request');
         }
 

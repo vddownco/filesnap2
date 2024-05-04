@@ -29,7 +29,7 @@ final readonly class ExceptionSubscriber implements EventSubscriberInterface
     {
         $throwable = $event->getThrowable();
 
-        if (false === ($throwable instanceof DomainException)) {
+        if ($throwable instanceof DomainException === false) {
             return;
         }
 
