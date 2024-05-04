@@ -54,7 +54,7 @@ final class SetupController extends FilesnapAbstractController
         #[Autowire(param: 'app.project_directory')] string $projectDirectory,
         Request $request
     ): Response {
-        $setupFile = "$projectDirectory/.setup";
+        $setupFile = $projectDirectory . '/.setup';
         $installAuthorized = $this->filesystem->exists($setupFile);
 
         if ($installAuthorized === false) {
@@ -69,10 +69,13 @@ final class SetupController extends FilesnapAbstractController
                 define('STDIN', fopen('php://stdin', 'rb'));
             }
 
-            $this->runCommand($this->doctrineDatabaseCreateCommand);
-            $this->runCommand($this->doctrineMigrationsMigrateCommand);
-
             $postedData = $form->getData();
+
+            if ($postedData['dbAlreadyCreated'] === false) {
+                $this->runCommand($this->doctrineDatabaseCreateCommand);
+            }
+
+            $this->runCommand($this->doctrineMigrationsMigrateCommand);
             $this->createAdminUser($postedData['adminEmail'], $postedData['adminPlainPassword']);
 
             if ($this->error === null) {

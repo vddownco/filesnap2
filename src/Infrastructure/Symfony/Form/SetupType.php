@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,6 +27,9 @@ final class SetupType extends AbstractType
                         'message' => 'Your password is too weak, please type a stronger password.',
                     ]),
                 ],
+            ])
+            ->add('dbAlreadyCreated', CheckboxType::class, [
+                'required' => false,
             ]);
     }
 }

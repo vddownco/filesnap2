@@ -125,9 +125,7 @@ header > div {
 .input-group {
     display: flex;
     flex-direction: column;
-    width: fit-content;
     position: static;
-    max-width: 260px;
 }
 
 .input-group label {
