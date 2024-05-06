@@ -25,36 +25,18 @@ final class CreateTest extends FilesnapTestCase
     {
         return array_map(
             static function (MimeType $mimeType) {
-                $originalFilename = 'the-original-filename';
-                $fileAbsolutePath = '/this/is/an/absolute/path/to/a/file';
+                $originalFilenameBase = 'the-original-filename';
+                $fileAbsolutePathBase = '/this/is/an/absolute/path/to/a/file';
 
-                return match ($mimeType) {
-                    MimeType::ImageJpeg => [
-                        $originalFilename . '.jpg',
-                        MimeType::ImageJpeg->value,
-                        $fileAbsolutePath . '.jpg',
-                    ],
-                    MimeType::ImagePng => [
-                        $originalFilename . '.png',
-                        MimeType::ImagePng->value,
-                        $fileAbsolutePath . '.png',
-                    ],
-                    MimeType::ImageGif => [
-                        $originalFilename . '.gif',
-                        MimeType::ImageGif->value,
-                        $fileAbsolutePath . '.gif',
-                    ],
-                    MimeType::VideoWebm => [
-                        $originalFilename . '.webm',
-                        MimeType::VideoWebm->value,
-                        $fileAbsolutePath . '.webm',
-                    ],
-                    MimeType::VideoMp4 => [
-                        $originalFilename . '.mp4',
-                        MimeType::VideoMp4->value,
-                        $fileAbsolutePath . '.mp4',
-                    ]
+                [$originalFilename, $fileAbsolutePath] = match ($mimeType) {
+                    MimeType::ImageJpeg => [$originalFilenameBase . '.jpg', $fileAbsolutePathBase . '.jpg'],
+                    MimeType::ImagePng => [$originalFilenameBase . '.png', $fileAbsolutePathBase . '.png'],
+                    MimeType::ImageGif => [$originalFilenameBase . '.gif', $fileAbsolutePathBase . '.gif'],
+                    MimeType::VideoWebm => [$originalFilenameBase . '.webm', $fileAbsolutePathBase . '.webm'],
+                    MimeType::VideoMp4 => [$originalFilenameBase . '.mp4', $fileAbsolutePathBase . '.mp4']
                 };
+
+                return [$originalFilename, $fileAbsolutePath, $mimeType->value];
             },
             MimeType::cases()
         );
@@ -69,8 +51,8 @@ final class CreateTest extends FilesnapTestCase
     #[DataProvider('itCreatesSnapProvider')]
     public function testItCreatesSnap(
         string $originalFilename,
+        string $fileAbsolutePath,
         string $fileMimeType,
-        string $fileAbsolutePath
     ): void {
         $userId = Uuid::v7();
         $file = new File($fileAbsolutePath);
