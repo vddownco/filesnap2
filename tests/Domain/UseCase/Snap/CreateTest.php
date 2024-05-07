@@ -49,11 +49,8 @@ final class CreateTest extends FilesnapTestCase
      * @throws UnsupportedFileTypeException
      */
     #[DataProvider('itCreatesSnapProvider')]
-    public function testItCreatesSnap(
-        string $originalFilename,
-        string $fileAbsolutePath,
-        string $fileMimeType,
-    ): void {
+    public function testItCreatesSnap(string $originalFilename, string $fileAbsolutePath, string $fileMimeType): void
+    {
         $userId = Uuid::v7();
         $file = new File($fileAbsolutePath);
 
@@ -62,9 +59,14 @@ final class CreateTest extends FilesnapTestCase
             'get' => $file,
         ]);
 
-        $snapRepositoryStub = $this->createStub(SnapRepositoryInterface::class);
+        $snapRepositoryMock = $this->createMock(SnapRepositoryInterface::class);
+
+        $snapRepositoryMock
+            ->expects($this->once())
+            ->method('create');
+
         $snapFactory = new SnapFactory($fileStorageStub);
-        $useCase = new CreateSnapUseCase($snapRepositoryStub, $fileStorageStub, $snapFactory);
+        $useCase = new CreateSnapUseCase($snapRepositoryMock, $fileStorageStub, $snapFactory);
 
         $request = new CreateSnapRequest(
             userId: $userId,

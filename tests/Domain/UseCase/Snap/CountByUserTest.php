@@ -20,14 +20,19 @@ final class CountByUserTest extends FilesnapTestCase
      */
     public function testItCountsSnapsByUser(): void
     {
+        $request = new CountSnapsByUserRequest(Uuid::v7());
         $countValue = self::getRandomInt();
 
-        $snapRepositoryStub = $this->createConfiguredStub(SnapRepositoryInterface::class, [
-            'countByUser' => $countValue,
-        ]);
+        $snapRepositoryMock = $this->createMock(SnapRepositoryInterface::class);
 
-        $useCase = new CountSnapsByUserUseCase($snapRepositoryStub);
-        $response = $useCase(new CountSnapsByUserRequest(Uuid::v7()));
+        $snapRepositoryMock
+            ->expects($this->once())
+            ->method('countByUser')
+            ->with($request->getUserId())
+            ->willReturn($countValue);
+
+        $useCase = new CountSnapsByUserUseCase($snapRepositoryMock);
+        $response = $useCase($request);
 
         $this->assertEquals($countValue, $response->getCount());
     }

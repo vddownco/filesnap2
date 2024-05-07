@@ -16,4 +16,12 @@ class FilesnapTestCase extends KernelTestCase
     {
         return random_int($min, $max);
     }
+
+    /**
+     * @throws RandomException
+     */
+    protected static function getRandomDateTime(): \DateTimeInterface
+    {
+        return (new \DateTime())->setTimestamp(random_int(0, 2000000000));
+    }
 }
