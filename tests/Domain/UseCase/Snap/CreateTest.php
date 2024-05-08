@@ -12,6 +12,7 @@ use App\Application\Domain\Entity\Snap\FileStorage\File;
 use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
+use App\Application\Domain\Entity\Snap\Snap;
 use App\Application\UseCase\Snap\Create\CreateSnapRequest;
 use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\Tests\FilesnapTestCase;
@@ -79,12 +80,14 @@ final class CreateTest extends FilesnapTestCase
         $response = $useCase($request);
         $snap = $response->getSnap();
 
-        $this->assertEquals($userId, $snap->getUserId());
-        $this->assertEquals($originalFilename, $snap->getOriginalFilename());
-        $this->assertEquals(MimeType::tryFrom($fileMimeType), $snap->getMimeType());
-        $this->assertEquals(time(), $snap->getCreationDate()->getTimestamp());
+        $this->assertInstanceOf(Snap::class, $snap);
+        $this->assertInstanceOf(Uuid::class, $snap->getId());
+        $this->assertSame($userId, $snap->getUserId());
+        $this->assertSame($originalFilename, $snap->getOriginalFilename());
+        $this->assertSame(MimeType::tryFrom($fileMimeType), $snap->getMimeType());
+        $this->assertSame(time(), $snap->getCreationDate()->getTimestamp());
         $this->assertNull($snap->getLastSeenDate());
-        $this->assertEquals($file->getAbsolutePath(), $snap->getFile()->getAbsolutePath());
+        $this->assertSame($file->getAbsolutePath(), $snap->getFile()->getAbsolutePath());
     }
 
     /**
