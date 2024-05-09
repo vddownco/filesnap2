@@ -29,7 +29,7 @@ final class UpdateAuthorizationKeyByIdTest extends FilesnapTestCase
             ->with(
                 $userId,
                 $this->callback(
-                    function ($parameter) use (&$capturedNewAuthorizationKeyParam) {
+                    function ($parameter) use (&$capturedNewAuthorizationKeyParam): bool {
                         $capturedNewAuthorizationKeyParam = $parameter;
 
                         return $parameter instanceof Uuid;
