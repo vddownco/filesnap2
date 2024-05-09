@@ -6,6 +6,7 @@ namespace App\Tests\Domain\UseCase\User;
 
 use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
 use App\Application\Domain\Entity\User\Service\PasswordHasherInterface;
+use App\Application\Domain\Entity\User\User;
 use App\Application\Domain\Entity\User\UserRole;
 use App\Application\UseCase\User\Create\CreateUserRequest;
 use App\Application\UseCase\User\Create\CreateUserUseCase;
@@ -16,7 +17,6 @@ use Symfony\Component\Uid\Uuid;
 
 final class CreateTest extends FilesnapTestCase
 {
-
     public static function ItCreateProvider(): array
     {
         return [
@@ -38,10 +38,20 @@ final class CreateTest extends FilesnapTestCase
         );
 
         $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
+        $capturedUserId = null;
 
         $userRepositoryMock
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+            ->with($this->callback(function ($user) use (&$capturedUserId) {
+                $isUser = $user instanceof User;
+
+                if ($isUser === true) {
+                    $capturedUserId = $user->getId();
+                }
+
+                return $isUser;
+            }));
 
         $passwordHasherMock = $this->createMock(PasswordHasherInterface::class);
 
@@ -55,7 +65,7 @@ final class CreateTest extends FilesnapTestCase
         $response = $useCase($request);
         $user = $response->getUser();
 
-        $this->assertInstanceOf(Uuid::class, $user->getId());
+        $this->assertSame($capturedUserId, $user->getId());
         $this->assertMatchesRegularExpression('/^.+@\S+\.\S+$/', $user->getEmail());
         $this->assertSame($request->getEmail(), $user->getEmail());
         $this->assertIsString($user->getPassword());
