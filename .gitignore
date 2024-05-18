@@ -23,6 +23,7 @@ yarn-error.log
 /.idea/
 /.setup
 .DS_Store
+.bash_history
 
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php

@@ -1,8 +1,8 @@
 services:
 
   php:
-    container_name: php-fs
-    image: filesnap:dev
+    container_name: ${PROJECT_NAME}-php
+    image: filesnap:1
     volumes:
       - ./docker_config/php.ini:/usr/local/etc/php/php.ini
       - ./:/var/www
@@ -11,24 +11,24 @@ services:
 
   mariadb:
     image: mariadb:10.11.7
-    container_name: mariadb-fs
+    container_name: ${PROJECT_NAME}-mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: 'root'
-      MARIADB_USER: 'user'
-      MARIADB_PASSWORD: 'password'
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     ports:
       - '3306:3306'
     volumes:
       - mariadb_data:/var/lib/mysql
 
   caddy:
-    image: caddy:2-alpine
-    container_name: caddy-fs
+    image: caddy:2.7.6
+    container_name: ${PROJECT_NAME}-caddy
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./:/var/www
     ports:
-      - '8080:80'
+      - '80:80'
     depends_on:
       - php
 
