@@ -116,13 +116,11 @@ final class SetupController extends FilesnapAbstractController
         }
 
         try {
-            ($this->createUserUseCase)(
-                new CreateUserRequest(
-                    $email,
-                    $plainPassword,
-                    [UserRole::User, UserRole::Admin]
-                )
-            );
+            ($this->createUserUseCase)(new CreateUserRequest(
+                $email,
+                $plainPassword,
+                [UserRole::User, UserRole::Admin]
+            ));
         } catch (\Exception $e) {
             $this->error = $e->getMessage();
         }

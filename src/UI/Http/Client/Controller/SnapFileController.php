@@ -36,12 +36,7 @@ final class SnapFileController extends FilesnapAbstractController
             throw $this->createNotFoundException();
         }
 
-        $updateSnapLastSeenDateUseCase(
-            new UpdateSnapLastSeenDateRequest(
-                $snap->getId(),
-                new \DateTime()
-            )
-        );
+        $updateSnapLastSeenDateUseCase(new UpdateSnapLastSeenDateRequest($snap->getId(), new \DateTime()));
 
         $binaryFileResponse = $this->file(
             $snap->getFile()->getAbsolutePath(),

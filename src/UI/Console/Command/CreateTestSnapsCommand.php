@@ -133,15 +133,13 @@ final class CreateTestSnapsCommand extends Command
             $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
             $file = $this->files[$randomIndex];
 
-            ($this->createSnapUseCase)(
-                new CreateSnapRequest(
-                    $user->getId(),
-                    $file->getFilename(),
-                    $file->getMimeType(),
-                    $file->getPathname(),
-                    $file->getSize()
-                )
-            );
+            ($this->createSnapUseCase)(new CreateSnapRequest(
+                $user->getId(),
+                $file->getFilename(),
+                $file->getMimeType(),
+                $file->getPathname(),
+                $file->getSize()
+            ));
         }
 
         return Command::SUCCESS;

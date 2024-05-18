@@ -22,11 +22,9 @@ final class ApiKeyResetController extends FilesnapAbstractController
     public function __invoke(
         UpdateUserAuthorizationKeyByIdUseCase $updateUserAuthorizationKeyByIdUseCase
     ): JsonResponse {
-        $useCaseResponse = $updateUserAuthorizationKeyByIdUseCase(
-            new UpdateUserAuthorizationKeyByIdRequest(
-                $this->getAuthenticatedUser()->getId()
-            )
-        );
+        $useCaseResponse = $updateUserAuthorizationKeyByIdUseCase(new UpdateUserAuthorizationKeyByIdRequest(
+            $this->getAuthenticatedUser()->getId()
+        ));
 
         return $this->json(['apikey' => $useCaseResponse->getAuthorizationKey()->toBase58()]);
     }

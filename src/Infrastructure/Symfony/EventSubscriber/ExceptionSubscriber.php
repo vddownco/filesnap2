@@ -35,7 +35,7 @@ final readonly class ExceptionSubscriber implements EventSubscriberInterface
 
         $statusCode = match ($throwable::class) {
             SnapNotFoundException::class => Response::HTTP_NOT_FOUND,
-            UnsupportedFileTypeException::class, FileSizeTooBigException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
+            UnsupportedFileTypeException::class, FileSizeTooBigException::class => Response::HTTP_BAD_REQUEST,
             default => Response::HTTP_INTERNAL_SERVER_ERROR
         };
 

@@ -79,13 +79,11 @@ final class CreateUserCommand extends Command
             $roles[] = UserRole::Admin;
         }
 
-        ($this->createUserUseCase)(
-            new CreateUserRequest(
-                $input->getArgument(self::ARGUMENT_EMAIL),
-                $input->getArgument(self::ARGUMENT_PASSWORD),
-                $roles
-            )
-        );
+        ($this->createUserUseCase)(new CreateUserRequest(
+            $input->getArgument(self::ARGUMENT_EMAIL),
+            $input->getArgument(self::ARGUMENT_PASSWORD),
+            $roles
+        ));
 
         return Command::SUCCESS;
     }

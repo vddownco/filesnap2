@@ -42,15 +42,13 @@ final class SnapPostController extends FilesnapAbstractController
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Missing file in body request');
         }
 
-        $useCaseResponse = $createSnapUseCase(
-            new CreateSnapRequest(
-                $this->getAuthenticatedUser()->getId(),
-                $uploadedFile->getClientOriginalName(),
-                $uploadedFile->getMimeType(),
-                $uploadedFile->getPathname(),
-                $uploadedFile->getSize()
-            )
-        );
+        $useCaseResponse = $createSnapUseCase(new CreateSnapRequest(
+            $this->getAuthenticatedUser()->getId(),
+            $uploadedFile->getClientOriginalName(),
+            $uploadedFile->getMimeType(),
+            $uploadedFile->getPathname(),
+            $uploadedFile->getSize()
+        ));
 
         $snapUrl = $router->generate(
             'client_snap_file',

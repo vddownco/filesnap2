@@ -49,13 +49,8 @@ final class GalleryController extends FilesnapAbstractController
             throw $this->createNotFoundException();
         }
 
-        $nextPage = $page === $pageCount || $snapsCount === 0
-            ? null
-            : $page + 1;
-
-        $previousPage = $page === 1
-            ? null
-            : $page - 1;
+        $nextPage = $page === $pageCount || $snapsCount === 0 ? null : $page + 1;
+        $previousPage = $page === 1 ? null : $page - 1;
 
         /** @var Snap[] $snaps */
         $snaps = [];
@@ -72,11 +67,7 @@ final class GalleryController extends FilesnapAbstractController
             $snaps = $findUseCaseResponse->getSnaps();
         }
 
-        $emptySpaceCount = 0;
-
-        if (count($snaps) < self::MAX_SNAPS_BY_PAGE) {
-            $emptySpaceCount = self::MAX_SNAPS_BY_PAGE - count($snaps);
-        }
+        $emptySpaceCount = count($snaps) < self::MAX_SNAPS_BY_PAGE ? self::MAX_SNAPS_BY_PAGE - count($snaps) : 0;
 
         return $this->render(parameters: [
             'snaps' => $snaps,
