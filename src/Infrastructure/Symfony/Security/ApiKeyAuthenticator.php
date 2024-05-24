@@ -37,11 +37,10 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
     {
         $authorizationHeader = $request->headers->get('Authorization');
 
-        if (empty($authorizationHeader)) {
-            throw new CustomUserMessageAuthenticationException('No API key provided');
-        }
-
-        if (str_starts_with($authorizationHeader, self::AUTHORIZATION_HEADER_PREFIX) === false) {
+        if (
+            $authorizationHeader === null
+            || str_starts_with($authorizationHeader, self::AUTHORIZATION_HEADER_PREFIX) === false
+        ) {
             throw $this->createIncorrectApiKeyException();
         }
 

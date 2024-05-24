@@ -56,13 +56,11 @@ final class GalleryController extends FilesnapAbstractController
         $snaps = [];
 
         if ($snapsCount > 0) {
-            $findUseCaseResponse = $findSnapsByUserUseCase(
-                new FindSnapsByUserRequest(
-                    $user->getId(),
-                    self::MAX_SNAPS_BY_PAGE * ($page - 1),
-                    self::MAX_SNAPS_BY_PAGE
-                )
-            );
+            $findUseCaseResponse = $findSnapsByUserUseCase(new FindSnapsByUserRequest(
+                $user->getId(),
+                self::MAX_SNAPS_BY_PAGE * ($page - 1),
+                self::MAX_SNAPS_BY_PAGE
+            ));
 
             $snaps = $findUseCaseResponse->getSnaps();
         }
