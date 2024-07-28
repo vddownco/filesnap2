@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\User\Ajax;
 
-use App\Application\Domain\Entity\Snap\Exception\SnapNotFoundException;
-use App\Application\UseCase\Snap\DeleteById\DeleteSnapByIdRequest;
-use App\Application\UseCase\Snap\DeleteById\DeleteSnapByIdUseCase;
+use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsRequest;
+use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsUseCase;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,21 +20,19 @@ use Symfony\Component\Uid\Uuid;
 )]
 final class SnapDeleteController extends FilesnapAbstractController
 {
-    /**
-     * @throws SnapNotFoundException
-     */
     public function __invoke(
-        DeleteSnapByIdUseCase $deleteSnapByIdUseCase,
+        DeleteUserSnapsUseCase $deleteUserSnapsUseCase,
         Request $request
     ): Response {
-        $deleteRequests = array_map(
-            static fn (string $id) => new DeleteSnapByIdRequest(Uuid::fromString($id)),
+        $snapIds = array_map(
+            static fn (string $id) => Uuid::fromString($id),
             $request->getPayload()->all('ids')
         );
 
-        foreach ($deleteRequests as $deleteRequest) {
-            $deleteSnapByIdUseCase($deleteRequest);
-        }
+        ($deleteUserSnapsUseCase)(new DeleteUserSnapsRequest(
+            $this->getAuthenticatedUser()->getId(),
+            $snapIds
+        ));
 
         return $this->emptyResponse();
     }

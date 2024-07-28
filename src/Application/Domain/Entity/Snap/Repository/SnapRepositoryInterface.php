@@ -23,4 +23,9 @@ interface SnapRepositoryInterface
     public function countByUser(Uuid $userId): int;
 
     public function deleteOneById(Uuid $id): void;
+
+    /**
+     * @param Uuid[] $ids
+     */
+    public function deleteByIds(Uuid $userId, array $ids): void;
 }

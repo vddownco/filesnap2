@@ -9,6 +9,7 @@ use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
 use App\Application\Domain\Entity\Snap\Snap;
 use App\Infrastructure\Entity\MariadbTools;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
@@ -131,6 +132,29 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
         $query = 'DELETE FROM snap WHERE id = :id';
 
         $this->connection->executeQuery($query, ['id' => $id->toRfc4122()]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteByIds(Uuid $userId, array $ids): void
+    {
+        $query = 'DELETE FROM snap WHERE user_id = :user_id AND id IN (:ids)';
+
+        $this->connection->executeQuery(
+            $query,
+            [
+                'user_id' => $userId->toRfc4122(),
+                'ids' => array_map(
+                    static fn (Uuid $id) => $id->toRfc4122(),
+                    $ids
+                ),
+            ],
+            [
+                'user_id' => ParameterType::STRING,
+                'ids' => ArrayParameterType::STRING,
+            ]
+        );
     }
 
     /**
