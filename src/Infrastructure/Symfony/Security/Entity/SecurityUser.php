@@ -66,7 +66,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public function getRoles(): array
     {
         return array_map(
-            static fn (SecurityUserRole $role): string => RoleTools::fromSecurityUserRoleToString($role),
+            static fn (SecurityUserRole $role): string => $role->value,
             $this->securityRoles
         );
     }
@@ -109,7 +109,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
             $user->getEmail(),
             $user->getPassword(),
             array_map(
-                static fn (UserRole $role): SecurityUserRole => RoleTools::fromUserRoleToSecurityUserRole($role),
+                static fn (UserRole $role): SecurityUserRole => SecurityUserRole::fromUserRole($role),
                 $user->getRoles()
             ),
             $user->getAuthorizationKey()

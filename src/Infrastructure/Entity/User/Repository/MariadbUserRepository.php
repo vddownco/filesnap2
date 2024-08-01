@@ -8,6 +8,7 @@ use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
 use App\Application\Domain\Entity\User\User;
 use App\Application\Domain\Entity\User\UserRole;
 use App\Infrastructure\Symfony\Security\Entity\RoleTools;
+use App\Infrastructure\Symfony\Security\Entity\SecurityUserRole;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\Uid\Uuid;
@@ -158,7 +159,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     private function createUserEntity(array $dbResult): User
     {
         $roles = array_map(
-            static fn (string $role): UserRole => RoleTools::fromStringToUserRole($role),
+            static fn (string $role): UserRole => SecurityUserRole::valueToUserRole($role),
             json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR)
         );
 
@@ -180,7 +181,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     {
         return json_encode(
             array_map(
-                static fn (UserRole $role): string => RoleTools::fromUserRoleToString($role),
+                static fn (UserRole $role): string => SecurityUserRole::userRoleToValue($role),
                 $roles
             ),
             JSON_THROW_ON_ERROR

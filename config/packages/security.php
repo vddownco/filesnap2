@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Symfony\Security\ApiKeyAuthenticator;
+use App\Infrastructure\Symfony\Security\Entity\SecurityUserRole;
 use App\Infrastructure\Symfony\Security\UserProvider;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -51,11 +52,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'access_control' => [
             [
                 'path' => '^/u',
-                'roles' => 'ROLE_USER',
+                'roles' => SecurityUserRole::User->value,
             ],
             [
                 'path' => '^/admin',
-                'roles' => 'ROLE_ADMIN',
+                'roles' => SecurityUserRole::Admin->value,
             ],
         ],
     ]);
