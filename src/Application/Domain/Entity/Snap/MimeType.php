@@ -9,14 +9,14 @@ use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
 enum MimeType: string
 {
     /** @var self[] */
-    public const array imageMimeTypes = [
+    public const array IMAGES_MIME_TYPES = [
         self::ImageJpeg,
         self::ImagePng,
         self::ImageGif,
     ];
 
     /** @var self[] */
-    public const array videoMimeTypes = [
+    public const array VIDEO_MIME_TYPES = [
         self::VideoWebm,
         self::VideoMp4,
     ];
@@ -39,5 +39,15 @@ enum MimeType: string
         }
 
         return $enum;
+    }
+
+    public function isImage(): bool
+    {
+        return in_array($this, self::IMAGES_MIME_TYPES, true);
+    }
+
+    public function isVideo(): bool
+    {
+        return in_array($this, self::VIDEO_MIME_TYPES, true);
     }
 }

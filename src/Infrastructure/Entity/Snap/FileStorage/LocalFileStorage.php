@@ -8,6 +8,8 @@ use App\Application\Domain\Entity\Snap\FileStorage\File;
 use App\Application\Domain\Entity\Snap\FileStorage\FileMetadata;
 use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
 use App\Infrastructure\Symfony\Service\ThumbnailService;
+use FFMpeg\FFMpeg;
+use FFMpeg\Format\Video\WebM;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Uid\Uuid;
@@ -18,6 +20,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
         #[Autowire(param: 'app.project_directory')] private string $projectDirectory,
         #[Autowire(param: 'app.upload.relative_directory')] private string $uploadRelativeDirectory,
         #[Autowire(param: 'app.upload.bytes_max_filesize')] private int $uploadBytesMaxFilesize,
+        #[Autowire(param: 'app.convert_video_to_webm')] private bool $convertVideoToWebm,
         private ThumbnailService $thumbnailService,
         private Filesystem $filesystem = new Filesystem()
     ) {
@@ -41,8 +44,20 @@ final readonly class LocalFileStorage implements FileStorageInterface
             $this->filesystem->mkdir($userPersonalUploadDirectory);
         }
 
+        $filePath = $fileMetadata->getPath();
+
+        if ($this->convertVideoToWebm === true && $fileMetadata->getMimeType()->isVideo() === true) {
+            $tmpFilePath = $this->filesystem->tempnam(sys_get_temp_dir(), 'ffmpeg_tmp_', '.webm');
+
+            FFMpeg::create()
+                ->open($filePath)
+                ->save(new WebM(), $tmpFilePath);
+
+            $filePath = $tmpFilePath;
+        }
+
         $this->filesystem->copy(
-            $fileMetadata->getPath(),
+            $filePath,
             $userPersonalUploadDirectory . $snapId->toBase58()
         );
     }

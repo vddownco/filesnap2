@@ -7,7 +7,6 @@ namespace App\Infrastructure\Entity\User\Repository;
 use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
 use App\Application\Domain\Entity\User\User;
 use App\Application\Domain\Entity\User\UserRole;
-use App\Infrastructure\Symfony\Security\Entity\RoleTools;
 use App\Infrastructure\Symfony\Security\Entity\SecurityUserRole;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;

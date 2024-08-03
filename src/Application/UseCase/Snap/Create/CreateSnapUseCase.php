@@ -45,7 +45,8 @@ final readonly class CreateSnapUseCase
             $request->getUserId(),
             new FileMetadata(
                 $request->getFileOriginalName(),
-                $request->getFilePath()
+                $request->getFilePath(),
+                $snapMimeType
             )
         );
 

@@ -67,11 +67,11 @@ final class Snap
 
     public function isImage(): bool
     {
-        return in_array($this->mimeType, MimeType::imageMimeTypes, true);
+        return $this->getMimeType()->isImage();
     }
 
     public function isVideo(): bool
     {
-        return in_array($this->mimeType, MimeType::videoMimeTypes, true);
+        return $this->getMimeType()->isVideo();
     }
 }
