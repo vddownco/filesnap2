@@ -5,61 +5,70 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Service;
 
 use App\Application\Domain\Entity\Snap\Snap;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class ThumbnailService
 {
+    private const int RESIZE_WIDTH = 240;
+
     public function __construct(
         #[Autowire(param: 'app.public_directory')] private string $publicDirectory,
         private Filesystem $filesystem = new Filesystem()
     ) {
     }
 
-    private function getThumbnailAbsolutePathDotThumbnail(Uuid $snapId): string
-    {
-        return sprintf('%s/snap/%s.thumbnail', $this->publicDirectory, $snapId->toBase58());
-    }
-
     public function generate(Snap $snap): void
     {
-        $thumbnailAbsolutePathDotJpeg = sprintf(
-            '%s/snap/%s.jpeg',
-            $this->publicDirectory,
-            $snap->getId()->toBase58()
-        );
-
-        $thumbnailAbsolutePathDotThumbnail = $this->getThumbnailAbsolutePathDotThumbnail($snap->getId());
+        $imagine = new Imagine();
+        $thumbnailAbsolutePath = $this->getThumbnailAbsolutePath($snap->getId());
 
         if ($snap->isImage() === true) {
-            $imagine = new Imagine();
-            $imagineImage = $imagine->open($snap->getFile()->getAbsolutePath());
+            $imagineImage = $this->resize($imagine->open($snap->getFile()->getAbsolutePath()));
+            $this->save($imagineImage, $thumbnailAbsolutePath);
+        }
 
-            $width = 240;
-            $height = ($imagineImage->getSize()->getHeight() / $imagineImage->getSize()->getWidth()) * $width;
+        if ($snap->isVideo() === true) {
+            $tmpFilename = $this->filesystem->tempnam(sys_get_temp_dir(), 'ffmpeg_tmp_', '.jpeg');
 
-            $imagineImage->resize(new Box($width, $height));
-            $imagineImage->save($thumbnailAbsolutePathDotJpeg);
+            FFMpeg::create()
+                ->open($snap->getFile()->getAbsolutePath())
+                ->frame(TimeCode::fromSeconds(1))
+                ->save($tmpFilename);
 
-            $this->filesystem->rename(
-                $thumbnailAbsolutePathDotJpeg,
-                $thumbnailAbsolutePathDotThumbnail
-            );
-        } elseif ($snap->isVideo() === true) {
-            $videoThumbnail = sprintf('%s/video_thumbnail.jpg', $this->publicDirectory);
-
-            $this->filesystem->copy(
-                $videoThumbnail,
-                $thumbnailAbsolutePathDotThumbnail
-            );
+            $imagineImage = $this->resize($imagine->open($tmpFilename));
+            $this->save($imagineImage, $thumbnailAbsolutePath);
         }
     }
 
     public function delete(Uuid $snapId): void
     {
-        $this->filesystem->remove($this->getThumbnailAbsolutePathDotThumbnail($snapId));
+        $this->filesystem->remove($this->getThumbnailAbsolutePath($snapId));
+    }
+
+    private function getThumbnailAbsolutePath(Uuid $snapId): string
+    {
+        return sprintf('%s/snap/%s.thumbnail', $this->publicDirectory, $snapId->toBase58());
+    }
+
+    private function resize(ImageInterface $image): ImageInterface
+    {
+        $height = ($image->getSize()->getHeight() / $image->getSize()->getWidth()) * self::RESIZE_WIDTH;
+        $image->resize(new Box(self::RESIZE_WIDTH, $height));
+
+        return $image;
+    }
+
+    private function save(ImageInterface $image, string $filepath): void
+    {
+        $tmpFilename = $this->filesystem->tempnam(sys_get_temp_dir(), 'imagine_tmp_', '.jpeg');
+        $image->save($tmpFilename);
+        $this->filesystem->rename($tmpFilename, $filepath);
     }
 }

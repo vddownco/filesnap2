@@ -2,7 +2,7 @@ services:
 
   php:
     container_name: filesnap-php
-    image: filesnap:1
+    image: filesnap:2
     volumes:
       - ./docker_config/php.ini:/usr/local/etc/php/php.ini
       - ./:/var/www

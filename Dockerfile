@@ -12,7 +12,8 @@ RUN apt update && apt install -y \
  libjpeg62-turbo-dev \
  libpng-dev \
  libwebp-dev \
- libfreetype6-dev
+ libfreetype6-dev \
+ ffmpeg
 
 # Install PHP extensions
 RUN docker-php-ext-configure intl
