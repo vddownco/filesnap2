@@ -62,7 +62,7 @@ final readonly class CreateSnapUseCase
         try {
             $this->snapRepository->create($snap);
         } catch (\Exception $e) {
-            $this->fileStorage->delete($snapId, $request->getUserId());
+            $this->fileStorage->delete($snap);
             throw $e;
         }
 

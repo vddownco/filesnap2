@@ -78,6 +78,33 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
     }
 
     /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function findByIds(array $ids): array
+    {
+        $query = '
+            SELECT id, user_id, original_filename, mime_type, creation_date, last_seen_date
+            FROM snap
+            WHERE id IN (:ids)
+        ';
+
+        $dbResults = $this->connection->fetchAllAssociative(
+            $query,
+            ['ids' => array_map(
+                static fn (Uuid $id) => $id->toRfc4122(),
+                $ids
+            )],
+            ['ids' => ArrayParameterType::STRING]
+        );
+
+        return array_map(
+            fn (array $dbResult) => $this->createSnapEntity($dbResult),
+            $dbResults
+        );
+    }
+
+    /**
      * @return Snap[]
      *
      * @throws Exception

@@ -50,12 +50,38 @@ final class SnapPostController extends FilesnapAbstractController
             $uploadedFile->getSize()
         ));
 
-        $snapUrl = $router->generate(
-            'client_snap_file',
-            ['id' => $useCaseResponse->getSnap()->getId()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $snap = $useCaseResponse->getSnap();
+        $parameters = ['id' => $snap->getId()->toBase58()];
 
-        return $this->json(['url' => $snapUrl]);
+        $urls = [
+            'original' => $router->generate(
+                'client_snap_file_original',
+                $parameters,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+            'thumbnail' => $router->generate(
+                'client_snap_file_thumbnail',
+                $parameters,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+        ];
+
+        if ($snap->isImage() === true) {
+            $urls['webp'] = $router->generate(
+                'client_snap_file_webp',
+                $parameters,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+
+        if ($snap->isVideo() === true) {
+            $urls['webm'] = $router->generate(
+                'client_snap_file_webm',
+                $parameters,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+
+        return $this->json($urls);
     }
 }

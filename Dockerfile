@@ -18,7 +18,7 @@ RUN apt update && apt install -y \
 # Install PHP extensions
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure opcache
-RUN docker-php-ext-configure gd --enable-gd --prefix=/usr --with-jpeg
+RUN docker-php-ext-configure gd --enable-gd --prefix=/usr --with-jpeg --with-webp
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl opcache
 RUN pecl install apcu
 

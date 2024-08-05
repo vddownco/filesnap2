@@ -82,7 +82,7 @@ final class DeleteByIdTest extends FilesnapTestCase
         $fileRepositoryMock
             ->expects($this->once())
             ->method('delete')
-            ->with($snap->getId(), $snap->getUserId());
+            ->with($snap);
 
         $useCase = new DeleteSnapByIdUseCase($snapRepositoryMock, $fileRepositoryMock);
         $useCase(new DeleteSnapByIdRequest($snap->getId()));

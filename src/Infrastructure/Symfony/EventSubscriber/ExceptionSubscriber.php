@@ -6,6 +6,7 @@ namespace App\Infrastructure\Symfony\EventSubscriber;
 
 use App\Application\Domain\Entity\Snap\Exception\FileSizeTooBigException;
 use App\Application\Domain\Entity\Snap\Exception\SnapNotFoundException;
+use App\Application\Domain\Entity\Snap\Exception\UnauthorizedDeletionException;
 use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
 use App\Application\Domain\Exception\DomainException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -36,6 +37,7 @@ final readonly class ExceptionSubscriber implements EventSubscriberInterface
         $statusCode = match ($throwable::class) {
             SnapNotFoundException::class => Response::HTTP_NOT_FOUND,
             UnsupportedFileTypeException::class, FileSizeTooBigException::class => Response::HTTP_BAD_REQUEST,
+            UnauthorizedDeletionException::class => Response::HTTP_FORBIDDEN,
             default => Response::HTTP_INTERNAL_SERVER_ERROR
         };
 

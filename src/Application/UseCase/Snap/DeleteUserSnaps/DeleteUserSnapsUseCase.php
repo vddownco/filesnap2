@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\DeleteUserSnaps;
 
+use App\Application\Domain\Entity\Snap\Exception\UnauthorizedDeletionException;
 use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
+use App\Application\Domain\Entity\Snap\Snap;
+use Symfony\Component\Uid\Uuid;
 
 final readonly class DeleteUserSnapsUseCase
 {
@@ -15,12 +18,37 @@ final readonly class DeleteUserSnapsUseCase
     ) {
     }
 
+    /**
+     * @throws UnauthorizedDeletionException
+     */
     public function __invoke(DeleteUserSnapsRequest $request): void
     {
-        $this->snapRepository->deleteByIds($request->getUserId(), $request->getSnapIds());
+        $snaps = $this->snapRepository->findByIds($request->getSnapIds());
 
-        foreach ($request->getSnapIds() as $snapId) {
-            $this->fileStorage->delete($snapId, $request->getUserId());
+        $unauthorizedToDeleteSnaps = array_filter(
+            $snaps,
+            static fn (Snap $snap): bool => $snap->getUserId()->toRfc4122() !== $request->getUserId()->toRfc4122()
+        );
+
+        if ($unauthorizedToDeleteSnaps !== []) {
+            $ids = array_map(
+                static fn (Snap $snap): Uuid => $snap->getId(),
+                $unauthorizedToDeleteSnaps
+            );
+
+            throw new UnauthorizedDeletionException(...$ids);
+        }
+
+        $this->snapRepository->deleteByIds(
+            $request->getUserId(),
+            array_map(
+                static fn (Snap $snap): Uuid => $snap->getId(),
+                $snaps
+            )
+        );
+
+        foreach ($snaps as $snap) {
+            $this->fileStorage->delete($snap);
         }
     }
 }

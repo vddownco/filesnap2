@@ -27,7 +27,7 @@ final readonly class DeleteSnapByIdUseCase
             throw new SnapNotFoundException($request->getId());
         }
 
-        $this->fileStorage->delete($snap->getId(), $snap->getUserId());
+        $this->fileStorage->delete($snap);
         $this->snapRepository->deleteOneById($snap->getId());
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Domain\Entity\Snap\FileStorage;
 
+use App\Application\Domain\Entity\Snap\Snap;
 use Symfony\Component\Uid\Uuid;
 
 interface FileStorageInterface
@@ -15,7 +16,7 @@ interface FileStorageInterface
 
     public function store(Uuid $snapId, Uuid $snapUserId, FileMetadata $fileMetadata): void;
 
-    public function delete(Uuid $snapId, Uuid $snapUserId): void;
+    public function delete(Snap $snap): void;
 
     public function get(Uuid $snapId, Uuid $snapUserId): ?File;
 }

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Api\Controller;
 
-use App\Application\Domain\Entity\Snap\Exception\SnapNotFoundException;
-use App\Application\UseCase\Snap\DeleteById\DeleteSnapByIdRequest;
-use App\Application\UseCase\Snap\DeleteById\DeleteSnapByIdUseCase;
+use App\Application\Domain\Entity\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsRequest;
+use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsUseCase;
+use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdRequest;
+use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdUseCase;
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,14 +25,25 @@ use Symfony\Component\Uid\Uuid;
 final class SnapDeleteController extends FilesnapAbstractController
 {
     /**
-     * @throws SnapNotFoundException
+     * @throws UnauthorizedDeletionException
      */
     public function __invoke(
-        DeleteSnapByIdUseCase $deleteSnapByIdUseCase,
+        FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
+        DeleteUserSnapsUseCase $deleteUserSnapsUseCase,
         Request $request,
         #[MapUuidFromBase58] Uuid $id
     ): Response {
-        $deleteSnapByIdUseCase(new DeleteSnapByIdRequest($id));
+        $useCaseResponse = $findOneSnapByIdUseCase(new FindOneSnapByIdRequest($id));
+        $snap = $useCaseResponse->getSnap();
+
+        if ($snap === null) {
+            throw $this->createNotFoundException();
+        }
+
+        $deleteUserSnapsUseCase(new DeleteUserSnapsRequest(
+            $this->getAuthenticatedUser()->getId(),
+            [$snap->getId()]
+        ));
 
         return $this->emptyResponse();
     }

@@ -16,6 +16,13 @@ interface SnapRepositoryInterface
     public function findOneById(Uuid $id): ?Snap;
 
     /**
+     * @param Uuid[] $ids
+     *
+     * @return Snap[]
+     */
+    public function findByIds(array $ids): array;
+
+    /**
      * @return Snap[]
      */
     public function findByUser(Uuid $userId, int $offset, int $limit): array;

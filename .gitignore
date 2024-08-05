@@ -26,3 +26,5 @@ docker-compose-prod.yaml
 
 /phpunit.xml
 .phpunit.result.cache
+
+/.features
