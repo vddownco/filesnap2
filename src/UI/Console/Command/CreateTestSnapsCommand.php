@@ -88,7 +88,7 @@ final class CreateTestSnapsCommand extends Command
             self::ARGUMENT_QUANTITY,
             InputArgument::OPTIONAL,
             'The quantity of snaps to create.',
-            125
+            '125'
         );
     }
 

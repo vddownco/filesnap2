@@ -47,7 +47,7 @@ final class CreateUserCommand extends Command
             self::ARGUMENT_IS_ADMIN,
             InputArgument::OPTIONAL,
             'Tha account privileges.',
-            false,
+            'false',
             self::ARGUMENT_IS_ADMIN_VALUES
         );
     }
