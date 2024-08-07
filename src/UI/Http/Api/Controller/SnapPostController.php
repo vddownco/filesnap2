@@ -51,7 +51,7 @@ final class SnapPostController extends FilesnapAbstractController
         }
 
         if ($size === false) {
-            throw new \Exception('Unable to determine file size');
+            throw new \RuntimeException('Unable to determine file size');
         }
 
         $useCaseResponse = $createSnapUseCase(new CreateSnapRequest(

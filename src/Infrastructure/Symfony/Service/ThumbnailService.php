@@ -44,7 +44,7 @@ final readonly class ThumbnailService
             $ffmpegVideo = FFMpeg::create()->open($snap->getFile()->getAbsolutePath());
 
             if ($ffmpegVideo instanceof Video === false) {
-                throw new \Exception('Opened file is not a video');
+                throw new \RuntimeException('Opened file is not a video');
             }
 
             $ffmpegVideo

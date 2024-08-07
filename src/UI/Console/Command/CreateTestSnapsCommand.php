@@ -65,7 +65,7 @@ final class CreateTestSnapsCommand extends Command
         );
 
         if ($filePaths === false) {
-            throw new \Exception('An error occurred with the glob function');
+            throw new \RuntimeException('An error occurred with the glob function');
         }
 
         $this->files = array_map(
@@ -151,11 +151,11 @@ final class CreateTestSnapsCommand extends Command
             $size = $file->getSize();
 
             if ($mimeType === null) {
-                throw new \Exception('Unable to determine file mimetype');
+                throw new \RuntimeException('Unable to determine file mimetype');
             }
 
             if ($size === false) {
-                throw new \Exception('Unable to determine file size');
+                throw new \RuntimeException('Unable to determine file size');
             }
 
             ($this->createSnapUseCase)(new CreateSnapRequest(

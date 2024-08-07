@@ -34,17 +34,17 @@ final readonly class WebpConverter implements FormatConverterInterface
             MimeType::ImageJpeg => imagecreatefromjpeg($snapAbsolutePath),
             MimeType::ImagePng => imagecreatefrompng($snapAbsolutePath),
             MimeType::ImageGif => imagecreatefromgif($snapAbsolutePath),
-            default => throw new \Exception('You can\'t generate a webp from a ' . $snapMimeType->value . ' file.')
+            default => throw new \RuntimeException('You can\'t generate a webp from a ' . $snapMimeType->value . ' file.')
         };
 
         if ($gdImage === false) {
-            throw new \Exception('GdImage could not be created.');
+            throw new \RuntimeException('GdImage could not be created.');
         }
 
         $webpAbsolutePath = $this->getFileAbsolutePath($snap);
 
         if (imagewebp($gdImage, $webpAbsolutePath, self::QUALITY) === false) {
-            throw new \Exception('Error at webp image creation');
+            throw new \RuntimeException('Error at webp image creation');
         }
 
         return $webpAbsolutePath;

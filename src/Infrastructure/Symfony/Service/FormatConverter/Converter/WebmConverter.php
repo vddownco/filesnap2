@@ -27,7 +27,7 @@ final readonly class WebmConverter implements FormatConverterInterface
     public function convert(Snap $snap): string
     {
         if ($snap->isVideo() === false) {
-            throw new \Exception('You can\'t generate a webm from a ' . $snap->getMimeType()->value . ' file.');
+            throw new \RuntimeException('You can\'t generate a webm from a ' . $snap->getMimeType()->value . ' file.');
         }
 
         $webmAbsolutePath = $this->getFileAbsolutePath($snap);

@@ -166,7 +166,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
         $count = $this->connection->fetchOne($query, ['user_id' => $userId->toRfc4122()]);
 
         if (is_int($count) === false) {
-            throw new \Exception(__FUNCTION__ . ' doctrine returns is not a correct count value.');
+            throw new \RuntimeException(__FUNCTION__ . ' doctrine returns is not a correct count value.');
         }
 
         return $count;

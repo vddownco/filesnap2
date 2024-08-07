@@ -177,7 +177,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
         $rolesJson = json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR);
 
         if (is_array($rolesJson) === false) {
-            throw new \Exception('Error at roles json decode.');
+            throw new \RuntimeException('Error at roles json decode.');
         }
 
         $roles = array_map(
