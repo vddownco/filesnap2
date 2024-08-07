@@ -66,17 +66,17 @@ final class FindOneByAuthorizationKeyTest extends FilesnapTestCase
         $response = $useCase($request);
         $user = $response->getUser();
 
-        $this->assertNotNull($user);
-        $this->assertSame($expectedUser->getId(), $user->getId());
-        $this->assertSame($expectedUser->getEmail(), $user->getEmail());
-        $this->assertSame($expectedUser->getPassword(), $user->getPassword());
-        $this->assertSameSize($expectedUser->getRoles(), $user->getRoles());
-        $this->assertContainsOnlyInstancesOf(UserRole::class, $user->getRoles());
+        self::assertNotNull($user);
+        self::assertSame($expectedUser->getId(), $user->getId());
+        self::assertSame($expectedUser->getEmail(), $user->getEmail());
+        self::assertSame($expectedUser->getPassword(), $user->getPassword());
+        self::assertSameSize($expectedUser->getRoles(), $user->getRoles());
+        self::assertContainsOnlyInstancesOf(UserRole::class, $user->getRoles());
 
         foreach ($expectedUser->getRoles() as $role) {
-            $this->assertContainsEquals($role, $user->getRoles());
+            self::assertContainsEquals($role, $user->getRoles());
         }
 
-        $this->assertSame($expectedUser->getAuthorizationKey(), $user->getAuthorizationKey());
+        self::assertSame($expectedUser->getAuthorizationKey(), $user->getAuthorizationKey());
     }
 }

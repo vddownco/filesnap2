@@ -34,6 +34,6 @@ final class CountByUserTest extends FilesnapTestCase
         $useCase = new CountSnapsByUserUseCase($snapRepositoryMock);
         $response = $useCase($request);
 
-        $this->assertSame($countValue, $response->getCount());
+        self::assertSame($countValue, $response->getCount());
     }
 }

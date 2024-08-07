@@ -62,7 +62,7 @@ final class CreateTest extends FilesnapTestCase
         $userId = Uuid::v7();
         $file = new File($fileAbsolutePath);
 
-        $fileStorageStub = $this->createConfiguredStub(FileStorageInterface::class, [
+        $fileStorageStub = self::createConfiguredStub(FileStorageInterface::class, [
             'getFileMaximumAuthorizedBytesSize' => 100,
             'get' => $file,
         ]);
@@ -87,14 +87,14 @@ final class CreateTest extends FilesnapTestCase
         $response = $useCase($request);
         $snap = $response->getSnap();
 
-        $this->assertInstanceOf(Snap::class, $snap);
-        $this->assertInstanceOf(Uuid::class, $snap->getId());
-        $this->assertSame($userId, $snap->getUserId());
-        $this->assertSame($originalFilename, $snap->getOriginalFilename());
-        $this->assertSame(MimeType::tryFrom($fileMimeType), $snap->getMimeType());
-        $this->assertSame(time(), $snap->getCreationDate()->getTimestamp());
-        $this->assertNull($snap->getLastSeenDate());
-        $this->assertSame($file->getAbsolutePath(), $snap->getFile()->getAbsolutePath());
+        self::assertInstanceOf(Snap::class, $snap);
+        self::assertInstanceOf(Uuid::class, $snap->getId());
+        self::assertSame($userId, $snap->getUserId());
+        self::assertSame($originalFilename, $snap->getOriginalFilename());
+        self::assertSame(MimeType::tryFrom($fileMimeType), $snap->getMimeType());
+        self::assertSame(time(), $snap->getCreationDate()->getTimestamp());
+        self::assertNull($snap->getLastSeenDate());
+        self::assertSame($file->getAbsolutePath(), $snap->getFile()->getAbsolutePath());
     }
 
     /**
@@ -105,11 +105,11 @@ final class CreateTest extends FilesnapTestCase
      */
     public function testItFailsFileTooBig(): void
     {
-        $fileStorageStub = $this->createConfiguredStub(FileStorageInterface::class, [
+        $fileStorageStub = self::createConfiguredStub(FileStorageInterface::class, [
             'getFileMaximumAuthorizedBytesSize' => 10,
         ]);
 
-        $snapRepositoryStub = $this->createStub(SnapRepositoryInterface::class);
+        $snapRepositoryStub = self::createStub(SnapRepositoryInterface::class);
         $snapFactory = new SnapFactory($fileStorageStub);
         $useCase = new CreateSnapUseCase($snapRepositoryStub, $fileStorageStub, $snapFactory);
 
@@ -134,11 +134,11 @@ final class CreateTest extends FilesnapTestCase
      */
     public function testItFailsUnsupportedFileType(): void
     {
-        $fileStorageStub = $this->createConfiguredStub(FileStorageInterface::class, [
+        $fileStorageStub = self::createConfiguredStub(FileStorageInterface::class, [
             'getFileMaximumAuthorizedBytesSize' => 100,
         ]);
 
-        $snapRepositoryStub = $this->createStub(SnapRepositoryInterface::class);
+        $snapRepositoryStub = self::createStub(SnapRepositoryInterface::class);
         $snapFactory = new SnapFactory($fileStorageStub);
         $useCase = new CreateSnapUseCase($snapRepositoryStub, $fileStorageStub, $snapFactory);
 
@@ -163,12 +163,12 @@ final class CreateTest extends FilesnapTestCase
      */
     public function testItFailsFileNotFound(): void
     {
-        $fileStorageStub = $this->createConfiguredStub(FileStorageInterface::class, [
+        $fileStorageStub = self::createConfiguredStub(FileStorageInterface::class, [
             'getFileMaximumAuthorizedBytesSize' => 100,
             'get' => null,
         ]);
 
-        $snapRepositoryStub = $this->createStub(SnapRepositoryInterface::class);
+        $snapRepositoryStub = self::createStub(SnapRepositoryInterface::class);
         $snapFactory = new SnapFactory($fileStorageStub);
         $useCase = new CreateSnapUseCase($snapRepositoryStub, $fileStorageStub, $snapFactory);
 

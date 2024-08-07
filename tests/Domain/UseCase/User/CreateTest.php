@@ -48,7 +48,7 @@ final class CreateTest extends FilesnapTestCase
         $userRepositoryMock
             ->expects($this->once())
             ->method('save')
-            ->with($this->callback(function ($user) use (&$capturedUserId): bool {
+            ->with(self::callback(function ($user) use (&$capturedUserId): bool {
                 $isUser = $user instanceof User;
 
                 if ($isUser === true) {
@@ -70,17 +70,17 @@ final class CreateTest extends FilesnapTestCase
         $response = $useCase($request);
         $user = $response->getUser();
 
-        $this->assertSame($capturedUserId, $user->getId());
-        $this->assertMatchesRegularExpression('/^.+@\S+\.\S+$/', $user->getEmail());
-        $this->assertSame($request->getEmail(), $user->getEmail());
-        $this->assertIsString($user->getPassword());
-        $this->assertContainsOnlyInstancesOf(UserRole::class, $user->getRoles());
-        $this->assertSameSize($userRoles, $user->getRoles());
+        self::assertSame($capturedUserId, $user->getId());
+        self::assertMatchesRegularExpression('/^.+@\S+\.\S+$/', $user->getEmail());
+        self::assertSame($request->getEmail(), $user->getEmail());
+        self::assertIsString($user->getPassword());
+        self::assertContainsOnlyInstancesOf(UserRole::class, $user->getRoles());
+        self::assertSameSize($userRoles, $user->getRoles());
 
         foreach ($userRoles as $role) {
-            $this->assertContainsEquals($role, $user->getRoles());
+            self::assertContainsEquals($role, $user->getRoles());
         }
 
-        $this->assertInstanceOf(Uuid::class, $user->getAuthorizationKey());
+        self::assertInstanceOf(Uuid::class, $user->getAuthorizationKey());
     }
 }

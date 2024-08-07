@@ -18,6 +18,6 @@ final class SettingsController extends FilesnapAbstractController
 {
     public function __invoke(): Response
     {
-        return $this->render();
+        return $this->view();
     }
 }

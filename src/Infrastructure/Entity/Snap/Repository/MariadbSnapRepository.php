@@ -219,7 +219,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             originalFilename: $dbResult['original_filename'],
             mimeType: MimeType::fromString($dbResult['mime_type']),
             creationDate: new \DateTime($dbResult['creation_date']),
-            lastSeenDate: $dbResult['last_seen_date'] ? new \DateTime($dbResult['last_seen_date']) : null
+            lastSeenDate: $dbResult['last_seen_date'] !== null ? new \DateTime($dbResult['last_seen_date']) : null
         );
     }
 }

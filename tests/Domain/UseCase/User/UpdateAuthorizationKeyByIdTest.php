@@ -28,7 +28,7 @@ final class UpdateAuthorizationKeyByIdTest extends FilesnapTestCase
             ->method('updateAuthorizationKey')
             ->with(
                 $userId,
-                $this->callback(
+                self::callback(
                     function ($parameter) use (&$capturedNewAuthorizationKeyParam): bool {
                         $capturedNewAuthorizationKeyParam = $parameter;
 
@@ -41,6 +41,6 @@ final class UpdateAuthorizationKeyByIdTest extends FilesnapTestCase
         $response = $useCase(new UpdateUserAuthorizationKeyByIdRequest($userId));
         $newAuthorizationKey = $response->getAuthorizationKey();
 
-        $this->assertSame($capturedNewAuthorizationKeyParam, $newAuthorizationKey);
+        self::assertSame($capturedNewAuthorizationKeyParam, $newAuthorizationKey);
     }
 }

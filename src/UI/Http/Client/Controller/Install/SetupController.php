@@ -86,7 +86,7 @@ final class SetupController extends FilesnapAbstractController
             }
         }
 
-        return $this->render(parameters: [
+        return $this->view([
             'form' => $form,
             'error' => $this->error,
         ]);

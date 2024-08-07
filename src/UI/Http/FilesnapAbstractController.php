@@ -30,14 +30,10 @@ abstract class FilesnapAbstractController extends AbstractController
     }
 
     /**
-     * @param array<string,mixed> $parameters
+     * @param array<string, mixed> $parameters
      */
-    protected function render(?string $view = null, array $parameters = [], ?Response $response = null): Response
+    protected function view(array $parameters = [], ?Response $response = null): Response
     {
-        if ($view !== null) {
-            return parent::render($view, $parameters, $response);
-        }
-
         $routeAttributes = (new \ReflectionClass(static::class))->getAttributes(Route::class);
 
         if ($routeAttributes === []) {

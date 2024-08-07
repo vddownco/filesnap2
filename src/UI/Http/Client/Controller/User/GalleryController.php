@@ -67,7 +67,7 @@ final class GalleryController extends FilesnapAbstractController
 
         $emptySpaceCount = count($snaps) < self::MAX_SNAPS_BY_PAGE ? self::MAX_SNAPS_BY_PAGE - count($snaps) : 0;
 
-        return $this->render(parameters: [
+        return $this->view([
             'snaps' => $snaps,
             'page' => $page,
             'next_page' => $nextPage,

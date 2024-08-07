@@ -31,7 +31,7 @@ final class LoginController extends FilesnapAbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render(parameters: [
+        return $this->view([
             'last_username' => $lastUsername,
             'error' => $error,
             'setup_finished' => $setupFinished,

@@ -58,7 +58,7 @@ final class CreateUserCommand extends Command
 
         if (
             is_string($isAdminArgument) === true
-            && in_array($isAdminArgument, self::ARGUMENT_IS_ADMIN_VALUES) === false
+            && in_array($isAdminArgument, self::ARGUMENT_IS_ADMIN_VALUES, true) === false
         ) {
             $output->writeln(sprintf(
                 'The %s argument is invalid. It must be one of theses values : %s.',
@@ -69,13 +69,9 @@ final class CreateUserCommand extends Command
             return Command::FAILURE;
         }
 
-        if (is_bool($isAdminArgument) === false) {
-            $isAdminArgument = $isAdminArgument === 'true';
-        }
-
         $roles = [UserRole::User];
 
-        if ($isAdminArgument === true) {
+        if ($isAdminArgument == 'true') {
             $roles[] = UserRole::Admin;
         }
 

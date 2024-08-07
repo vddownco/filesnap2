@@ -73,18 +73,18 @@ final class FindOneByIdTest extends FilesnapTestCase
         $actualSnap = $response->getSnap();
 
         if ($expectedSnap === null) {
-            $this->assertNull($actualSnap);
+            self::assertNull($actualSnap);
 
             return;
         }
 
-        $this->assertNotNull($actualSnap);
-        $this->assertSame($expectedSnap->getId(), $actualSnap->getId());
-        $this->assertSame($expectedSnap->getUserId(), $actualSnap->getUserId());
-        $this->assertSame($expectedSnap->getOriginalFilename(), $actualSnap->getOriginalFilename());
-        $this->assertSame($expectedSnap->getMimeType(), $actualSnap->getMimeType());
-        $this->assertSame($expectedSnap->getCreationDate(), $actualSnap->getCreationDate());
-        $this->assertSame($expectedSnap->getLastSeenDate(), $actualSnap->getLastSeenDate());
-        $this->assertSame($expectedSnap->getFile()->getAbsolutePath(), $actualSnap->getFile()->getAbsolutePath());
+        self::assertNotNull($actualSnap);
+        self::assertSame($expectedSnap->getId(), $actualSnap->getId());
+        self::assertSame($expectedSnap->getUserId(), $actualSnap->getUserId());
+        self::assertSame($expectedSnap->getOriginalFilename(), $actualSnap->getOriginalFilename());
+        self::assertSame($expectedSnap->getMimeType(), $actualSnap->getMimeType());
+        self::assertSame($expectedSnap->getCreationDate(), $actualSnap->getCreationDate());
+        self::assertSame($expectedSnap->getLastSeenDate(), $actualSnap->getLastSeenDate());
+        self::assertSame($expectedSnap->getFile()->getAbsolutePath(), $actualSnap->getFile()->getAbsolutePath());
     }
 }

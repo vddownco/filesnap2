@@ -27,7 +27,7 @@ final class DeleteByIdTest extends FilesnapTestCase
     {
         $request = new DeleteSnapByIdRequest(Uuid::v4());
 
-        $fileStorageStub = $this->createStub(FileStorageInterface::class);
+        $fileStorageStub = self::createStub(FileStorageInterface::class);
         $snapRepositoryMock = $this->createMock(SnapRepositoryInterface::class);
 
         $snapRepositoryMock
@@ -51,7 +51,7 @@ final class DeleteByIdTest extends FilesnapTestCase
      */
     public function testItDeleteSnap(): void
     {
-        $fileRepositoryMock = $this->createConfiguredMock(FileStorageInterface::class, [
+        $fileRepositoryMock = self::createConfiguredMock(FileStorageInterface::class, [
             'get' => new File('/this/is/an/absolute/path/to/file.jpg'),
         ]);
 

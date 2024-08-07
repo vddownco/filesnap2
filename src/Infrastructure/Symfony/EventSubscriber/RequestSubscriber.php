@@ -37,7 +37,8 @@ final readonly class RequestSubscriber implements EventSubscriberInterface
         }
 
         if (str_starts_with($route, 'client_user_')) {
-            $this->twig->addGlobal('open_menu', $request->get('open_menu') ? true : null);
+            dump((bool) $request->get('open_menu'));
+            $this->twig->addGlobal('open_menu', $request->get('open_menu') === '1' ? true : null);
         }
     }
 }

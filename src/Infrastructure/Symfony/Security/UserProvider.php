@@ -56,11 +56,13 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
     /**
      * This method should not block the login, that's why it does not throw anything
      * cf PasswordUpgraderInterface::upgradePassword phpdoc.
-     *
-     * @param SecurityUser $user
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
+        if ($user instanceof SecurityUser === false) {
+            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
+        }
+
         try {
             ($this->updateUserPasswordByIdUseCase)(
                 new UpdateUserPasswordByIdRequest($user->getId(), $newHashedPassword)
