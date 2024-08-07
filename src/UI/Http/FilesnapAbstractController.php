@@ -29,6 +29,9 @@ abstract class FilesnapAbstractController extends AbstractController
         return new Response(status: Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @param array<string,mixed> $parameters
+     */
     protected function render(?string $view = null, array $parameters = [], ?Response $response = null): Response
     {
         if ($view !== null) {

@@ -28,3 +28,5 @@ docker-compose-prod.yaml
 .phpunit.result.cache
 
 /.features
+
+phpstan.neon

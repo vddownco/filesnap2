@@ -24,12 +24,19 @@ final readonly class RequestSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function addTwigGlobalOpenMenu(RequestEvent $event): void
     {
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
 
-        if ($route !== null && str_starts_with($route, 'client_user_')) {
+        if (is_string($route) === false) {
+            return;
+        }
+
+        if (str_starts_with($route, 'client_user_')) {
             $this->twig->addGlobal('open_menu', $request->get('open_menu') ? true : null);
         }
     }

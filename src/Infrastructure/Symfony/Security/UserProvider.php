@@ -16,6 +16,9 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<SecurityUser>
+ */
 final readonly class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(

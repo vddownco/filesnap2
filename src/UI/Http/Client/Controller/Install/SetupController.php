@@ -69,6 +69,7 @@ final class SetupController extends FilesnapAbstractController
                 define('STDIN', fopen('php://stdin', 'rb'));
             }
 
+            /** @var array{adminEmail:string, adminPlainPassword:string, dbAlreadyCreated:bool} $postedData */
             $postedData = $form->getData();
 
             if ($postedData['dbAlreadyCreated'] === false) {

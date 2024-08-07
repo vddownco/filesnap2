@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Entity\Snap\Repository;
 
+use App\Application\Domain\Entity\Snap\Exception\FileNotFoundException;
+use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
 use App\Application\Domain\Entity\Snap\Factory\SnapFactory;
 use App\Application\Domain\Entity\Snap\MimeType;
 use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
@@ -15,6 +17,16 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @phpstan-type DbResult array{
+ *      id:string,
+ *      user_id:string,
+ *      original_filename:string,
+ *      mime_type:string,
+ *      creation_date:string,
+ *      last_seen_date:string|null
+ *  }
+ */
 final readonly class MariadbSnapRepository implements SnapRepositoryInterface
 {
     public function __construct(
@@ -68,6 +80,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             WHERE id = :id
         ';
 
+        /** @var DbResult|false $dbResult */
         $dbResult = $this->connection->fetchAssociative($query, ['id' => $id->toRfc4122()]);
 
         if ($dbResult === false) {
@@ -89,6 +102,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             WHERE id IN (:ids)
         ';
 
+        /** @var list<DbResult> $dbResults */
         $dbResults = $this->connection->fetchAllAssociative(
             $query,
             ['ids' => array_map(
@@ -121,6 +135,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             OFFSET :offset
         ';
 
+        /** @var list<DbResult> $dbResults */
         $dbResults = $this->connection->fetchAllAssociative(
             $query,
             [
@@ -143,12 +158,18 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     public function countByUser(Uuid $userId): int
     {
         $query = 'SELECT COUNT(id) FROM snap WHERE user_id = :user_id';
+        $count = $this->connection->fetchOne($query, ['user_id' => $userId->toRfc4122()]);
 
-        return $this->connection->fetchOne($query, ['user_id' => $userId->toRfc4122()]);
+        if (is_int($count) === false) {
+            throw new \Exception(__FUNCTION__ . ' doctrine returns is not a correct count value.');
+        }
+
+        return $count;
     }
 
     /**
@@ -185,7 +206,10 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
     }
 
     /**
-     * @throws \Exception
+     * @param DbResult $dbResult
+     *
+     * @throws FileNotFoundException
+     * @throws UnsupportedFileTypeException
      */
     private function createSnapEntity(array $dbResult): Snap
     {

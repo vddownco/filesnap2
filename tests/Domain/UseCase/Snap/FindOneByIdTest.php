@@ -22,6 +22,8 @@ use Symfony\Component\Uid\Uuid;
 final class FindOneByIdTest extends FilesnapTestCase
 {
     /**
+     * @return list<array{0:Uuid,1:Snap|null}>
+     *
      * @throws Exception
      * @throws FileNotFoundException
      * @throws RandomException
@@ -53,7 +55,7 @@ final class FindOneByIdTest extends FilesnapTestCase
      * @throws Exception
      */
     #[DataProvider('provider')]
-    public function test(Uuid $id, ?Snap $expectedSnap)
+    public function test(Uuid $id, ?Snap $expectedSnap): void
     {
         $request = new FindOneSnapByIdRequest($id);
 
@@ -72,14 +74,17 @@ final class FindOneByIdTest extends FilesnapTestCase
 
         if ($expectedSnap === null) {
             $this->assertNull($actualSnap);
-        } else {
-            $this->assertSame($expectedSnap->getId(), $actualSnap->getId());
-            $this->assertSame($expectedSnap->getUserId(), $actualSnap->getUserId());
-            $this->assertSame($expectedSnap->getOriginalFilename(), $actualSnap->getOriginalFilename());
-            $this->assertSame($expectedSnap->getMimeType(), $actualSnap->getMimeType());
-            $this->assertSame($expectedSnap->getCreationDate(), $actualSnap->getCreationDate());
-            $this->assertSame($expectedSnap->getLastSeenDate(), $actualSnap->getLastSeenDate());
-            $this->assertSame($expectedSnap->getFile()->getAbsolutePath(), $actualSnap->getFile()->getAbsolutePath());
+
+            return;
         }
+
+        $this->assertNotNull($actualSnap);
+        $this->assertSame($expectedSnap->getId(), $actualSnap->getId());
+        $this->assertSame($expectedSnap->getUserId(), $actualSnap->getUserId());
+        $this->assertSame($expectedSnap->getOriginalFilename(), $actualSnap->getOriginalFilename());
+        $this->assertSame($expectedSnap->getMimeType(), $actualSnap->getMimeType());
+        $this->assertSame($expectedSnap->getCreationDate(), $actualSnap->getCreationDate());
+        $this->assertSame($expectedSnap->getLastSeenDate(), $actualSnap->getLastSeenDate());
+        $this->assertSame($expectedSnap->getFile()->getAbsolutePath(), $actualSnap->getFile()->getAbsolutePath());
     }
 }

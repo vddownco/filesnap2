@@ -23,7 +23,7 @@ use Symfony\Component\Uid\Uuid;
 final class DeleteUserSnapsTest extends FilesnapTestCase
 {
     /**
-     * @return Snap[]
+     * @return list<array{0:Uuid,1:list<Snap>}>
      *
      * @throws Exception
      * @throws FileNotFoundException
@@ -56,7 +56,7 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
     }
 
     /**
-     * @return Snap[]
+     * @return list<array{0:Uuid,1:list<Snap>}>
      *
      * @throws Exception
      * @throws FileNotFoundException
@@ -134,6 +134,8 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
     }
 
     /**
+     * @param list<Snap> $snaps
+     *
      * @throws Exception
      */
     #[DataProvider('differentUserIdsSnapsProvider')]

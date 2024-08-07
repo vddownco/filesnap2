@@ -23,7 +23,8 @@ enum SecurityUserRole: string
     {
         return match ($value) {
             self::User->value => UserRole::User,
-            self::Admin->value => UserRole::Admin
+            self::Admin->value => UserRole::Admin,
+            default => throw new \InvalidArgumentException(sprintf('%s does not have a matching %s.', $value, UserRole::class))
         };
     }
 

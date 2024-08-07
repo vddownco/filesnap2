@@ -7,6 +7,7 @@ namespace App\Infrastructure\Symfony\Service;
 use App\Application\Domain\Entity\Snap\Snap;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use FFMpeg\Media\Video;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -24,6 +25,9 @@ final readonly class ThumbnailService
     ) {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function generate(Snap $snap): void
     {
         $imagine = new Imagine();
@@ -37,8 +41,13 @@ final readonly class ThumbnailService
         if ($snap->isVideo() === true) {
             $tmpFilename = $this->filesystem->tempnam(sys_get_temp_dir(), 'ffmpeg_tmp_', '.jpeg');
 
-            FFMpeg::create()
-                ->open($snap->getFile()->getAbsolutePath())
+            $ffmpegVideo = FFMpeg::create()->open($snap->getFile()->getAbsolutePath());
+
+            if ($ffmpegVideo instanceof Video === false) {
+                throw new \Exception('Opened file is not a video');
+            }
+
+            $ffmpegVideo
                 ->frame(TimeCode::fromSeconds(1))
                 ->save($tmpFilename);
 

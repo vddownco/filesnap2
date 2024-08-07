@@ -30,6 +30,7 @@ final class SnapPostController extends FilesnapAbstractController
      * @throws FileSizeTooBigException
      * @throws UnsupportedFileTypeException
      * @throws FileNotFoundException
+     * @throws \Exception
      */
     public function __invoke(
         CreateSnapUseCase $createSnapUseCase,
@@ -42,12 +43,23 @@ final class SnapPostController extends FilesnapAbstractController
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Missing file in body request');
         }
 
+        $mimeType = $uploadedFile->getMimeType();
+        $size = $uploadedFile->getSize();
+
+        if ($mimeType === null) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, 'Unable to determine file mimetype');
+        }
+
+        if ($size === false) {
+            throw new \Exception('Unable to determine file size');
+        }
+
         $useCaseResponse = $createSnapUseCase(new CreateSnapRequest(
             $this->getAuthenticatedUser()->getId(),
             $uploadedFile->getClientOriginalName(),
-            $uploadedFile->getMimeType(),
+            $mimeType,
             $uploadedFile->getPathname(),
-            $uploadedFile->getSize()
+            $size
         ));
 
         $snap = $useCaseResponse->getSnap();

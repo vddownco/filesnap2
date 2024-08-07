@@ -17,6 +17,9 @@ use Symfony\Component\Uid\Uuid;
 
 final class CreateTest extends FilesnapTestCase
 {
+    /**
+     * @return list<array{0:list<UserRole>}>
+     */
     public static function ItCreateProvider(): array
     {
         return [
@@ -26,6 +29,8 @@ final class CreateTest extends FilesnapTestCase
     }
 
     /**
+     * @param list<UserRole> $userRoles
+     *
      * @throws Exception
      */
     #[DataProvider('itCreateProvider')]

@@ -22,7 +22,7 @@ use Symfony\Component\Uid\Uuid;
 final class FindByUserTest extends FilesnapTestCase
 {
     /**
-     * @return Snap[]
+     * @return list<array{0:list<Snap>}>
      *
      * @throws Exception
      * @throws FileNotFoundException
@@ -61,7 +61,7 @@ final class FindByUserTest extends FilesnapTestCase
      * @throws RandomException
      */
     #[DataProvider('provider')]
-    public function test(array $expectedSnaps)
+    public function test(array $expectedSnaps): void
     {
         $request = new FindSnapsByUserRequest(Uuid::v7(), self::getRandomInt(), self::getRandomInt());
 

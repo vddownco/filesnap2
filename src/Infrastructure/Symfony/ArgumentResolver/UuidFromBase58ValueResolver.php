@@ -13,6 +13,9 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class UuidFromBase58ValueResolver implements ValueResolverInterface
 {
+    /**
+     * @return list<Uuid>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): array
     {
         $attribute = $argument->getAttributesOfType(MapUuidFromBase58::class)[0] ?? null;
@@ -21,7 +24,12 @@ final readonly class UuidFromBase58ValueResolver implements ValueResolverInterfa
             return [];
         }
 
-        $originalValue = $request->attributes->get($attribute->name ?? $argument->getName());
+        $argumentName = $attribute->name ?? $argument->getName();
+        $originalValue = $request->attributes->get($argumentName);
+
+        if (is_string($originalValue) === false) {
+            throw new NotFoundHttpException(sprintf('Invalid argument %s, it must be a string.', $argumentName));
+        }
 
         try {
             $uuid = Uuid::fromBase58($originalValue);

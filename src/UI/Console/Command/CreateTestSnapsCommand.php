@@ -32,6 +32,9 @@ final class CreateTestSnapsCommand extends Command
      */
     private array $files;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct(
         private readonly CreateSnapUseCase $createSnapUseCase,
         private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
@@ -46,8 +49,7 @@ final class CreateTestSnapsCommand extends Command
                 MimeType::ImagePng => ['png'],
                 MimeType::ImageGif => ['gif'],
                 MimeType::VideoMp4 => ['mp4'],
-                MimeType::VideoWebm => ['webm'],
-                default => throw new \RuntimeException("The mimetype $mimeType->name has no associated file extension(s).")
+                MimeType::VideoWebm => ['webm']
             };
 
             $authorizedExtensions = [...$authorizedExtensions, ...$extensions];
@@ -61,6 +63,10 @@ final class CreateTestSnapsCommand extends Command
             ),
             GLOB_BRACE
         );
+
+        if ($filePaths === false) {
+            throw new \Exception('An error occurred with the glob function');
+        }
 
         $this->files = array_map(
             static fn (string $filePath) => new File($filePath),
@@ -91,6 +97,7 @@ final class CreateTestSnapsCommand extends Command
      * @throws FileNotFoundException
      * @throws UnsupportedFileTypeException
      * @throws RandomException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -108,15 +115,22 @@ final class CreateTestSnapsCommand extends Command
             return Command::FAILURE;
         }
 
-        if (is_numeric($input->getArgument(self::ARGUMENT_QUANTITY)) === false) {
+        $quantityArgument = $input->getArgument(self::ARGUMENT_QUANTITY);
+        $emailArgument = $input->getArgument(self::ARGUMENT_EMAIL);
+
+        if (is_numeric($quantityArgument) === false) {
             $output->writeln('The quantity parameter must be a number.');
 
             return Command::FAILURE;
         }
 
-        $findUserUserCaseResponse = ($this->findOneUserByEmailUseCase)(
-            new FindOneUserByEmailRequest($input->getArgument(self::ARGUMENT_EMAIL))
-        );
+        if (is_string($emailArgument) === false) {
+            $output->writeln('The email parameter must be a string.');
+
+            return Command::FAILURE;
+        }
+
+        $findUserUserCaseResponse = ($this->findOneUserByEmailUseCase)(new FindOneUserByEmailRequest($emailArgument));
         $user = $findUserUserCaseResponse->getUser();
 
         if ($user === null) {
@@ -129,16 +143,27 @@ final class CreateTestSnapsCommand extends Command
         $filesArrayMinIndex = min($filesArrayIndexes);
         $filesArrayMaxIndex = max($filesArrayIndexes);
 
-        for ($i = 0; $i < (int) $input->getArgument(self::ARGUMENT_QUANTITY); ++$i) {
+        for ($i = 0; $i < (int) $quantityArgument; ++$i) {
             $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
             $file = $this->files[$randomIndex];
+
+            $mimeType = $file->getMimeType();
+            $size = $file->getSize();
+
+            if ($mimeType === null) {
+                throw new \Exception('Unable to determine file mimetype');
+            }
+
+            if ($size === false) {
+                throw new \Exception('Unable to determine file size');
+            }
 
             ($this->createSnapUseCase)(new CreateSnapRequest(
                 $user->getId(),
                 $file->getFilename(),
-                $file->getMimeType(),
+                $mimeType,
                 $file->getPathname(),
-                $file->getSize()
+                $size
             ));
         }
 

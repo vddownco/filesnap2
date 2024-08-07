@@ -22,6 +22,13 @@ use Symfony\Component\Uid\Uuid;
 
 final class CreateTest extends FilesnapTestCase
 {
+    /**
+     * @return list<array{
+     *     0:string,
+     *     1:string,
+     *     2:string
+     * }>
+     */
     public static function itCreatesSnapProvider(): array
     {
         return array_map(

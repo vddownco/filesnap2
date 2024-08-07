@@ -79,11 +79,22 @@ final class CreateUserCommand extends Command
             $roles[] = UserRole::Admin;
         }
 
-        ($this->createUserUseCase)(new CreateUserRequest(
-            $input->getArgument(self::ARGUMENT_EMAIL),
-            $input->getArgument(self::ARGUMENT_PASSWORD),
-            $roles
-        ));
+        $emailArgument = $input->getArgument(self::ARGUMENT_EMAIL);
+        $passwordArgument = $input->getArgument(self::ARGUMENT_PASSWORD);
+
+        if (is_string($emailArgument) === false) {
+            $output->writeln('The email parameter must be a string.');
+
+            return Command::FAILURE;
+        }
+
+        if (is_string($passwordArgument) === false) {
+            $output->writeln('The password parameter must be a string.');
+
+            return Command::FAILURE;
+        }
+
+        ($this->createUserUseCase)(new CreateUserRequest($emailArgument, $passwordArgument, $roles));
 
         return Command::SUCCESS;
     }

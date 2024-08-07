@@ -16,6 +16,9 @@ use Symfony\Component\Uid\Uuid;
 
 final class FindOneByEmailTest extends FilesnapTestCase
 {
+    /**
+     * @return list<array{0:User}>
+     */
     public static function provider(): array
     {
         $email = 'user@example.com';
@@ -47,7 +50,7 @@ final class FindOneByEmailTest extends FilesnapTestCase
      * @throws Exception
      */
     #[DataProvider('provider')]
-    public function test(User $expectedUser)
+    public function test(User $expectedUser): void
     {
         $request = new FindOneUserByEmailRequest($expectedUser->getEmail());
 
@@ -63,6 +66,7 @@ final class FindOneByEmailTest extends FilesnapTestCase
         $response = $useCase($request);
         $user = $response->getUser();
 
+        $this->assertNotNull($user);
         $this->assertSame($expectedUser->getId(), $user->getId());
         $this->assertSame($expectedUser->getEmail(), $user->getEmail());
         $this->assertSame($expectedUser->getPassword(), $user->getPassword());

@@ -12,6 +12,15 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @phpstan-type DbResult array{
+ *      id:string,
+ *      email:string,
+ *      password:string,
+ *      roles:string,
+ *      authorization_key:string,
+ *  }
+ */
 final readonly class MariadbUserRepository implements UserRepositoryInterface
 {
     public function __construct(private Connection $connection)
@@ -39,6 +48,8 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     public function findOneById(Uuid $id): ?User
     {
         $query = 'SELECT id, email, password, roles, authorization_key FROM user WHERE id = :id';
+
+        /** @var DbResult|false $dbResult */
         $dbResult = $this->connection->fetchAssociative($query, ['id' => $id->toRfc4122()]);
 
         if ($dbResult === false) {
@@ -54,6 +65,8 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     public function findOneByEmail(string $email): ?User
     {
         $query = 'SELECT id, email, password, roles, authorization_key FROM user WHERE email = :email';
+
+        /** @var DbResult|false $dbResult */
         $dbResult = $this->connection->fetchAssociative($query, ['email' => $email]);
 
         if ($dbResult === false) {
@@ -74,6 +87,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
             WHERE authorization_key = :authorization_key
         ';
 
+        /** @var DbResult|false $dbResult */
         $dbResult = $this->connection->fetchAssociative(
             $query,
             ['authorization_key' => $authorizationKey->toRfc4122()]
@@ -153,13 +167,22 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param DbResult $dbResult
+     *
      * @throws \JsonException
+     * @throws \Exception
      */
     private function createUserEntity(array $dbResult): User
     {
+        $rolesJson = json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR);
+
+        if (is_array($rolesJson) === false) {
+            throw new \Exception('Error at roles json decode.');
+        }
+
         $roles = array_map(
             static fn (string $role): UserRole => SecurityUserRole::valueToUserRole($role),
-            json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR)
+            $rolesJson
         );
 
         return new User(
