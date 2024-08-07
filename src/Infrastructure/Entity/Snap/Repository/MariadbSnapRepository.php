@@ -119,7 +119,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
     }
 
     /**
-     * @return Snap[]
+     * @return list<Snap>
      *
      * @throws Exception
      * @throws \Exception

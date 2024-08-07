@@ -55,7 +55,7 @@ final class FindByUserTest extends FilesnapTestCase
     }
 
     /**
-     * @param Snap[] $expectedSnaps
+     * @param list<Snap> $expectedSnaps
      *
      * @throws Exception
      * @throws RandomException

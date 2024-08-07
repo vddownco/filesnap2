@@ -16,14 +16,14 @@ interface SnapRepositoryInterface
     public function findOneById(Uuid $id): ?Snap;
 
     /**
-     * @param Uuid[] $ids
+     * @param list<Uuid> $ids
      *
-     * @return Snap[]
+     * @return list<Snap>
      */
     public function findByIds(array $ids): array;
 
     /**
-     * @return Snap[]
+     * @return list<Snap>
      */
     public function findByUser(Uuid $userId, int $offset, int $limit): array;
 
@@ -32,7 +32,7 @@ interface SnapRepositoryInterface
     public function deleteOneById(Uuid $id): void;
 
     /**
-     * @param Uuid[] $ids
+     * @param list<Uuid> $ids
      */
     public function deleteByIds(Uuid $userId, array $ids): void;
 }

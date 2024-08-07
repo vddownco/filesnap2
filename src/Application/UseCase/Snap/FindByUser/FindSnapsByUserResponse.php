@@ -9,14 +9,14 @@ use App\Application\Domain\Entity\Snap\Snap;
 final readonly class FindSnapsByUserResponse
 {
     /**
-     * @param Snap[] $snaps
+     * @param list<Snap> $snaps
      */
     public function __construct(private array $snaps)
     {
     }
 
     /**
-     * @return Snap[]
+     * @return list<Snap>
      */
     public function getSnaps(): array
     {

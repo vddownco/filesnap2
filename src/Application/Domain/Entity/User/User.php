@@ -12,7 +12,7 @@ use Symfony\Component\Uid\Uuid;
 final class User
 {
     /**
-     * @param UserRole[] $roles
+     * @param list<UserRole> $roles
      */
     public function __construct(
         #[Persistence] private readonly Uuid $id,
@@ -53,7 +53,7 @@ final class User
     }
 
     /**
-     * @return UserRole[]
+     * @return list<UserRole>
      */
     public function getRoles(): array
     {
@@ -61,7 +61,7 @@ final class User
     }
 
     /**
-     * @param UserRole[] $roles
+     * @param list<UserRole> $roles
      */
     public function setRoles(array $roles): self
     {

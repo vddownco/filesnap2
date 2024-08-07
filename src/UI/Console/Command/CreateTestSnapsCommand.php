@@ -28,7 +28,7 @@ final class CreateTestSnapsCommand extends Command
     public const string ARGUMENT_QUANTITY = 'quantity';
 
     /**
-     * @var File[]
+     * @var list<File>
      */
     private array $files;
 

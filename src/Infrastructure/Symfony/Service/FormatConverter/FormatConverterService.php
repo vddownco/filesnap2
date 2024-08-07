@@ -12,7 +12,7 @@ use App\Infrastructure\Symfony\Service\FormatConverter\Converter\WebpConverter;
 final readonly class FormatConverterService
 {
     /**
-     * @return FormatConverterInterface[]
+     * @return list<FormatConverterInterface>
      */
     private static function getConverters(): array
     {

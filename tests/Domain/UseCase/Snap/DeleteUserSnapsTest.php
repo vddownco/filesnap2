@@ -98,7 +98,7 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
     }
 
     /**
-     * @param Snap[] $snaps
+     * @param list<Snap> $snaps
      *
      * @throws Exception
      * @throws UnauthorizedDeletionException

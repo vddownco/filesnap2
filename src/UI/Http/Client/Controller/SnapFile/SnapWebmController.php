@@ -49,7 +49,7 @@ final class SnapWebmController extends AbstractSnapFileController
     }
 
     /**
-     * @return MimeType[]
+     * @return list<MimeType>
      */
     protected function supportedMimeTypes(): array
     {

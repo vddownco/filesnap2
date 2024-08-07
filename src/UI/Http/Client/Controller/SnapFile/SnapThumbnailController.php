@@ -43,7 +43,7 @@ final class SnapThumbnailController extends AbstractSnapFileController
     }
 
     /**
-     * @return MimeType[]
+     * @return list<MimeType>
      */
     protected function supportedMimeTypes(): array
     {

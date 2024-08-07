@@ -9,7 +9,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class DeleteUserSnapsRequest
 {
     /**
-     * @param Uuid[] $snapIds
+     * @param list<Uuid> $snapIds
      */
     public function __construct(
         private Uuid $userId,
@@ -23,7 +23,7 @@ final readonly class DeleteUserSnapsRequest
     }
 
     /**
-     * @return Uuid[]
+     * @return list<Uuid>
      */
     public function getSnapIds(): array
     {

@@ -52,7 +52,7 @@ final class GalleryController extends FilesnapAbstractController
         $nextPage = $page === $pageCount || $snapsCount === 0 ? null : $page + 1;
         $previousPage = $page === 1 ? null : $page - 1;
 
-        /** @var Snap[] $snaps */
+        /** @var list<Snap> $snaps */
         $snaps = [];
 
         if ($snapsCount > 0) {

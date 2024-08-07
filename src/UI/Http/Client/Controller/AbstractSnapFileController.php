@@ -49,7 +49,7 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
     abstract protected function updateSnapLastSeenDate(): bool;
 
     /**
-     * @return MimeType[]
+     * @return list<MimeType>
      */
     abstract protected function supportedMimeTypes(): array;
 }

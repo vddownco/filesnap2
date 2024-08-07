@@ -9,7 +9,7 @@ use App\Application\Domain\Entity\User\UserRole;
 final readonly class CreateUserRequest
 {
     /**
-     * @param UserRole[] $roles
+     * @param list<UserRole> $roles
      */
     public function __construct(
         private string $email,
@@ -29,7 +29,7 @@ final readonly class CreateUserRequest
     }
 
     /**
-     * @return UserRole[]
+     * @return list<UserRole>
      */
     public function getRoles(): array
     {

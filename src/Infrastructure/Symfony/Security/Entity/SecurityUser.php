@@ -13,7 +13,7 @@ use Symfony\Component\Uid\Uuid;
 final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
-     * @param SecurityUserRole[] $securityRoles
+     * @param list<SecurityUserRole> $securityRoles
      */
     public function __construct(
         private Uuid $id,
@@ -61,7 +61,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -72,7 +72,7 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     }
 
     /**
-     * @param SecurityUserRole[] $securityRoles
+     * @param list<SecurityUserRole> $securityRoles
      */
     public function setSecurityRoles(array $securityRoles): self
     {

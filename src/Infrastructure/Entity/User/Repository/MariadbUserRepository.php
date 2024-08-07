@@ -195,7 +195,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param UserRole[] $roles
+     * @param list<UserRole> $roles
      *
      * @throws \JsonException
      */
