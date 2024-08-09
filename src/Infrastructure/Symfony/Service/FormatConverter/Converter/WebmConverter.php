@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
 
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\Snap;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\WebM;
 use Symfony\Component\Filesystem\Filesystem;
@@ -27,7 +27,7 @@ final readonly class WebmConverter implements FormatConverterInterface
     public function convert(Snap $snap): string
     {
         if ($snap->isVideo() === false) {
-            throw new \RuntimeException('You can\'t generate a webm from a ' . $snap->getMimeType()->value . ' file.');
+            throw new \RuntimeException(sprintf('You can\'t generate a webm from a %s file.', $snap->getMimeType()->value));
         }
 
         $webmAbsolutePath = $this->getFileAbsolutePath($snap);

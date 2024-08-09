@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\Install;
 
-use App\Application\Domain\Entity\User\UserRole;
+use App\Application\Domain\User\UserRole;
 use App\Application\UseCase\User\Create\CreateUserRequest;
 use App\Application\UseCase\User\Create\CreateUserUseCase;
 use App\Infrastructure\Symfony\Form\SetupType;

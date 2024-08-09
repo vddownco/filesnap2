@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\User\UpdateAuthorizationKeyById;
 
-use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
+use App\Application\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class UpdateUserAuthorizationKeyByIdUseCase
 {
-    public function __construct(private UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        private UserRepositoryInterface $userRepository
+    ) {
     }
 
     public function __invoke(UpdateUserAuthorizationKeyByIdRequest $request): UpdateUserAuthorizationKeyByIdResponse

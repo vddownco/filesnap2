@@ -8,8 +8,9 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class FindOneSnapByIdRequest
 {
-    public function __construct(private Uuid $id)
-    {
+    public function __construct(
+        private Uuid $id
+    ) {
     }
 
     public function getId(): Uuid

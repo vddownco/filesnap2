@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\User;
 
-use App\Application\Domain\Entity\Snap\Snap;
-use App\Application\UseCase\Snap\CountByUser\CountSnapsByUserRequest;
-use App\Application\UseCase\Snap\CountByUser\CountSnapsByUserUseCase;
 use App\Application\UseCase\Snap\FindByUser\FindSnapsByUserRequest;
 use App\Application\UseCase\Snap\FindByUser\FindSnapsByUserUseCase;
 use App\UI\Http\FilesnapAbstractController;
@@ -22,49 +19,37 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 final class GalleryController extends FilesnapAbstractController
 {
-    public const int MAX_SNAPS_BY_PAGE = 45;
+    private const int MAX_SNAPS_BY_PAGE = 45;
 
     public function __invoke(
-        CountSnapsByUserUseCase $countSnapsByUserUseCase,
         FindSnapsByUserUseCase $findSnapsByUserUseCase,
         #[MapQueryParameter] ?int $page
     ): Response {
         if ($page === null) {
             $page = 1;
-        } elseif ($page <= 0) {
+        } elseif ($page < 1) {
             throw $this->createNotFoundException();
         }
 
-        $user = $this->getAuthenticatedUser();
+        $useCaseResponse = $findSnapsByUserUseCase(new FindSnapsByUserRequest(
+            $this->getAuthenticatedUser()->getId(),
+            self::MAX_SNAPS_BY_PAGE * ($page - 1),
+            self::MAX_SNAPS_BY_PAGE
+        ));
 
-        $countUseCaseResponse = $countSnapsByUserUseCase(new CountSnapsByUserRequest($user->getId()));
-
-        $snapsCount = $countUseCaseResponse->getCount();
-        $pageCount = (int) ceil($snapsCount / self::MAX_SNAPS_BY_PAGE);
+        $snaps = $useCaseResponse->getSnaps();
+        $snapsCount = $useCaseResponse->getTotalCount();
 
         if (
-            ($snapsCount > 0 && $page > $pageCount)
-            || ($snapsCount === 0 && $page !== 1)
+            ($snaps === [] && $snapsCount > 0)
+            || ($page > 1 && $snapsCount === 0)
         ) {
             throw $this->createNotFoundException();
         }
 
+        $pageCount = (int) ceil($snapsCount / self::MAX_SNAPS_BY_PAGE);
         $nextPage = $page === $pageCount || $snapsCount === 0 ? null : $page + 1;
         $previousPage = $page === 1 ? null : $page - 1;
-
-        /** @var list<Snap> $snaps */
-        $snaps = [];
-
-        if ($snapsCount > 0) {
-            $findUseCaseResponse = $findSnapsByUserUseCase(new FindSnapsByUserRequest(
-                $user->getId(),
-                self::MAX_SNAPS_BY_PAGE * ($page - 1),
-                self::MAX_SNAPS_BY_PAGE
-            ));
-
-            $snaps = $findUseCaseResponse->getSnaps();
-        }
-
         $emptySpaceCount = count($snaps) < self::MAX_SNAPS_BY_PAGE ? self::MAX_SNAPS_BY_PAGE - count($snaps) : 0;
 
         return $this->view([

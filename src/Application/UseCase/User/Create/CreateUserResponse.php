@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\User\Create;
 
-use App\Application\Domain\Entity\User\User;
+use App\Application\Domain\User\User;
 
 final readonly class CreateUserResponse
 {
-    public function __construct(private User $user)
-    {
+    public function __construct(
+        private User $user
+    ) {
     }
 
     public function getUser(): User

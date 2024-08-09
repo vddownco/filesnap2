@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\EventSubscriber;
 
-use App\Application\Domain\Entity\Snap\Exception\FileSizeTooBigException;
-use App\Application\Domain\Entity\Snap\Exception\SnapNotFoundException;
-use App\Application\Domain\Entity\Snap\Exception\UnauthorizedDeletionException;
-use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
 use App\Application\Domain\Exception\DomainException;
+use App\Application\Domain\Snap\Exception\FileSizeTooBigException;
+use App\Application\Domain\Snap\Exception\SnapNotFoundException;
+use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\Domain\Snap\Exception\UnsupportedFileTypeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -21,12 +21,12 @@ final readonly class ExceptionSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::EXCEPTION => [
-                ['convertDomainExceptionToHttpException', -127],
+                ['domainExceptionToHttpException', -127],
             ],
         ];
     }
 
-    public function convertDomainExceptionToHttpException(ExceptionEvent $event): void
+    public function domainExceptionToHttpException(ExceptionEvent $event): void
     {
         $throwable = $event->getThrowable();
 

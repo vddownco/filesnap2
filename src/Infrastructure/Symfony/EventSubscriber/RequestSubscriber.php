@@ -11,8 +11,9 @@ use Twig\Environment;
 
 final readonly class RequestSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private Environment $twig)
-    {
+    public function __construct(
+        private Environment $twig
+    ) {
     }
 
     public static function getSubscribedEvents(): array

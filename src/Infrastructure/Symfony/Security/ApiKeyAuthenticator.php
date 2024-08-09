@@ -55,6 +55,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
         $useCaseResponse = ($this->findOneUserByAuthorizationKeyUseCase)(
             new FindOneUserByAuthorizationKeyRequest($apiKeyUuid)
         );
+
         $user = $useCaseResponse->getUser();
 
         if ($user === null) {
@@ -78,6 +79,6 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
     private function createIncorrectApiKeyException(): CustomUserMessageAuthenticationException
     {
-        return new CustomUserMessageAuthenticationException('Incorrect API key');
+        return new CustomUserMessageAuthenticationException('Incorrect API key.');
     }
 }

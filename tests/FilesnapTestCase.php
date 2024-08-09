@@ -22,6 +22,6 @@ class FilesnapTestCase extends KernelTestCase
      */
     protected static function getRandomDateTime(): \DateTimeInterface
     {
-        return (new \DateTime())->setTimestamp(random_int(0, 2000000000));
+        return (new \DateTimeImmutable())->setTimestamp(random_int(0, 2000000000));
     }
 }

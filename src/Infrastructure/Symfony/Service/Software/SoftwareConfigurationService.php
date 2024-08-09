@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Service\Software;
 
 use App\Infrastructure\Symfony\Security\Entity\SecurityUser;
-use App\Infrastructure\Symfony\Service\Software\SoftwareConfiguration\SharexConfigurationService;
+use App\Infrastructure\Symfony\Service\Software\SoftwareConfiguration\SharexConfiguration;
 use Symfony\Component\HttpFoundation\File\File;
 
 final readonly class SoftwareConfigurationService
 {
-    public function __construct(private SharexConfigurationService $sharexConfigurationService)
-    {
+    public function __construct(
+        private SharexConfiguration $sharexConfiguration
+    ) {
     }
 
     /**
@@ -20,7 +21,7 @@ final readonly class SoftwareConfigurationService
     public function getConfigurationFile(Software $software, SecurityUser $user): File
     {
         return match ($software) {
-            Software::Sharex => $this->sharexConfigurationService->getConfigurationFile($user),
+            Software::Sharex => $this->sharexConfiguration->getConfigurationFile($user),
         };
     }
 }

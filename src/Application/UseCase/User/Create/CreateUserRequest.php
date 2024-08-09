@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\User\Create;
 
-use App\Application\Domain\Entity\User\UserRole;
+use App\Application\Domain\User\UserRole;
 
 final readonly class CreateUserRequest
 {

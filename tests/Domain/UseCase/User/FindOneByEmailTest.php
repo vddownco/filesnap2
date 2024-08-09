@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\UseCase\User;
 
-use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
-use App\Application\Domain\Entity\User\User;
-use App\Application\Domain\Entity\User\UserRole;
+use App\Application\Domain\User\User;
+use App\Application\Domain\User\UserRepositoryInterface;
+use App\Application\Domain\User\UserRole;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailRequest;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailUseCase;
 use App\Tests\FilesnapTestCase;

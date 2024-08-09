@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\User\Create;
 
-use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
-use App\Application\Domain\Entity\User\Service\PasswordHasherInterface;
-use App\Application\Domain\Entity\User\User;
+use App\Application\Domain\User\Service\PasswordHasherInterface;
+use App\Application\Domain\User\User;
+use App\Application\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class CreateUserUseCase

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\DeleteById;
 
-use App\Application\Domain\Entity\Snap\Exception\SnapNotFoundException;
-use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
-use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
+use App\Application\Domain\Snap\Exception\SnapNotFoundException;
+use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
+use App\Application\Domain\Snap\SnapRepositoryInterface;
 
 final readonly class DeleteSnapByIdUseCase
 {
@@ -27,7 +27,7 @@ final readonly class DeleteSnapByIdUseCase
             throw new SnapNotFoundException($request->getId());
         }
 
-        $this->fileStorage->delete($snap);
         $this->snapRepository->deleteOneById($snap->getId());
+        $this->fileStorage->delete($snap);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Console\Command;
 
-use App\Application\Domain\Entity\User\UserRole;
+use App\Application\Domain\User\UserRole;
 use App\Application\UseCase\User\Create\CreateUserRequest;
 use App\Application\UseCase\User\Create\CreateUserUseCase;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -16,10 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:create-user')]
 final class CreateUserCommand extends Command
 {
-    public const string ARGUMENT_EMAIL = 'email';
-    public const string ARGUMENT_PASSWORD = 'password';
-    public const string ARGUMENT_IS_ADMIN = 'is_admin';
-    public const array ARGUMENT_IS_ADMIN_VALUES = [
+    private const string ARGUMENT_EMAIL = 'email';
+    private const string ARGUMENT_PASSWORD = 'password';
+    private const string ARGUMENT_IS_ADMIN = 'is_admin';
+    private const array ARGUMENT_IS_ADMIN_VALUES = [
         'true',
         'false',
     ];

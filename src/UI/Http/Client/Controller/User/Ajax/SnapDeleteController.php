@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\User\Ajax;
 
-use App\Application\Domain\Entity\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
 use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsRequest;
 use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsUseCase;
 use App\UI\Http\FilesnapAbstractController;

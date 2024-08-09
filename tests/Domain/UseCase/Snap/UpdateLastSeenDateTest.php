@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\UseCase\Snap;
 
-use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
+use App\Application\Domain\Snap\SnapRepositoryInterface;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateRequest;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateUseCase;
 use App\Tests\FilesnapTestCase;

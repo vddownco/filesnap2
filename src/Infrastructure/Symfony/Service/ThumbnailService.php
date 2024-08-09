@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Service;
 
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\Snap;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Media\Video;

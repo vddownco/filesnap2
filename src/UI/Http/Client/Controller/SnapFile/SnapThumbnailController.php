@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\SnapFile;
 
-use App\Application\Domain\Entity\Snap\MimeType;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\MimeType;
+use App\Application\Domain\Snap\Snap;
 use App\Infrastructure\Symfony\Service\ThumbnailService;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,6 +30,9 @@ final class SnapThumbnailController extends AbstractSnapFileController
     ) {
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function response(Snap $snap): RedirectResponse
     {
         $this->thumbnailService->generate($snap);

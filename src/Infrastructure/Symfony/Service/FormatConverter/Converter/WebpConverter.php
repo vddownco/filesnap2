@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
 
-use App\Application\Domain\Entity\Snap\MimeType;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\MimeType;
+use App\Application\Domain\Snap\Snap;
 use Symfony\Component\Filesystem\Filesystem;
 
 final readonly class WebpConverter implements FormatConverterInterface
@@ -34,7 +34,7 @@ final readonly class WebpConverter implements FormatConverterInterface
             MimeType::ImageJpeg => imagecreatefromjpeg($snapAbsolutePath),
             MimeType::ImagePng => imagecreatefrompng($snapAbsolutePath),
             MimeType::ImageGif => imagecreatefromgif($snapAbsolutePath),
-            default => throw new \RuntimeException('You can\'t generate a webp from a ' . $snapMimeType->value . ' file.')
+            default => throw new \RuntimeException(sprintf('You can\'t generate a webp from a %s file.', $snapMimeType->value))
         };
 
         if ($gdImage === false) {

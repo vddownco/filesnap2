@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller;
 
-use App\Application\Domain\Entity\Snap\MimeType;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\MimeType;
+use App\Application\Domain\Snap\Snap;
 use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdRequest;
 use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdUseCase;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateRequest;
@@ -38,7 +38,7 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
         $response->headers->set('Cache-Control', 'no-store');
 
         if ($this->updateSnapLastSeenDate() === true) {
-            $updateSnapLastSeenDateUseCase(new UpdateSnapLastSeenDateRequest($snap->getId(), new \DateTime()));
+            $updateSnapLastSeenDateUseCase(new UpdateSnapLastSeenDateRequest($snap->getId(), new \DateTimeImmutable()));
         }
 
         return $response;

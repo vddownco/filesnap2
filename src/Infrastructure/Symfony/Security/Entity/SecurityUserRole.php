@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Security\Entity;
 
-use App\Application\Domain\Entity\User\UserRole;
+use App\Application\Domain\User\UserRole;
 
 enum SecurityUserRole: string
 {

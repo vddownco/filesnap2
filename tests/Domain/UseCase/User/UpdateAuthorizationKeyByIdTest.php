@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\UseCase\User;
 
-use App\Application\Domain\Entity\User\Repository\UserRepositoryInterface;
+use App\Application\Domain\User\UserRepositoryInterface;
 use App\Application\UseCase\User\UpdateAuthorizationKeyById\UpdateUserAuthorizationKeyByIdRequest;
 use App\Application\UseCase\User\UpdateAuthorizationKeyById\UpdateUserAuthorizationKeyByIdUseCase;
 use App\Tests\FilesnapTestCase;

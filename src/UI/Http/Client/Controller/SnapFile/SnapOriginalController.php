@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\SnapFile;
 
-use App\Application\Domain\Entity\Snap\MimeType;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\MimeType;
+use App\Application\Domain\Snap\Snap;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;

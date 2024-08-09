@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Security\Entity;
 
-use App\Application\Domain\Entity\User\User;
-use App\Application\Domain\Entity\User\UserRole;
+use App\Application\Domain\User\User;
+use App\Application\Domain\User\UserRole;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
+final readonly class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @param list<SecurityUserRole> $securityRoles
@@ -29,35 +29,14 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
         return $this->id;
     }
 
-    public function setId(Uuid $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     /**
@@ -71,26 +50,9 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
         );
     }
 
-    /**
-     * @param list<SecurityUserRole> $securityRoles
-     */
-    public function setSecurityRoles(array $securityRoles): self
-    {
-        $this->securityRoles = $securityRoles;
-
-        return $this;
-    }
-
     public function getAuthorizationKey(): Uuid
     {
         return $this->authorizationKey;
-    }
-
-    public function setAuthorizationKey(Uuid $authorizationKey): self
-    {
-        $this->authorizationKey = $authorizationKey;
-
-        return $this;
     }
 
     public function eraseCredentials(): void
@@ -105,14 +67,14 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
     public static function create(User $user): self
     {
         return new self(
-            $user->getId(),
-            $user->getEmail(),
-            $user->getPassword(),
-            array_map(
+            id: $user->getId(),
+            email: $user->getEmail(),
+            password: $user->getPassword(),
+            securityRoles: array_map(
                 static fn (UserRole $role): SecurityUserRole => SecurityUserRole::fromUserRole($role),
                 $user->getRoles()
             ),
-            $user->getAuthorizationKey()
+            authorizationKey: $user->getAuthorizationKey()
         );
     }
 }

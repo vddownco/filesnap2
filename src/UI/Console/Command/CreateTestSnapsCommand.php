@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\UI\Console\Command;
 
-use App\Application\Domain\Entity\Snap\Exception\FileNotFoundException;
-use App\Application\Domain\Entity\Snap\Exception\FileSizeTooBigException;
-use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
-use App\Application\Domain\Entity\Snap\MimeType;
+use App\Application\Domain\Snap\Exception\FileNotFoundException;
+use App\Application\Domain\Snap\Exception\FileSizeTooBigException;
+use App\Application\Domain\Snap\Exception\UnsupportedFileTypeException;
+use App\Application\Domain\Snap\MimeType;
 use App\Application\UseCase\Snap\Create\CreateSnapRequest;
 use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailRequest;
@@ -24,8 +24,8 @@ use Symfony\Component\HttpFoundation\File\File;
 #[AsCommand(name: 'app:create-test-snaps')]
 final class CreateTestSnapsCommand extends Command
 {
-    public const string ARGUMENT_EMAIL = 'email';
-    public const string ARGUMENT_QUANTITY = 'quantity';
+    private const string ARGUMENT_EMAIL = 'email';
+    private const string ARGUMENT_QUANTITY = 'quantity';
 
     /**
      * @var list<File>
@@ -36,10 +36,10 @@ final class CreateTestSnapsCommand extends Command
      * @throws \Exception
      */
     public function __construct(
+        #[Autowire(param: 'app.environment')] private readonly string $environment,
+        #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory,
         private readonly CreateSnapUseCase $createSnapUseCase,
         private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
-        #[Autowire(param: 'app.environment')] private readonly string $environment,
-        #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory
     ) {
         $authorizedExtensions = [];
 

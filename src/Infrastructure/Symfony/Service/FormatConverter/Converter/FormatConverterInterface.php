@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
 
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\Snap;
 
 interface FormatConverterInterface
 {

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\FindOneById;
 
-use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
+use App\Application\Domain\Snap\SnapRepositoryInterface;
 
 final readonly class FindOneSnapByIdUseCase
 {
-    public function __construct(private SnapRepositoryInterface $snapRepository)
-    {
+    public function __construct(
+        private SnapRepositoryInterface $snapRepository
+    ) {
     }
 
     public function __invoke(FindOneSnapByIdRequest $request): FindOneSnapByIdResponse

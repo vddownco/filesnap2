@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Client\Controller\SnapFile;
 
-use App\Application\Domain\Entity\Snap\MimeType;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\MimeType;
+use App\Application\Domain\Snap\Snap;
 use App\Infrastructure\Symfony\Service\FormatConverter\Converter\WebpConverter;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -50,6 +50,6 @@ final class SnapWebpController extends AbstractSnapFileController
      */
     protected function supportedMimeTypes(): array
     {
-        return MimeType::IMAGES_MIME_TYPES;
+        return MimeType::IMAGE_MIME_TYPES;
     }
 }

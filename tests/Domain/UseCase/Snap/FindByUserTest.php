@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\UseCase\Snap;
 
-use App\Application\Domain\Entity\Snap\Exception\FileNotFoundException;
-use App\Application\Domain\Entity\Snap\Factory\SnapFactory;
-use App\Application\Domain\Entity\Snap\FileStorage\File;
-use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
-use App\Application\Domain\Entity\Snap\MimeType;
-use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\Exception\FileNotFoundException;
+use App\Application\Domain\Snap\FileStorage\File;
+use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
+use App\Application\Domain\Snap\MimeType;
+use App\Application\Domain\Snap\Snap;
+use App\Application\Domain\Snap\SnapFactory;
+use App\Application\Domain\Snap\SnapRepositoryInterface;
 use App\Application\UseCase\Snap\FindByUser\FindSnapsByUserRequest;
 use App\Application\UseCase\Snap\FindByUser\FindSnapsByUserUseCase;
 use App\Tests\FilesnapTestCase;
@@ -63,6 +63,7 @@ final class FindByUserTest extends FilesnapTestCase
     #[DataProvider('provider')]
     public function test(array $expectedSnaps): void
     {
+        $count = self::getRandomInt();
         $request = new FindSnapsByUserRequest(Uuid::v7(), self::getRandomInt(), self::getRandomInt());
 
         $snapRepositoryMock = $this->createMock(SnapRepositoryInterface::class);
@@ -73,12 +74,19 @@ final class FindByUserTest extends FilesnapTestCase
             ->with($request->getUserId(), $request->getOffset(), $request->getLimit())
             ->willReturn($expectedSnaps);
 
+        $snapRepositoryMock
+            ->expects($this->once())
+            ->method('countByUser')
+            ->with($request->getUserId())
+            ->willReturn($count);
+
         $useCase = new FindSnapsByUserUseCase($snapRepositoryMock);
 
         $response = $useCase($request);
         $actualSnaps = $response->getSnaps();
 
         self::assertSameSize($expectedSnaps, $actualSnaps);
+        self::assertSame($count, $response->getTotalCount());
 
         if ($expectedSnaps !== []) {
             foreach ($expectedSnaps as $i => $expectedSnap) {

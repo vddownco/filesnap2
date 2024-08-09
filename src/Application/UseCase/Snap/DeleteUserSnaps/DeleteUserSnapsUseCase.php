@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\DeleteUserSnaps;
 
-use App\Application\Domain\Entity\Snap\Exception\UnauthorizedDeletionException;
-use App\Application\Domain\Entity\Snap\FileStorage\FileStorageInterface;
-use App\Application\Domain\Entity\Snap\Repository\SnapRepositoryInterface;
-use App\Application\Domain\Entity\Snap\Snap;
+use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
+use App\Application\Domain\Snap\Snap;
+use App\Application\Domain\Snap\SnapRepositoryInterface;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class DeleteUserSnapsUseCase

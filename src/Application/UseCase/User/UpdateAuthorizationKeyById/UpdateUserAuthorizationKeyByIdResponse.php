@@ -8,8 +8,9 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class UpdateUserAuthorizationKeyByIdResponse
 {
-    public function __construct(private Uuid $authorizationKey)
-    {
+    public function __construct(
+        private Uuid $authorizationKey
+    ) {
     }
 
     public function getAuthorizationKey(): Uuid

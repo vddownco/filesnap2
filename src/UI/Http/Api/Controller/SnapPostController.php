@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\UI\Http\Api\Controller;
 
-use App\Application\Domain\Entity\Snap\Exception\FileNotFoundException;
-use App\Application\Domain\Entity\Snap\Exception\FileSizeTooBigException;
-use App\Application\Domain\Entity\Snap\Exception\UnsupportedFileTypeException;
+use App\Application\Domain\Snap\Exception\FileNotFoundException;
+use App\Application\Domain\Snap\Exception\FileSizeTooBigException;
+use App\Application\Domain\Snap\Exception\UnsupportedFileTypeException;
 use App\Application\UseCase\Snap\Create\CreateSnapRequest;
 use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\UI\Http\FilesnapAbstractController;
