@@ -8,9 +8,7 @@ use App\Application\Domain\Snap\Exception\FileNotFoundException;
 use App\Application\Domain\Snap\Exception\FileSizeTooBigException;
 use App\Application\Domain\Snap\Exception\UnsupportedFileTypeException;
 use App\Application\UseCase\Snap\Create\CreateSnapRequest;
-use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
-use App\Infrastructure\Symfony\Message\ConversionMessage;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Domain\UseCase\Snap\CreateSnapUseCaseDispatcher;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -38,8 +35,7 @@ final class SnapPostController extends FilesnapAbstractController
      * @throws ExceptionInterface
      */
     public function __invoke(
-        CreateSnapUseCase $createSnapUseCase,
-        MessageBusInterface $bus,
+        CreateSnapUseCaseDispatcher $createSnapUseCase,
         UrlGeneratorInterface $router,
         Request $request
     ): JsonResponse {
@@ -85,8 +81,6 @@ final class SnapPostController extends FilesnapAbstractController
         ];
 
         if ($snap->isImage() === true) {
-            $bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webp));
-
             $formats['webp'] = $router->generate(
                 'client_snap_file_webp',
                 $parameters,
@@ -97,8 +91,6 @@ final class SnapPostController extends FilesnapAbstractController
         }
 
         if ($snap->isVideo() === true) {
-            $bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webm));
-
             $formats['webm'] = $router->generate(
                 'client_snap_file_webm',
                 $parameters,
