@@ -12,6 +12,8 @@ use App\Application\UseCase\Snap\Create\CreateSnapRequest;
 use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailRequest;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailUseCase;
+use App\Infrastructure\Symfony\Message\ConversionMessage;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
 use Random\RandomException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -20,6 +22,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(name: 'app:create-test-snaps')]
 final class CreateTestSnapsCommand extends Command
@@ -40,6 +44,7 @@ final class CreateTestSnapsCommand extends Command
         #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory,
         private readonly CreateSnapUseCase $createSnapUseCase,
         private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
+        private readonly MessageBusInterface $bus,
     ) {
         $authorizedExtensions = [];
 
@@ -98,6 +103,7 @@ final class CreateTestSnapsCommand extends Command
      * @throws UnsupportedFileTypeException
      * @throws RandomException
      * @throws \Exception
+     * @throws ExceptionInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -158,13 +164,23 @@ final class CreateTestSnapsCommand extends Command
                 throw new \RuntimeException('Unable to determine file size');
             }
 
-            ($this->createSnapUseCase)(new CreateSnapRequest(
+            $createUseCaseResponse = ($this->createSnapUseCase)(new CreateSnapRequest(
                 $user->getId(),
                 $file->getFilename(),
                 $mimeType,
                 $file->getPathname(),
                 $size
             ));
+
+            $snap = $createUseCaseResponse->getSnap();
+
+            if ($snap->isImage() === true) {
+                $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webp));
+            }
+
+            if ($snap->isVideo() === true) {
+                $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webm));
+            }
         }
 
         return Command::SUCCESS;

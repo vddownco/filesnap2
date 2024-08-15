@@ -2,7 +2,7 @@ services:
 
   php:
     container_name: filesnap-php
-    image: filesnap:3
+    image: filesnap:5
     volumes:
       - ./docker_config/php.ini:/usr/local/etc/php/php.ini
       - ./:/var/www
@@ -37,6 +37,18 @@ services:
       - filesnap-network
     depends_on:
       - php
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: filesnap-rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - ./docker_data/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./docker_data/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - filesnap-network
 
 volumes:
   mariadb_data:

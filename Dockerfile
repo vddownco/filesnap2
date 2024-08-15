@@ -13,7 +13,8 @@ RUN apt update && apt install -y \
  libpng-dev \
  libwebp-dev \
  libfreetype6-dev \
- ffmpeg
+ ffmpeg \
+ librabbitmq-dev
 
 # Install PHP extensions
 RUN docker-php-ext-configure intl
@@ -21,6 +22,8 @@ RUN docker-php-ext-configure opcache
 RUN docker-php-ext-configure gd --enable-gd --prefix=/usr --with-jpeg --with-webp
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl opcache
 RUN pecl install apcu
+RUN pecl install amqp
+RUN docker-php-ext-enable amqp
 
 # Copy Composer from the official Composer image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -21,6 +21,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
         #[Autowire(param: 'app.upload.relative_directory')] private string $uploadRelativeDirectory,
         #[Autowire(param: 'app.upload.bytes_max_filesize')] private int $uploadBytesMaxFilesize,
         private ThumbnailService $thumbnailService,
+        private FormatConverterService $formatConverterService,
         private Filesystem $filesystem = new Filesystem()
     ) {
     }
@@ -61,7 +62,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
 
         $this->filesystem->remove($filePath);
         $this->thumbnailService->delete($snap->getId());
-        FormatConverterService::deleteAllConvertedFiles($snap);
+        $this->formatConverterService->deleteConvertedFiles($snap);
     }
 
     public function get(Uuid $snapId, Uuid $snapUserId): ?File

@@ -11,7 +11,9 @@ use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdUseCase;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateRequest;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateUseCase;
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
 use App\UI\Http\FilesnapAbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
@@ -37,11 +39,19 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
         $response->headers->set('X-Robots-Tag', 'noindex');
         $response->headers->set('Cache-Control', 'no-store');
 
-        if ($this->updateSnapLastSeenDate() === true) {
+        if ($this->updateSnapLastSeenDate() === true && $response instanceof BinaryFileResponse) {
             $updateSnapLastSeenDateUseCase(new UpdateSnapLastSeenDateRequest($snap->getId(), new \DateTimeImmutable()));
         }
 
         return $response;
+    }
+
+    protected function waitingForConversionResponse(Snap $snap, ConvertFormat $format): Response
+    {
+        return $this->render('client/waiting-for-conversion.html.twig', [
+            'snap' => $snap,
+            'format' => $format,
+        ]);
     }
 
     abstract protected function response(Snap $snap): Response;

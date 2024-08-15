@@ -35,7 +35,8 @@ final readonly class SharexConfiguration implements SoftwareConfigurationInterfa
             'Headers' => ['Authorization' => $authorizationHeader],
             'Body' => 'MultipartFormData',
             'FileFormName' => 'file',
-            'URL' => '{json:webp}',
+            'URL' => '{json:formats.preferred}',
+            'ThumbnailURL' => '{json:formats.thumbnail}',
         ];
 
         $json = json_encode($configuration, JSON_THROW_ON_ERROR);

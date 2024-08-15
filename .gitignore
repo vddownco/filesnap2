@@ -13,6 +13,7 @@ npm-debug.log
 yarn-error.log
 
 /user_uploads/
+/user_converted_uploads/
 /create_test_snaps_files
 /public/snap/
 /.idea/
@@ -28,5 +29,6 @@ docker-compose-prod.yaml
 .phpunit.result.cache
 
 /.features
+docker_data/
 
 phpstan.neon

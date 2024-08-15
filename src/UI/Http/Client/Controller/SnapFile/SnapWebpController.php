@@ -6,10 +6,11 @@ namespace App\UI\Http\Client\Controller\SnapFile;
 
 use App\Application\Domain\Snap\MimeType;
 use App\Application\Domain\Snap\Snap;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\WebpConverter;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webp\WebpConverter;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -22,19 +23,24 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 final class SnapWebpController extends AbstractSnapFileController
 {
+    public function __construct(
+        private readonly WebpConverter $converter,
+    ) {
+    }
+
     /**
      * @throws \Exception
      */
-    protected function response(Snap $snap): BinaryFileResponse
+    protected function response(Snap $snap): Response
     {
-        $webpConverter = new WebpConverter();
+        $webpFile = $this->converter->getConvertedFile($snap);
 
-        if ($webpConverter->fileExists($snap) === false) {
-            $webpConverter->convert($snap);
+        if ($webpFile === null) {
+            return $this->waitingForConversionResponse($snap, ConvertFormat::Webp);
         }
 
         return $this->file(
-            $webpConverter->getFileAbsolutePath($snap),
+            $webpFile,
             $snap->getOriginalFilename() . '.webp',
             ResponseHeaderBag::DISPOSITION_INLINE
         );

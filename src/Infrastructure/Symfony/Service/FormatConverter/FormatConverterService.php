@@ -5,27 +5,25 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Service\FormatConverter;
 
 use App\Application\Domain\Snap\Snap;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\FormatConverterInterface;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\WebmConverter;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\WebpConverter;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webm\WebmLocalStorage;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webp\WebpLocalStorage;
 
 final readonly class FormatConverterService
 {
-    public static function deleteAllConvertedFiles(Snap $snap): void
-    {
-        foreach (self::getConverters() as $converter) {
-            $converter->deleteConvertedFile($snap);
-        }
+    public function __construct(
+        private WebpLocalStorage $webpLocalStorage,
+        private WebmLocalStorage $webmLocalStorage,
+    ) {
     }
 
-    /**
-     * @return list<FormatConverterInterface>
-     */
-    private static function getConverters(): array
+    public function deleteConvertedFiles(Snap $snap): void
     {
-        return [
-            new WebpConverter(),
-            new WebmConverter(),
-        ];
+        if ($snap->isImage() === true) {
+            $this->webpLocalStorage->delete($snap);
+        }
+
+        if ($snap->isVideo() === true) {
+            $this->webmLocalStorage->delete($snap);
+        }
     }
 }
