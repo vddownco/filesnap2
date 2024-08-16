@@ -8,7 +8,7 @@ use App\Application\Domain\Snap\Exception\FileNotFoundException;
 use App\Application\Domain\Snap\Exception\FileSizeTooBigException;
 use App\Application\Domain\Snap\Exception\UnsupportedFileTypeException;
 use App\Application\UseCase\Snap\Create\CreateSnapRequest;
-use App\Infrastructure\Domain\UseCase\Snap\CreateSnapUseCaseDispatcher;
+use App\Infrastructure\UseCase\Snap\CreateSnapUseCaseDispatcher;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;

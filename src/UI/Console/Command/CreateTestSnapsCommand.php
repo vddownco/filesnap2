@@ -11,7 +11,7 @@ use App\Application\Domain\Snap\MimeType;
 use App\Application\UseCase\Snap\Create\CreateSnapRequest;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailRequest;
 use App\Application\UseCase\User\FindOneByEmail\FindOneUserByEmailUseCase;
-use App\Infrastructure\Domain\UseCase\Snap\CreateSnapUseCaseDispatcher;
+use App\Infrastructure\UseCase\Snap\CreateSnapUseCaseDispatcher;
 use Random\RandomException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

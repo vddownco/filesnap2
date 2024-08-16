@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Domain\UseCase\Snap;
+namespace App\Infrastructure\UseCase\Snap;
 
 use App\Application\Domain\Snap\Exception\FileNotFoundException;
 use App\Application\Domain\Snap\Exception\FileSizeTooBigException;

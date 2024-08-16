@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
-use App\Application\Domain\Snap\SnapRepositoryInterface;
-use App\Application\Domain\User\Service\PasswordHasherInterface;
-use App\Application\Domain\User\UserRepositoryInterface;
-use App\Infrastructure\Domain\Impl\Snap\FileStorage\LocalFileStorage;
-use App\Infrastructure\Domain\Impl\Snap\Repository\MariadbSnapRepository;
-use App\Infrastructure\Domain\Impl\User\Repository\MariadbUserRepository;
-use App\Infrastructure\Domain\Impl\User\Service\SymfonyPasswordHasher;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -34,9 +26,4 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->exclude([
             __DIR__ . '/../src/Kernel.php',
         ]);
-
-    $services->alias(UserRepositoryInterface::class, MariadbUserRepository::class);
-    $services->alias(SnapRepositoryInterface::class, MariadbSnapRepository::class);
-    $services->alias(FileStorageInterface::class, LocalFileStorage::class);
-    $services->alias(PasswordHasherInterface::class, SymfonyPasswordHasher::class);
 };
