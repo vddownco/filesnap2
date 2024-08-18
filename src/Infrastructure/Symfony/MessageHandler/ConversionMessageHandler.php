@@ -8,6 +8,7 @@ use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdRequest;
 use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdUseCase;
 use App\Infrastructure\Symfony\Message\ConversionMessage;
 use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Thumbnail\ThumbnailConverter;
 use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webm\WebmConverter;
 use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webp\WebpConverter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -17,6 +18,7 @@ final readonly class ConversionMessageHandler
 {
     public function __construct(
         private FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
+        private ThumbnailConverter $thumbnailConverter,
         private WebmConverter $webmConverter,
         private WebpConverter $webpConverter
     ) {
@@ -32,6 +34,7 @@ final readonly class ConversionMessageHandler
         }
 
         match ($message->getFormat()) {
+            ConvertFormat::Thumbnail => $this->thumbnailConverter->convert($snap),
             ConvertFormat::Webm => $this->webmConverter->convert($snap),
             ConvertFormat::Webp => $this->webpConverter->convert($snap)
         };

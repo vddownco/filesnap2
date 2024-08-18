@@ -23,11 +23,6 @@ final readonly class WebpConverter extends AbstractConverter
         parent::__construct($formatStorage);
     }
 
-    public function isConversionInProgress(Snap $snap): bool
-    {
-        return $this->filesystem->exists($this->getTempFilePath($snap));
-    }
-
     protected function conversion(Snap $snap): File
     {
         $snapAbsolutePath = $snap->getFile()->getAbsolutePath();

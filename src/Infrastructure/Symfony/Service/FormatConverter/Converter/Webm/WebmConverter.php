@@ -25,11 +25,6 @@ final readonly class WebmConverter extends AbstractConverter
         parent::__construct($formatStorage);
     }
 
-    public function isConversionInProgress(Snap $snap): bool
-    {
-        return $this->filesystem->exists($this->getTempFilePath($snap));
-    }
-
     protected function conversion(Snap $snap): File
     {
         if ($snap->isVideo() === false) {

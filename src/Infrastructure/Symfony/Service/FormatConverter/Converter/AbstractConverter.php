@@ -26,8 +26,6 @@ abstract readonly class AbstractConverter
         return $this->formatStorage->get($snap);
     }
 
-    abstract public function isConversionInProgress(Snap $snap): bool;
-
     abstract protected function conversion(Snap $snap): File;
 
     abstract protected function cleanUp(Snap $snap): void;

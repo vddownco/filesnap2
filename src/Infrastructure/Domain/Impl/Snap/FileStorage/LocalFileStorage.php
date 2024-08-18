@@ -9,7 +9,6 @@ use App\Application\Domain\Snap\FileStorage\FileMetadata;
 use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Snap\Snap;
 use App\Infrastructure\Symfony\Service\FormatConverter\FormatConverterService;
-use App\Infrastructure\Symfony\Service\ThumbnailService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Uid\Uuid;
@@ -20,7 +19,6 @@ final readonly class LocalFileStorage implements FileStorageInterface
         #[Autowire(param: 'app.project_directory')] private string $projectDirectory,
         #[Autowire(param: 'app.upload.relative_directory')] private string $uploadRelativeDirectory,
         #[Autowire(param: 'app.upload.bytes_max_filesize')] private int $uploadBytesMaxFilesize,
-        private ThumbnailService $thumbnailService,
         private FormatConverterService $formatConverterService,
         private Filesystem $filesystem = new Filesystem()
     ) {
@@ -61,7 +59,6 @@ final readonly class LocalFileStorage implements FileStorageInterface
         );
 
         $this->filesystem->remove($filePath);
-        $this->thumbnailService->delete($snap->getId());
         $this->formatConverterService->deleteConvertedFiles($snap);
     }
 

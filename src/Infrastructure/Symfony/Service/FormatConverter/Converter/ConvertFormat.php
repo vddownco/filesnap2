@@ -6,6 +6,7 @@ namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
 
 enum ConvertFormat: string
 {
+    case Thumbnail = 'thumbnail';
     case Webm = 'webm';
     case Webp = 'webp';
 }
