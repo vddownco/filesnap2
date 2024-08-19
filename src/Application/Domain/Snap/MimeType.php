@@ -9,6 +9,7 @@ enum MimeType: string
     case ImageJpeg = 'image/jpeg';
     case ImagePng = 'image/png';
     case ImageGif = 'image/gif';
+    case ImageWebp = 'image/webp';
     case VideoWebm = 'video/webm';
     case VideoMp4 = 'video/mp4';
 
@@ -17,6 +18,7 @@ enum MimeType: string
         self::ImageJpeg,
         self::ImagePng,
         self::ImageGif,
+        self::ImageWebp,
     ];
 
     /** @var list<self> */

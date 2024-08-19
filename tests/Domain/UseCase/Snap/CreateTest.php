@@ -40,6 +40,7 @@ final class CreateTest extends FilesnapTestCase
                     MimeType::ImageJpeg => [$originalFilenameBase . '.jpg', $fileAbsolutePathBase . '.jpg'],
                     MimeType::ImagePng => [$originalFilenameBase . '.png', $fileAbsolutePathBase . '.png'],
                     MimeType::ImageGif => [$originalFilenameBase . '.gif', $fileAbsolutePathBase . '.gif'],
+                    MimeType::ImageWebp => [$originalFilenameBase . '.webp', $fileAbsolutePathBase . '.webp'],
                     MimeType::VideoWebm => [$originalFilenameBase . '.webm', $fileAbsolutePathBase . '.webm'],
                     MimeType::VideoMp4 => [$originalFilenameBase . '.mp4', $fileAbsolutePathBase . '.mp4']
                 };

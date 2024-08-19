@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 
@@ -40,7 +41,8 @@ final class CreateTestSnapsCommand extends Command
         #[Autowire(param: 'app.environment')] private readonly string $environment,
         #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory,
         private readonly CreateSnapUseCaseDispatcher $createSnapUseCase,
-        private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase
+        private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
+        private readonly Filesystem $filesystem = new Filesystem()
     ) {
         $authorizedExtensions = [];
 
@@ -49,6 +51,7 @@ final class CreateTestSnapsCommand extends Command
                 MimeType::ImageJpeg => ['jpg', 'jpeg'],
                 MimeType::ImagePng => ['png'],
                 MimeType::ImageGif => ['gif'],
+                MimeType::ImageWebp => ['webp'],
                 MimeType::VideoMp4 => ['mp4'],
                 MimeType::VideoWebm => ['webm']
             };
@@ -141,14 +144,8 @@ final class CreateTestSnapsCommand extends Command
             return Command::FAILURE;
         }
 
-        $filesArrayIndexes = array_keys($this->files);
-        $filesArrayMinIndex = min($filesArrayIndexes);
-        $filesArrayMaxIndex = max($filesArrayIndexes);
-
         for ($i = 0; $i < (int) $quantityArgument; ++$i) {
-            $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
-            $file = $this->files[$randomIndex];
-
+            $file = $this->getRandomTempFile();
             $mimeType = $file->getMimeType();
             $size = $file->getSize();
 
@@ -160,7 +157,7 @@ final class CreateTestSnapsCommand extends Command
                 throw new \RuntimeException('Unable to determine file size');
             }
 
-            $createUseCaseResponse = ($this->createSnapUseCase)(new CreateSnapRequest(
+            ($this->createSnapUseCase)(new CreateSnapRequest(
                 $user->getId(),
                 $file->getFilename(),
                 $mimeType,
@@ -170,5 +167,23 @@ final class CreateTestSnapsCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @throws RandomException
+     */
+    private function getRandomTempFile(): File
+    {
+        $filesArrayIndexes = array_keys($this->files);
+        $filesArrayMinIndex = min($filesArrayIndexes);
+        $filesArrayMaxIndex = max($filesArrayIndexes);
+
+        $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
+        $file = $this->files[$randomIndex];
+
+        $tempPath = $this->filesystem->tempnam(sys_get_temp_dir(), 'test_snap_');
+        $this->filesystem->appendToFile($tempPath, $file->getContent());
+
+        return new File($tempPath);
     }
 }
