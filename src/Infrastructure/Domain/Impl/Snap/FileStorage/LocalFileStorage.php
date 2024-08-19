@@ -36,7 +36,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
             $this->filesystem->mkdir($userPersonalUploadDirectory);
         }
 
-        $this->filesystem->copy(
+        $this->filesystem->rename(
             $fileMetadata->getPath(),
             sprintf('%s/%s', $userPersonalUploadDirectory, $snapId->toBase58())
         );
