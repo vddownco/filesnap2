@@ -10,7 +10,7 @@ final readonly class UpdateUserPasswordByIdRequest
 {
     public function __construct(
         private Uuid $id,
-        private string $hashedPassword
+        private string $hashedPassword,
     ) {
     }
 

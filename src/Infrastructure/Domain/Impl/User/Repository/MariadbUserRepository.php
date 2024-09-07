@@ -24,7 +24,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class MariadbUserRepository implements UserRepositoryInterface
 {
     public function __construct(
-        private Connection $connection
+        private Connection $connection,
     ) {
     }
 

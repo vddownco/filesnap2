@@ -27,7 +27,7 @@ final class SnapDeleteController extends FilesnapAbstractController
      */
     public function __invoke(
         DeleteUserSnapsUseCase $deleteUserSnapsUseCase,
-        Request $request
+        Request $request,
     ): Response {
         $payloadIds = $request->getPayload()->all('ids');
 

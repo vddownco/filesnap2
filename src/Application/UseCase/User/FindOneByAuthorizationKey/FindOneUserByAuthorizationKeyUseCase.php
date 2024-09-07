@@ -9,7 +9,7 @@ use App\Application\Domain\User\UserRepositoryInterface;
 final readonly class FindOneUserByAuthorizationKeyUseCase
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 

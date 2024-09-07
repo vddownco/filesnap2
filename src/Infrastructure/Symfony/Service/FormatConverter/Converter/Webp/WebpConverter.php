@@ -33,7 +33,7 @@ final readonly class WebpConverter extends AbstractConverter
             MimeType::ImagePng => imagecreatefrompng($snapAbsolutePath),
             MimeType::ImageGif => imagecreatefromgif($snapAbsolutePath),
             MimeType::ImageWebp => imagecreatefromwebp($snapAbsolutePath),
-            default => throw new \RuntimeException(sprintf('You can\'t generate a webp from a %s file.', $snapMimeType->value))
+            default => throw new \RuntimeException(sprintf('You can\'t generate a webp from a %s file.', $snapMimeType->value)),
         };
 
         if ($gdImage === false) {

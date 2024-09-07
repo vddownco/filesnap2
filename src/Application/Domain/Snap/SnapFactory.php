@@ -11,7 +11,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class SnapFactory
 {
     public function __construct(
-        private FileStorageInterface $fileStorage
+        private FileStorageInterface $fileStorage,
     ) {
     }
 
@@ -24,7 +24,7 @@ final readonly class SnapFactory
         string $originalFilename,
         MimeType $mimeType,
         \DateTimeInterface $creationDate,
-        ?\DateTimeInterface $lastSeenDate
+        ?\DateTimeInterface $lastSeenDate,
     ): Snap {
         $file = $this->fileStorage->get($id, $userId);
 

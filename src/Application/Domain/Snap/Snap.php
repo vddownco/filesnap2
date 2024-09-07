@@ -16,7 +16,7 @@ final readonly class Snap
         private MimeType $mimeType,
         private \DateTimeInterface $creationDate,
         private ?\DateTimeInterface $lastSeenDate,
-        private File $file
+        private File $file,
     ) {
     }
 

@@ -22,7 +22,6 @@ use Symfony\Component\Routing\Attribute\Route;
     name: 'client_snap_file_webm',
     methods: Request::METHOD_GET,
     priority: 1,
-    stateless: true
 )]
 final class SnapWebmController extends AbstractSnapFileController
 {

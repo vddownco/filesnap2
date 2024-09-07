@@ -9,7 +9,7 @@ use App\Application\Domain\Snap\Snap;
 final readonly class CreateSnapResponse
 {
     public function __construct(
-        private Snap $snap
+        private Snap $snap,
     ) {
     }
 

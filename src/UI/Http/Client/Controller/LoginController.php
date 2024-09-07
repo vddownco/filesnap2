@@ -22,7 +22,7 @@ final class LoginController extends FilesnapAbstractController
 {
     public function __invoke(
         AuthenticationUtils $authenticationUtils,
-        #[MapQueryParameter(name: 'setup_finished')] ?bool $setupFinished
+        #[MapQueryParameter(name: 'setup_finished')] ?bool $setupFinished,
     ): Response {
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('client_user_gallery');

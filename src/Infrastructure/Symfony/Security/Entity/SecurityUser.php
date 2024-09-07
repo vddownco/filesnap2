@@ -20,7 +20,7 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
         private string $email,
         private string $password,
         private array $securityRoles,
-        private Uuid $authorizationKey
+        private Uuid $authorizationKey,
     ) {
     }
 

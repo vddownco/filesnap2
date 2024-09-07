@@ -30,7 +30,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
 {
     public function __construct(
         private Connection $connection,
-        private SnapFactory $snapFactory
+        private SnapFactory $snapFactory,
     ) {
     }
 

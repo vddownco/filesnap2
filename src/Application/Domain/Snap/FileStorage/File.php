@@ -7,7 +7,7 @@ namespace App\Application\Domain\Snap\FileStorage;
 final readonly class File
 {
     public function __construct(
-        private string $absolutePath
+        private string $absolutePath,
     ) {
     }
 

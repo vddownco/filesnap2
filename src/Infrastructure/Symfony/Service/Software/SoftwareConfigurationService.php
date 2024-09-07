@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\File\File;
 final readonly class SoftwareConfigurationService
 {
     public function __construct(
-        private SharexConfiguration $sharexConfiguration
+        private SharexConfiguration $sharexConfiguration,
     ) {
     }
 

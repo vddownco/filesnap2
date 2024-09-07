@@ -16,7 +16,7 @@ final readonly class User
         private string $email,
         private string $password,
         private array $roles,
-        private Uuid $authorizationKey
+        private Uuid $authorizationKey,
     ) {
     }
 

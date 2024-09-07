@@ -13,7 +13,7 @@ final readonly class FindSnapsByUserResponse
      */
     public function __construct(
         private array $snaps,
-        private int $totalCount
+        private int $totalCount,
     ) {
     }
 

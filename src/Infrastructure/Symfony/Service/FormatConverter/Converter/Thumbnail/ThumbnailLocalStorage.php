@@ -14,7 +14,7 @@ final readonly class ThumbnailLocalStorage implements FormatStorageInterface
 {
     public function __construct(
         #[Autowire(param: 'app.thumbnail_directory')] private string $thumbnailDirectory,
-        private Filesystem $filesystem = new Filesystem()
+        private Filesystem $filesystem = new Filesystem(),
     ) {
     }
 

@@ -11,7 +11,7 @@ final readonly class FindSnapsByUserRequest
     public function __construct(
         private Uuid $userId,
         private int $offset,
-        private int $limit
+        private int $limit,
     ) {
     }
 

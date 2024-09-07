@@ -24,7 +24,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
     public const string AUTHORIZATION_HEADER_PREFIX = 'ApiKey ';
 
     public function __construct(
-        private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase
+        private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase,
     ) {
     }
 

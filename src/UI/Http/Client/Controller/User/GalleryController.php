@@ -23,7 +23,7 @@ final class GalleryController extends FilesnapAbstractController
 
     public function __invoke(
         FindSnapsByUserUseCase $findSnapsByUserUseCase,
-        #[MapQueryParameter] ?int $page
+        #[MapQueryParameter] ?int $page,
     ): Response {
         if ($page === null) {
             $page = 1;

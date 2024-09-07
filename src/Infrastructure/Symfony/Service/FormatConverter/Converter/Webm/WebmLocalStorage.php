@@ -14,7 +14,7 @@ final readonly class WebmLocalStorage implements FormatStorageInterface
 {
     public function __construct(
         #[Autowire(param: 'app.converted_upload_directory')] private string $convertedUploadDirectory,
-        private Filesystem $filesystem = new Filesystem()
+        private Filesystem $filesystem = new Filesystem(),
     ) {
     }
 

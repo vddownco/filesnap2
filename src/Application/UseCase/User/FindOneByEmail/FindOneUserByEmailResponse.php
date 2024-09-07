@@ -9,7 +9,7 @@ use App\Application\Domain\User\User;
 final readonly class FindOneUserByEmailResponse
 {
     public function __construct(
-        private ?User $user
+        private ?User $user,
     ) {
     }
 

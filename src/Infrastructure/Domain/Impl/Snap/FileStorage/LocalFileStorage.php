@@ -19,7 +19,7 @@ final readonly class LocalFileStorage implements FileStorageInterface
         #[Autowire(param: 'app.upload_directory')] private string $uploadDirectory,
         #[Autowire(param: 'app.upload.bytes_max_filesize')] private int $uploadBytesMaxFilesize,
         private FormatConverterService $formatConverterService,
-        private Filesystem $filesystem = new Filesystem()
+        private Filesystem $filesystem = new Filesystem(),
     ) {
     }
 

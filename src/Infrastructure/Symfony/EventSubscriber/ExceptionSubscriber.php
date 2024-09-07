@@ -38,7 +38,7 @@ final readonly class ExceptionSubscriber implements EventSubscriberInterface
             SnapNotFoundException::class => Response::HTTP_NOT_FOUND,
             UnsupportedFileTypeException::class, FileSizeTooBigException::class => Response::HTTP_BAD_REQUEST,
             UnauthorizedDeletionException::class => Response::HTTP_FORBIDDEN,
-            default => Response::HTTP_INTERNAL_SERVER_ERROR
+            default => Response::HTTP_INTERNAL_SERVER_ERROR,
         };
 
         $event->setThrowable(new HttpException($statusCode, $throwable->getMessage(), $throwable));

@@ -9,7 +9,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class UpdateUserAuthorizationKeyByIdResponse
 {
     public function __construct(
-        private Uuid $authorizationKey
+        private Uuid $authorizationKey,
     ) {
     }
 

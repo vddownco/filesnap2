@@ -46,7 +46,7 @@ final class SnapPostController extends FilesnapAbstractController
     public function __invoke(
         CreateSnapUseCaseDispatcher $createSnapUseCase,
         UrlGeneratorInterface $router,
-        Request $request
+        Request $request,
     ): JsonResponse {
         $uploadedFile = $request->files->get('file');
         $url = $request->request->get('url');
@@ -58,7 +58,7 @@ final class SnapPostController extends FilesnapAbstractController
         $file = match (true) {
             $uploadedFile instanceof UploadedFile => $uploadedFile,
             is_string($url) => $this->getFileFromUrl($url),
-            default => throw new HttpException(Response::HTTP_BAD_REQUEST, 'Missing file or url in body request')
+            default => throw new HttpException(Response::HTTP_BAD_REQUEST, 'Missing file or url in body request'),
         };
 
         $mimeType = $file->getMimeType();

@@ -14,7 +14,7 @@ final readonly class DeleteUserSnapsUseCase
 {
     public function __construct(
         private SnapRepositoryInterface $snapRepository,
-        private FileStorageInterface $fileStorage
+        private FileStorageInterface $fileStorage,
     ) {
     }
 

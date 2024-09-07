@@ -42,7 +42,7 @@ final class CreateTestSnapsCommand extends Command
         #[Autowire(param: 'app.project_directory')] private readonly string $projectDirectory,
         private readonly CreateSnapUseCaseDispatcher $createSnapUseCase,
         private readonly FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
-        private readonly Filesystem $filesystem = new Filesystem()
+        private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         $authorizedExtensions = [];
 
@@ -53,7 +53,7 @@ final class CreateTestSnapsCommand extends Command
                 MimeType::ImageGif => ['gif'],
                 MimeType::ImageWebp => ['webp'],
                 MimeType::VideoMp4 => ['mp4'],
-                MimeType::VideoWebm => ['webm']
+                MimeType::VideoWebm => ['webm'],
             };
 
             $authorizedExtensions = [...$authorizedExtensions, ...$extensions];

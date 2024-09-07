@@ -16,12 +16,13 @@ use Symfony\Component\Routing\Attribute\Route;
     path: '/snap/{id}',
     name: 'client_snap_file_original',
     methods: Request::METHOD_GET,
-    stateless: true
 )]
 final class SnapOriginalController extends AbstractSnapFileController
 {
     protected function response(Snap $snap): BinaryFileResponse
     {
+        $this->getUser();
+
         return $this->file(
             $snap->getFile()->getAbsolutePath(),
             $snap->getOriginalFilename(),

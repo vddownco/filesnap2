@@ -21,12 +21,11 @@ use Symfony\Component\Routing\Attribute\Route;
     name: 'client_snap_file_thumbnail',
     methods: Request::METHOD_GET,
     priority: 1,
-    stateless: true
 )]
 final class SnapThumbnailController extends AbstractSnapFileController
 {
     public function __construct(
-        private readonly ThumbnailConverter $thumbnailConverter
+        private readonly ThumbnailConverter $thumbnailConverter,
     ) {
     }
 

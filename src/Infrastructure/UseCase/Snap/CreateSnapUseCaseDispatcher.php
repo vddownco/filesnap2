@@ -19,7 +19,7 @@ final readonly class CreateSnapUseCaseDispatcher
 {
     public function __construct(
         private MessageBusInterface $bus,
-        private CreateSnapUseCase $useCase
+        private CreateSnapUseCase $useCase,
     ) {
     }
 

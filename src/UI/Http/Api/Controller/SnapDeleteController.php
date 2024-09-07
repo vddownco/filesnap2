@@ -31,7 +31,7 @@ final class SnapDeleteController extends FilesnapAbstractController
         FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
         DeleteUserSnapsUseCase $deleteUserSnapsUseCase,
         Request $request,
-        #[MapUuidFromBase58] Uuid $id
+        #[MapUuidFromBase58] Uuid $id,
     ): Response {
         $useCaseResponse = $findOneSnapByIdUseCase(new FindOneSnapByIdRequest($id));
         $snap = $useCaseResponse->getSnap();

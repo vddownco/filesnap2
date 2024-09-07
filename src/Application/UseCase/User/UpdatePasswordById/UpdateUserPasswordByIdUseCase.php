@@ -9,7 +9,7 @@ use App\Application\Domain\User\UserRepositoryInterface;
 final readonly class UpdateUserPasswordByIdUseCase
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 

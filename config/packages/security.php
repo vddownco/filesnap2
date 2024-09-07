@@ -31,6 +31,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     ApiKeyAuthenticator::class,
                 ],
             ],
+            'snap_file' => [
+                'pattern' => '^/snap/',
+                'lazy' => true,
+                'stateless' => true,
+            ],
             'client' => [
                 'lazy' => true,
                 'provider' => 'use_case_user_provider',

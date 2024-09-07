@@ -10,7 +10,7 @@ final readonly class UpdateSnapLastSeenDateRequest
 {
     public function __construct(
         private Uuid $id,
-        private \DateTimeInterface $lastSeenDate
+        private \DateTimeInterface $lastSeenDate,
     ) {
     }
 

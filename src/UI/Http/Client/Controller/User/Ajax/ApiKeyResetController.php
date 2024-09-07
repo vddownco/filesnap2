@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ApiKeyResetController extends FilesnapAbstractController
 {
     public function __invoke(
-        UpdateUserAuthorizationKeyByIdUseCase $updateUserAuthorizationKeyByIdUseCase
+        UpdateUserAuthorizationKeyByIdUseCase $updateUserAuthorizationKeyByIdUseCase,
     ): JsonResponse {
         $useCaseResponse = $updateUserAuthorizationKeyByIdUseCase(
             new UpdateUserAuthorizationKeyByIdRequest($this->getAuthenticatedUser()->getId())

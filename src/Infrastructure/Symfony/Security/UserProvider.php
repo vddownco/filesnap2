@@ -23,7 +23,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
 {
     public function __construct(
         private FindOneUserByEmailUseCase $findOneUserByEmailUseCase,
-        private UpdateUserPasswordByIdUseCase $updateUserPasswordByIdUseCase
+        private UpdateUserPasswordByIdUseCase $updateUserPasswordByIdUseCase,
     ) {
     }
 

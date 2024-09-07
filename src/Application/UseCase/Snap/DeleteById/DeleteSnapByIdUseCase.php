@@ -12,7 +12,7 @@ final readonly class DeleteSnapByIdUseCase
 {
     public function __construct(
         private SnapRepositoryInterface $snapRepository,
-        private FileStorageInterface $fileStorage
+        private FileStorageInterface $fileStorage,
     ) {
     }
 

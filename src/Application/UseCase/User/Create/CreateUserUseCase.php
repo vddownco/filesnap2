@@ -13,7 +13,7 @@ final readonly class CreateUserUseCase
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
-        private PasswordHasherInterface $passwordHasher
+        private PasswordHasherInterface $passwordHasher,
     ) {
     }
 

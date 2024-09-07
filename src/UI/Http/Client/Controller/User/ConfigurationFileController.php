@@ -25,7 +25,7 @@ final class ConfigurationFileController extends FilesnapAbstractController
      */
     public function __invoke(
         SoftwareConfigurationService $softwareConfigurationService,
-        Software $software
+        Software $software,
     ): BinaryFileResponse {
         $file = $softwareConfigurationService->getConfigurationFile($software, $this->getAuthenticatedUser());
         $filename = sprintf('filesnap_%s_configuration.%s', $software->value, $file->getExtension());

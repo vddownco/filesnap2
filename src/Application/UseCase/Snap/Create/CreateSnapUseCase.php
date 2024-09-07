@@ -19,7 +19,7 @@ final readonly class CreateSnapUseCase
     public function __construct(
         private SnapRepositoryInterface $snapRepository,
         private FileStorageInterface $fileStorage,
-        private SnapFactory $snapFactory
+        private SnapFactory $snapFactory,
     ) {
     }
 

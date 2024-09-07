@@ -11,7 +11,7 @@ final readonly class ConversionMessage
 {
     public function __construct(
         private Uuid $snapId,
-        private ConvertFormat $format
+        private ConvertFormat $format,
     ) {
     }
 

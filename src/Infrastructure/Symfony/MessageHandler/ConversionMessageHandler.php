@@ -20,7 +20,7 @@ final readonly class ConversionMessageHandler
         private FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
         private ThumbnailConverter $thumbnailConverter,
         private WebmConverter $webmConverter,
-        private WebpConverter $webpConverter
+        private WebpConverter $webpConverter,
     ) {
     }
 
@@ -36,7 +36,7 @@ final readonly class ConversionMessageHandler
         match ($message->getFormat()) {
             ConvertFormat::Thumbnail => $this->thumbnailConverter->convert($snap),
             ConvertFormat::Webm => $this->webmConverter->convert($snap),
-            ConvertFormat::Webp => $this->webpConverter->convert($snap)
+            ConvertFormat::Webp => $this->webpConverter->convert($snap),
         };
     }
 }

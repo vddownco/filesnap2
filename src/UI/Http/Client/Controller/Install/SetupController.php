@@ -38,7 +38,7 @@ final class SetupController extends FilesnapAbstractController
     public function __construct(
         private readonly CreateUserUseCase $createUserUseCase,
         private readonly KernelInterface $kernel,
-        private readonly Filesystem $filesystem = new Filesystem()
+        private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         $this->application = new Application($this->kernel);
         $this->application->setAutoExit(false);
@@ -52,7 +52,7 @@ final class SetupController extends FilesnapAbstractController
      */
     public function __invoke(
         #[Autowire(param: 'app.project_directory')] string $projectDirectory,
-        Request $request
+        Request $request,
     ): Response {
         $setupFile = $projectDirectory . '/.setup';
         $installAuthorized = $this->filesystem->exists($setupFile);

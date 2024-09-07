@@ -22,7 +22,7 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
     public function __invoke(
         FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
         UpdateSnapLastSeenDateUseCase $updateSnapLastSeenDateUseCase,
-        #[MapUuidFromBase58] Uuid $id
+        #[MapUuidFromBase58] Uuid $id,
     ): Response {
         $useCaseResponse = $findOneSnapByIdUseCase(new FindOneSnapByIdRequest($id));
         $snap = $useCaseResponse->getSnap();

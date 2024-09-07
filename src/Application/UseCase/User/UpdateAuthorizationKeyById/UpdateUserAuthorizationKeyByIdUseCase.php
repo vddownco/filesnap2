@@ -10,7 +10,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class UpdateUserAuthorizationKeyByIdUseCase
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
     ) {
     }
 

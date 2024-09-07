@@ -13,7 +13,7 @@ final readonly class DeleteUserSnapsRequest
      */
     public function __construct(
         private Uuid $userId,
-        private array $snapIds
+        private array $snapIds,
     ) {
     }
 

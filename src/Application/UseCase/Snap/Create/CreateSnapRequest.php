@@ -13,7 +13,7 @@ final readonly class CreateSnapRequest
         private string $fileOriginalName,
         private string $fileMimeType,
         private string $filePath,
-        private int $fileBytesSize
+        private int $fileBytesSize,
     ) {
     }
 

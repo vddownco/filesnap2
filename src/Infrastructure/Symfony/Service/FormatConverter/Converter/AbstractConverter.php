@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\File;
 abstract readonly class AbstractConverter
 {
     public function __construct(
-        private FormatStorageInterface $formatStorage
+        private FormatStorageInterface $formatStorage,
     ) {
     }
 

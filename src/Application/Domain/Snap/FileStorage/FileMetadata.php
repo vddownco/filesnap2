@@ -11,7 +11,7 @@ final readonly class FileMetadata
     public function __construct(
         private string $originalName,
         private string $path,
-        private MimeType $mimeType
+        private MimeType $mimeType,
     ) {
     }
 

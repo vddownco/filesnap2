@@ -15,7 +15,7 @@ enum SecurityUserRole: string
     {
         return match ($userRole) {
             UserRole::User => self::User,
-            UserRole::Admin => self::Admin
+            UserRole::Admin => self::Admin,
         };
     }
 
@@ -24,7 +24,7 @@ enum SecurityUserRole: string
         return match ($value) {
             self::User->value => UserRole::User,
             self::Admin->value => UserRole::Admin,
-            default => throw new \InvalidArgumentException(sprintf('%s does not have a matching %s.', $value, UserRole::class))
+            default => throw new \InvalidArgumentException(sprintf('%s does not have a matching %s.', $value, UserRole::class)),
         };
     }
 
@@ -32,7 +32,7 @@ enum SecurityUserRole: string
     {
         return match ($userRole) {
             UserRole::User => self::User->value,
-            UserRole::Admin => self::Admin->value
+            UserRole::Admin => self::Admin->value,
         };
     }
 }

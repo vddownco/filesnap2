@@ -14,7 +14,7 @@ final readonly class SharexConfiguration implements SoftwareConfigurationInterfa
 {
     public function __construct(
         private UrlGeneratorInterface $router,
-        private Filesystem $filesystem = new Filesystem()
+        private Filesystem $filesystem = new Filesystem(),
     ) {
     }
 
