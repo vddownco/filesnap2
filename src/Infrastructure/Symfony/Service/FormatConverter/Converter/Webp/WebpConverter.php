@@ -23,7 +23,7 @@ final readonly class WebpConverter extends AbstractConverter
         parent::__construct($formatStorage);
     }
 
-    protected function conversion(Snap $snap): File
+    protected function createConvertedFile(Snap $snap): File
     {
         $snapAbsolutePath = $snap->getFile()->getAbsolutePath();
         $snapMimeType = $snap->getMimeType();

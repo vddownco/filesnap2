@@ -9,6 +9,7 @@ use App\Infrastructure\Symfony\Service\FormatConverter\Converter\AbstractConvert
 use App\Infrastructure\Symfony\Service\FormatConverter\Converter\FormatStorageInterface;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\WebM;
+use FFMpeg\Media\Video;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -25,7 +26,7 @@ final readonly class WebmConverter extends AbstractConverter
         parent::__construct($formatStorage);
     }
 
-    protected function conversion(Snap $snap): File
+    protected function createConvertedFile(Snap $snap): File
     {
         if ($snap->isVideo() === false) {
             throw new \RuntimeException(sprintf('You can\'t generate a webm from a %s file.', $snap->getMimeType()->value));
@@ -33,6 +34,11 @@ final readonly class WebmConverter extends AbstractConverter
 
         $bitrate = self::DEFAULT_VIDEO_KILO_BITRATE;
         $video = FFMpeg::create()->open($snap->getFile()->getAbsolutePath());
+
+        if ($video instanceof Video === false) {
+            throw new \RuntimeException('Opened file is not a video');
+        }
+
         $videoStream = $video->getStreams()->videos()->first();
 
         if ($videoStream !== null) {

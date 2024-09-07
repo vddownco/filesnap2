@@ -16,7 +16,7 @@ abstract readonly class AbstractConverter
 
     public function convert(Snap $snap): void
     {
-        $convertedFile = $this->conversion($snap);
+        $convertedFile = $this->createConvertedFile($snap);
         $this->formatStorage->save($snap, $convertedFile);
         $this->cleanUp($snap);
     }
@@ -26,7 +26,7 @@ abstract readonly class AbstractConverter
         return $this->formatStorage->get($snap);
     }
 
-    abstract protected function conversion(Snap $snap): File;
+    abstract protected function createConvertedFile(Snap $snap): File;
 
     abstract protected function cleanUp(Snap $snap): void;
 }

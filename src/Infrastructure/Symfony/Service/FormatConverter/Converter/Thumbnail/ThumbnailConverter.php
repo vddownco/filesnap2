@@ -28,7 +28,7 @@ final readonly class ThumbnailConverter extends AbstractConverter
         parent::__construct($formatStorage);
     }
 
-    protected function conversion(Snap $snap): File
+    protected function createConvertedFile(Snap $snap): File
     {
         $imagine = new Imagine();
         $tempFilePath = $this->getTempFilePath($snap);
