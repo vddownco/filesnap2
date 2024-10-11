@@ -9,4 +9,5 @@ enum ConvertFormat: string
     case Thumbnail = 'thumbnail';
     case Webm = 'webm';
     case Webp = 'webp';
+    case Avif = 'avif';
 }

@@ -36,6 +36,7 @@ final readonly class CreateSnapUseCaseDispatcher
 
         if ($snap->isImage() === true) {
             $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webp));
+            $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Avif));
         }
 
         if ($snap->isVideo() === true) {

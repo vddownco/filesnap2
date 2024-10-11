@@ -14,12 +14,13 @@ RUN apt update && apt install -y \
  libwebp-dev \
  libfreetype6-dev \
  ffmpeg \
- librabbitmq-dev
+ librabbitmq-dev \
+ libavif-dev
 
 # Install PHP extensions
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure opcache
-RUN docker-php-ext-configure gd --enable-gd --prefix=/usr --with-jpeg --with-webp
+RUN docker-php-ext-configure gd --enable-gd --prefix=/usr --with-jpeg --with-webp --with-avif
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl opcache
 RUN pecl install apcu
 RUN pecl install amqp
