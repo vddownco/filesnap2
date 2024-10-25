@@ -10,7 +10,8 @@ final readonly class UpdateUserPasswordByIdRequest
 {
     public function __construct(
         private Uuid $id,
-        private string $hashedPassword,
+        private string $password,
+        private bool $passwordIsHashed,
     ) {
     }
 
@@ -19,8 +20,13 @@ final readonly class UpdateUserPasswordByIdRequest
         return $this->id;
     }
 
-    public function getHashedPassword(): string
+    public function getPassword(): string
     {
-        return $this->hashedPassword;
+        return $this->password;
+    }
+
+    public function passwordIsHashed(): bool
+    {
+        return $this->passwordIsHashed;
     }
 }

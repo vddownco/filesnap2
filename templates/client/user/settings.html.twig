@@ -58,5 +58,32 @@
 
             {{ form_end(updateEmailForm) }}
         </div>
+        <div class="max-w-3xl mx-auto bg-stone-50 p-2 border-rounded text-stone-800">
+            <h2 class="text-2xl font-bold">Password</h2>
+
+            {{ form_start(updatePasswordForm, {'attr': {'class': 'flex space-x-2'}}) }}
+            <div class="input-group flex-1">
+                {{ form_errors(updatePasswordForm.currentPassword) }}
+                {{ form_label(updatePasswordForm.currentPassword) }}
+                <div class="flex space-x-2">
+                    {{ form_widget(updatePasswordForm.currentPassword, {'attr': {'class': 'flex-1'}}) }}
+                </div>
+            </div>
+
+            <div class="input-group flex-1">
+                {{ form_errors(updatePasswordForm.newPassword) }}
+                {{ form_label(updatePasswordForm.newPassword) }}
+                <div class="flex space-x-2">
+                    {{ form_widget(updatePasswordForm.newPassword, {'attr': {'class': 'flex-1'}}) }}
+                </div>
+            </div>
+
+            <div class="input-group justify-end">
+                <button class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-blue-300 select-none space-x-2">Update password</button>
+            </div>
+
+            {{ form_rest(updatePasswordForm) }}
+            {{ form_end(updatePasswordForm) }}
+        </div>
     </div>
 {% endblock %}

@@ -65,7 +65,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
 
         try {
             ($this->updateUserPasswordByIdUseCase)(
-                new UpdateUserPasswordByIdRequest($user->getId(), $newHashedPassword)
+                new UpdateUserPasswordByIdRequest($user->getId(), $newHashedPassword, true)
             );
         } catch (\Exception) {
         }

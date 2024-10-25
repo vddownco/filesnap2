@@ -8,6 +8,8 @@ use App\Application\Domain\User\Exception\AlreadyExistingUserWithEmail;
 use App\Application\Domain\User\Exception\EmailIsUserCurrentEmail;
 use App\Application\UseCase\User\UpdateEmailById\UpdateUserEmailByIdRequest;
 use App\Application\UseCase\User\UpdateEmailById\UpdateUserEmailByIdUseCase;
+use App\Application\UseCase\User\UpdatePasswordById\UpdateUserPasswordByIdRequest;
+use App\Application\UseCase\User\UpdatePasswordById\UpdateUserPasswordByIdUseCase;
 use App\Infrastructure\Symfony\Form\UpdateEmailType;
 use App\Infrastructure\Symfony\Form\UpdatePasswordType;
 use App\Infrastructure\Symfony\Security\AuthenticationService;
@@ -16,7 +18,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(
@@ -37,6 +41,8 @@ final class SettingsController extends FilesnapAbstractController
     public function __construct(
         private readonly AuthenticationService $authenticationService,
         private readonly UpdateUserEmailByIdUseCase $updateUserEmailByIdUseCase,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly UpdateUserPasswordByIdUseCase $updateUserPasswordByIdUseCase,
     ) {
     }
 
@@ -129,6 +135,48 @@ final class SettingsController extends FilesnapAbstractController
             }
 
             $this->authenticationService->login($newEmail);
+
+            return $this->redirectToRoute('client_user_settings');
+        }
+
+        return null;
+    }
+
+    /** @phpstan-ignore method.unused */
+    private function handleUpdatePasswordForm(): ?Response
+    {
+        $updatePasswordForm = $this->getForm('updatePasswordForm');
+
+        if ($updatePasswordForm === null) {
+            throw new \RuntimeException('UpdatePasswordForm cannot be empty');
+        }
+
+        $updatePasswordForm->handleRequest($this->request);
+
+        if (
+            $updatePasswordForm->isSubmitted() === true
+            && $updatePasswordForm->isValid() === true
+        ) {
+            $currentPassword = $updatePasswordForm->get('currentPassword')->getData();
+            $newPassword = $updatePasswordForm->get('newPassword')->getData();
+
+            if (is_string($currentPassword) === false || is_string($newPassword) === false) {
+                throw new BadRequestHttpException();
+            }
+
+            $user = $this->getAuthenticatedUser();
+
+            if ($this->passwordHasher->isPasswordValid($user, $currentPassword) === false) {
+                throw new AccessDeniedHttpException();
+            }
+
+            ($this->updateUserPasswordByIdUseCase)(new UpdateUserPasswordByIdRequest(
+                $user->getId(),
+                $newPassword,
+                false
+            ));
+
+            $this->authenticationService->login($user->getUserIdentifier());
 
             return $this->redirectToRoute('client_user_settings');
         }
