@@ -23,8 +23,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autoconfigure();
 
     $services
-        ->load('App\\', __DIR__ . '/../src/')
+        ->load('App\\', sprintf('%s/../src/', __DIR__))
         ->exclude([
-            __DIR__ . '/../src/Kernel.php',
+            sprintf('%s/../src/Kernel.php', __DIR__),
         ]);
 };

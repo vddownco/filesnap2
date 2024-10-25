@@ -54,7 +54,7 @@ final class SetupController extends FilesnapAbstractController
         #[Autowire(param: 'app.project_directory')] string $projectDirectory,
         Request $request,
     ): Response {
-        $setupFile = $projectDirectory . '/.setup';
+        $setupFile = sprintf('%s/.setup', $projectDirectory);
         $installAuthorized = $this->filesystem->exists($setupFile);
 
         if ($installAuthorized === false) {

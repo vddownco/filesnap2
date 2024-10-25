@@ -21,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class ApiKeyAuthenticator extends AbstractAuthenticator
 {
-    public const string AUTHORIZATION_HEADER_PREFIX = 'Bearer ';
+    private const string AUTHORIZATION_HEADER_PREFIX = 'Bearer';
 
     public function __construct(
         private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase,
@@ -36,15 +36,16 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         $authorizationHeader = $request->headers->get('Authorization');
+        $authorizationHeaderPrefix = sprintf('%s ', self::AUTHORIZATION_HEADER_PREFIX);
 
         if (
             $authorizationHeader === null
-            || str_starts_with($authorizationHeader, self::AUTHORIZATION_HEADER_PREFIX) === false
+            || str_starts_with($authorizationHeader, $authorizationHeaderPrefix) === false
         ) {
             throw $this->createIncorrectApiKeyException();
         }
 
-        $apiKey = substr($authorizationHeader, strlen(self::AUTHORIZATION_HEADER_PREFIX));
+        $apiKey = substr($authorizationHeader, strlen($authorizationHeaderPrefix));
 
         try {
             $apiKeyUuid = Uuid::fromBase58($apiKey);
@@ -75,6 +76,11 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         return new JsonResponse(['message' => $exception->getMessage()], Response::HTTP_UNAUTHORIZED);
+    }
+
+    public static function createAuthorizationHeader(Uuid $apiKey): string
+    {
+        return sprintf('%s %s', self::AUTHORIZATION_HEADER_PREFIX, $apiKey->toBase58());
     }
 
     private function createIncorrectApiKeyException(): CustomUserMessageAuthenticationException

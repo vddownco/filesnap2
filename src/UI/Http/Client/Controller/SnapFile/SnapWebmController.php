@@ -43,7 +43,7 @@ final class SnapWebmController extends AbstractSnapFileController
 
         return $this->file(
             $webmFile,
-            $snap->getOriginalFilename() . '.webm',
+            sprintf('%s.webm', $snap->getOriginalFilename()),
             ResponseHeaderBag::DISPOSITION_INLINE
         );
     }

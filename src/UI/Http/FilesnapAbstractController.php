@@ -51,7 +51,7 @@ abstract class FilesnapAbstractController extends AbstractController
         }
 
         return parent::render(
-            str_replace('_', '/', $routeName) . '.html.twig',
+            sprintf('%s.html.twig', str_replace('_', '/', $routeName)),
             $parameters,
             $response
         );

@@ -24,7 +24,7 @@ final readonly class SharexConfiguration implements SoftwareConfigurationInterfa
     public function getConfigurationFile(SecurityUser $user): File
     {
         $requestUrl = $this->router->generate(name: 'api_snap_post', referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
-        $authorizationHeader = ApiKeyAuthenticator::AUTHORIZATION_HEADER_PREFIX . $user->getAuthorizationKey()->toBase58();
+        $authorizationHeader = ApiKeyAuthenticator::createAuthorizationHeader($user->getAuthorizationKey());
 
         $configuration = [
             'Version' => '14.1.0',

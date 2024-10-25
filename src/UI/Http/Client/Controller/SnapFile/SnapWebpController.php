@@ -40,7 +40,7 @@ final class SnapWebpController extends AbstractSnapFileController
 
         return $this->file(
             $webpFile,
-            $snap->getOriginalFilename() . '.webp',
+            sprintf('%s.webp', $snap->getOriginalFilename()),
             ResponseHeaderBag::DISPOSITION_INLINE
         );
     }
