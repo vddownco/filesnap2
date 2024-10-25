@@ -41,7 +41,7 @@ abstract class FilesnapAbstractController extends AbstractController
         }
 
         if (count($routeAttributes) > 1) {
-            throw new \RuntimeException(sprintf('Multiple routes defined for %s, you must precise the view to render with "view" parameter', static::class));
+            throw new \RuntimeException(sprintf('Multiple routes defined for %s, you must render the view with the "render" method.', static::class));
         }
 
         $routeName = $routeAttributes[0]->getArguments()['name'] ?? null;

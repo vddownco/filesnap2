@@ -128,6 +128,19 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @throws Exception
+     */
+    public function updateEmail(Uuid $id, string $email): void
+    {
+        $query = 'UPDATE user SET email = :email WHERE id = :id';
+
+        $this->connection->executeQuery($query, [
+            'email' => $email,
+            'id' => $id->toRfc4122(),
+        ]);
+    }
+
+    /**
      * @throws \JsonException
      * @throws Exception
      */

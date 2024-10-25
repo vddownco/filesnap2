@@ -41,5 +41,22 @@
                 </a>
             </div>
         </div>
+        <div class="max-w-3xl mx-auto bg-stone-50 p-2 border-rounded text-stone-800">
+            <h2 class="text-2xl font-bold">Account</h2>
+
+            {{ form_start(updateEmailForm, {'attr': {'class': 'flex'}}) }}
+            <div class="input-group flex-1">
+                {{ form_errors(updateEmailForm.email) }}
+                {{ form_label(updateEmailForm.email) }}
+                <div class="flex space-x-2">
+                    {{ form_widget(updateEmailForm.email, {'attr': {'class': 'flex-1'}}) }}
+                    <button class="flex-grow sm:flex-grow-0 button py-1 px-3 bg-blue-300 select-none space-x-2">Update email</button>
+                </div>
+
+            </div>
+            {{ form_rest(updateEmailForm) }}
+
+            {{ form_end(updateEmailForm) }}
+        </div>
     </div>
 {% endblock %}

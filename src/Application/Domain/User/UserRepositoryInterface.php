@@ -19,4 +19,6 @@ interface UserRepositoryInterface
     public function updatePassword(Uuid $id, string $hashedPassword): void;
 
     public function updateAuthorizationKey(Uuid $id, Uuid $authorizationKey): void;
+
+    public function updateEmail(Uuid $id, string $email): void;
 }
