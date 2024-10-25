@@ -21,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class ApiKeyAuthenticator extends AbstractAuthenticator
 {
-    public const string AUTHORIZATION_HEADER_PREFIX = 'ApiKey ';
+    public const string AUTHORIZATION_HEADER_PREFIX = 'Bearer ';
 
     public function __construct(
         private readonly FindOneUserByAuthorizationKeyUseCase $findOneUserByAuthorizationKeyUseCase,
