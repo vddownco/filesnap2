@@ -22,7 +22,7 @@ final readonly class ThumbnailConverter extends AbstractConverter
     private const int RESIZE_WIDTH = 240;
 
     public function __construct(
-        #[Autowire(service: ThumbnailLocalStorage::class)] FormatStorageInterface $formatStorage,
+        #[Autowire(service: 'thumbnail.local.storage')] FormatStorageInterface $formatStorage,
         private Filesystem $filesystem = new Filesystem(),
     ) {
         parent::__construct($formatStorage);

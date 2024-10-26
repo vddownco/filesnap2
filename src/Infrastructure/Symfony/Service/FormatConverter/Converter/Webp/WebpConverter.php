@@ -17,7 +17,7 @@ final readonly class WebpConverter extends AbstractConverter
     private const int QUALITY = 90;
 
     public function __construct(
-        #[Autowire(service: WebpLocalStorage::class)] FormatStorageInterface $formatStorage,
+        #[Autowire(service: 'webp.local.storage')] FormatStorageInterface $formatStorage,
         private Filesystem $filesystem = new Filesystem(),
     ) {
         parent::__construct($formatStorage);

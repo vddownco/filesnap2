@@ -17,7 +17,7 @@ final readonly class AvifConverter extends AbstractConverter
     private const int QUALITY = 90;
 
     public function __construct(
-        #[Autowire(service: AvifLocalStorage::class)] FormatStorageInterface $formatStorage,
+        #[Autowire(service: 'avif.local.storage')] FormatStorageInterface $formatStorage,
         private Filesystem $filesystem = new Filesystem(),
     ) {
         parent::__construct($formatStorage);

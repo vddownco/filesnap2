@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\FormatStorageInterface;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\LocalStorage;
+use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Thumbnail\ThumbnailLocalStorage;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -27,4 +31,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->exclude([
             sprintf('%s/../src/Kernel.php', __DIR__),
         ]);
+
+    $services->instanceof(FormatStorageInterface::class)->tag('format.storage.interface');
+    $services->set('thumbnail.local.storage', ThumbnailLocalStorage::class);
+    $services->set('webp.local.storage', LocalStorage::class)->arg('$format', ConvertFormat::Webp);
+    $services->set('avif.local.storage', LocalStorage::class)->arg('$format', ConvertFormat::Avif);
+    $services->set('webm.local.storage', LocalStorage::class)->arg('$format', ConvertFormat::Webm);
 };

@@ -20,7 +20,7 @@ final readonly class WebmConverter extends AbstractConverter
     private const int DEFAULT_AUDIO_KILO_BITRATE = 196;
 
     public function __construct(
-        #[Autowire(service: WebmLocalStorage::class)] FormatStorageInterface $formatStorage,
+        #[Autowire(service: 'webm.local.storage')] FormatStorageInterface $formatStorage,
         private Filesystem $filesystem = new Filesystem(),
     ) {
         parent::__construct($formatStorage);

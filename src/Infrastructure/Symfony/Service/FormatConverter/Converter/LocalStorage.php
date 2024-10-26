@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webm;
+namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
 
 use App\Application\Domain\Snap\Snap;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\FormatStorageInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
-final readonly class WebmLocalStorage implements FormatStorageInterface
+final readonly class LocalStorage implements FormatStorageInterface
 {
     public function __construct(
+        private ConvertFormat $format,
         #[Autowire(param: 'app.converted_upload_directory')] private string $convertedUploadDirectory,
         private Filesystem $filesystem = new Filesystem(),
     ) {
@@ -46,10 +46,11 @@ final readonly class WebmLocalStorage implements FormatStorageInterface
     private function getFileAbsolutePath(Snap $snap): string
     {
         return sprintf(
-            '%s/%s/%s.webm',
+            '%s/%s/%s.%s',
             $this->convertedUploadDirectory,
             $snap->getUserId()->toBase58(),
-            $snap->getId()->toBase58()
+            $snap->getId()->toBase58(),
+            $this->format->value
         );
     }
 }
