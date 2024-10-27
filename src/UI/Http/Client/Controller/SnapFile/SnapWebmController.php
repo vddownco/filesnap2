@@ -6,8 +6,8 @@ namespace App\UI\Http\Client\Controller\SnapFile;
 
 use App\Application\Domain\Snap\MimeType;
 use App\Application\Domain\Snap\Snap;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webm\WebmConverter;
+use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webm;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SnapWebmController extends AbstractSnapFileController
 {
     public function __construct(
-        private readonly WebmConverter $converter,
+        private readonly Webm $webm,
     ) {
     }
 
@@ -35,15 +35,15 @@ final class SnapWebmController extends AbstractSnapFileController
      */
     protected function response(Snap $snap): Response
     {
-        $webmFile = $this->converter->getConvertedFile($snap);
+        $webmFile = $this->webm->get($snap);
 
         if ($webmFile === null) {
-            return $this->waitingForConversionResponse($snap, ConvertFormat::Webm);
+            return $this->waitingForConversionResponse($snap, CommonFormat::Webm);
         }
 
         return $this->file(
             $webmFile,
-            sprintf('%s.webm', $snap->getOriginalFilename()),
+            sprintf('%s.%s', $snap->getOriginalFilename(), Webm::getExtension()),
             ResponseHeaderBag::DISPOSITION_INLINE
         );
     }

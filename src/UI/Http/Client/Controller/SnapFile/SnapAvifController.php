@@ -6,8 +6,8 @@ namespace App\UI\Http\Client\Controller\SnapFile;
 
 use App\Application\Domain\Snap\MimeType;
 use App\Application\Domain\Snap\Snap;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Avif\AvifConverter;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Avif;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SnapAvifController extends AbstractSnapFileController
 {
     public function __construct(
-        private readonly AvifConverter $converter,
+        private readonly Avif $avif,
     ) {
     }
 
@@ -32,15 +32,15 @@ final class SnapAvifController extends AbstractSnapFileController
      */
     protected function response(Snap $snap): Response
     {
-        $avifFile = $this->converter->getConvertedFile($snap);
+        $avifFile = $this->avif->get($snap);
 
         if ($avifFile === null) {
-            return $this->waitingForConversionResponse($snap, ConvertFormat::Avif);
+            return $this->waitingForConversionResponse($snap, CommonFormat::Avif);
         }
 
         return $this->file(
             $avifFile,
-            $snap->getOriginalFilename() . '.avif',
+            sprintf('%s.%s', $snap->getOriginalFilename(), Avif::getExtension()),
             ResponseHeaderBag::DISPOSITION_INLINE
         );
     }

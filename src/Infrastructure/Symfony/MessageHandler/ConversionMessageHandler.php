@@ -7,11 +7,10 @@ namespace App\Infrastructure\Symfony\MessageHandler;
 use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdRequest;
 use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdUseCase;
 use App\Infrastructure\Symfony\Message\ConversionMessage;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Avif\AvifConverter;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Thumbnail\ThumbnailConverter;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webm\WebmConverter;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Webp\WebpConverter;
+use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Avif;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webm;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webp;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -19,10 +18,9 @@ final readonly class ConversionMessageHandler
 {
     public function __construct(
         private FindOneSnapByIdUseCase $findOneSnapByIdUseCase,
-        private ThumbnailConverter $thumbnailConverter,
-        private WebmConverter $webmConverter,
-        private WebpConverter $webpConverter,
-        private AvifConverter $avifConverter,
+        private Avif $avif,
+        private Webm $webm,
+        private Webp $webp,
     ) {
     }
 
@@ -36,10 +34,9 @@ final readonly class ConversionMessageHandler
         }
 
         match ($message->getFormat()) {
-            ConvertFormat::Thumbnail => $this->thumbnailConverter->convert($snap),
-            ConvertFormat::Webm => $this->webmConverter->convert($snap),
-            ConvertFormat::Webp => $this->webpConverter->convert($snap),
-            ConvertFormat::Avif => $this->avifConverter->convert($snap),
+            CommonFormat::Avif => $this->avif->convert($snap),
+            CommonFormat::Webm => $this->webm->convert($snap),
+            CommonFormat::Webp => $this->webp->convert($snap),
         };
     }
 }

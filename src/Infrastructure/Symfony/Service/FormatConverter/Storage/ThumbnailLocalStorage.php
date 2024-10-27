@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter\Thumbnail;
+namespace App\Infrastructure\Symfony\Service\FormatConverter\Storage;
 
 use App\Application\Domain\Snap\Snap;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\FormatStorageInterface;
+use App\Infrastructure\Symfony\Service\FormatConverter\StorageInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
-final readonly class ThumbnailLocalStorage implements FormatStorageInterface
+final readonly class ThumbnailLocalStorage implements StorageInterface
 {
     public function __construct(
         #[Autowire(param: 'app.thumbnail_directory')] private string $thumbnailDirectory,
@@ -29,10 +29,10 @@ final readonly class ThumbnailLocalStorage implements FormatStorageInterface
 
     public function get(Snap $snap): ?File
     {
-        $absolutePath = $this->getFileAbsolutePath($snap);
+        $fileAbsolutePath = $this->getFileAbsolutePath($snap);
 
-        return $this->filesystem->exists($absolutePath)
-            ? new File($absolutePath)
+        return $this->filesystem->exists($fileAbsolutePath) === true
+            ? new File($fileAbsolutePath)
             : null;
     }
 

@@ -11,7 +11,7 @@ use App\Application\UseCase\Snap\Create\CreateSnapRequest;
 use App\Application\UseCase\Snap\Create\CreateSnapResponse;
 use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\Infrastructure\Symfony\Message\ConversionMessage;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -34,13 +34,10 @@ final readonly class CreateSnapUseCaseDispatcher
         $response = ($this->useCase)($request);
         $snap = $response->getSnap();
 
-        if ($snap->isImage() === true) {
-            $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webp));
-            $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Avif));
-        }
+        $formats = CommonFormat::getFormats($snap->getMimeType());
 
-        if ($snap->isVideo() === true) {
-            $this->bus->dispatch(new ConversionMessage($snap->getId(), ConvertFormat::Webm));
+        foreach ($formats as $format) {
+            $this->bus->dispatch(new ConversionMessage($snap->getId(), $format));
         }
 
         return $response;

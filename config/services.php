@@ -2,11 +2,17 @@
 
 declare(strict_types=1);
 
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\FormatStorageInterface;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\LocalStorage;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\Thumbnail\ThumbnailLocalStorage;
+use App\Infrastructure\Symfony\Service\FormatConverter\AbstractFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Avif;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Thumbnail;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webm;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webp;
+use App\Infrastructure\Symfony\Service\FormatConverter\Storage\ConvertedLocalStorage;
+use App\Infrastructure\Symfony\Service\FormatConverter\Storage\ThumbnailLocalStorage;
+use App\Infrastructure\Symfony\Service\FormatConverter\StorageInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
@@ -32,9 +38,33 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             sprintf('%s/../src/Kernel.php', __DIR__),
         ]);
 
-    $services->instanceof(FormatStorageInterface::class)->tag('format.storage.interface');
-    $services->set('thumbnail.local.storage', ThumbnailLocalStorage::class);
-    $services->set('webp.local.storage', LocalStorage::class)->arg('$format', ConvertFormat::Webp);
-    $services->set('avif.local.storage', LocalStorage::class)->arg('$format', ConvertFormat::Avif);
-    $services->set('webm.local.storage', LocalStorage::class)->arg('$format', ConvertFormat::Webm);
+    $services->instanceof(AbstractFormat::class)->tag('abstract-format');
+
+    $services
+        ->set('converted-local-storage.extension.avif', ConvertedLocalStorage::class)
+        ->arg('$extension', Avif::getExtension());
+
+    $services
+        ->set(Avif::class)
+        ->bind(StorageInterface::class, service('converted-local-storage.extension.avif'));
+
+    $services
+        ->set(Thumbnail::class)
+        ->bind(StorageInterface::class, ThumbnailLocalStorage::class);
+
+    $services
+        ->set('converted-local-storage.extension.webm', ConvertedLocalStorage::class)
+        ->arg('$extension', Webm::getExtension());
+
+    $services
+        ->set(Webm::class)
+        ->bind(StorageInterface::class, service('converted-local-storage.extension.avif'));
+
+    $services
+        ->set('converted-local-storage.extension.webp', ConvertedLocalStorage::class)
+        ->arg('$extension', Webp::getExtension());
+
+    $services
+        ->set(Webp::class)
+        ->bind(StorageInterface::class, service('converted-local-storage.extension.webp'));
 };

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Symfony\Message;
 
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class ConversionMessage
 {
     public function __construct(
         private Uuid $snapId,
-        private ConvertFormat $format,
+        private CommonFormat $format,
     ) {
     }
 
@@ -20,7 +20,7 @@ final readonly class ConversionMessage
         return $this->snapId;
     }
 
-    public function getFormat(): ConvertFormat
+    public function getFormat(): CommonFormat
     {
         return $this->format;
     }

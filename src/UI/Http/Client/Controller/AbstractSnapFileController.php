@@ -11,7 +11,7 @@ use App\Application\UseCase\Snap\FindOneById\FindOneSnapByIdUseCase;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateRequest;
 use App\Application\UseCase\Snap\UpdateLastSeenDate\UpdateSnapLastSeenDateUseCase;
 use App\Infrastructure\Symfony\Attribute\MapUuidFromBase58;
-use App\Infrastructure\Symfony\Service\FormatConverter\Converter\ConvertFormat;
+use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +46,7 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
         return $response;
     }
 
-    protected function waitingForConversionResponse(Snap $snap, ConvertFormat $format): Response
+    protected function waitingForConversionResponse(Snap $snap, CommonFormat $format): Response
     {
         return $this->render('client/waiting-for-conversion.html.twig', [
             'snap' => $snap,

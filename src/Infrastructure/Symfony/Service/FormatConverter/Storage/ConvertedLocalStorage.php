@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
+namespace App\Infrastructure\Symfony\Service\FormatConverter\Storage;
 
 use App\Application\Domain\Snap\Snap;
+use App\Infrastructure\Symfony\Service\FormatConverter\StorageInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Uid\Uuid;
 
-final readonly class LocalStorage implements FormatStorageInterface
+final readonly class ConvertedLocalStorage implements StorageInterface
 {
     public function __construct(
-        private ConvertFormat $format,
+        private string $extension,
         #[Autowire(param: 'app.converted_upload_directory')] private string $convertedUploadDirectory,
         private Filesystem $filesystem = new Filesystem(),
     ) {
@@ -20,7 +22,7 @@ final readonly class LocalStorage implements FormatStorageInterface
 
     public function save(Snap $snap, File $file): void
     {
-        $userDirectory = sprintf('%s/%s/', $this->convertedUploadDirectory, $snap->getUserId()->toBase58());
+        $userDirectory = $this->getUserDirectory($snap->getUserId());
 
         if ($this->filesystem->exists($userDirectory) === false) {
             $this->filesystem->mkdir($userDirectory);
@@ -43,14 +45,18 @@ final readonly class LocalStorage implements FormatStorageInterface
         $this->filesystem->remove($this->getFileAbsolutePath($snap));
     }
 
+    private function getUserDirectory(Uuid $userId): string
+    {
+        return sprintf('%s/%s', $this->convertedUploadDirectory, $userId->toBase58());
+    }
+
     private function getFileAbsolutePath(Snap $snap): string
     {
         return sprintf(
-            '%s/%s/%s.%s',
-            $this->convertedUploadDirectory,
-            $snap->getUserId()->toBase58(),
+            '%s/%s.%s',
+            $this->getUserDirectory($snap->getUserId()),
             $snap->getId()->toBase58(),
-            $this->format->value
+            $this->extension
         );
     }
 }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Symfony\Service\FormatConverter\Converter;
+namespace App\Infrastructure\Symfony\Service\FormatConverter;
 
 use App\Application\Domain\Snap\Snap;
 use Symfony\Component\HttpFoundation\File\File;
 
-interface FormatStorageInterface
+interface StorageInterface
 {
     public function save(Snap $snap, File $file): void;
 
