@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\UseCase\Snap;
 
+use App\Application\Domain\Exception\InvalidRequestParameterException;
 use App\Application\Domain\Snap\Exception\FileNotFoundException;
 use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\Domain\Snap\Exception\UnknownSnapsException;
 use App\Application\Domain\Snap\FileStorage\File;
 use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Snap\MimeType;
@@ -101,7 +103,9 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
      * @param list<Snap> $snaps
      *
      * @throws Exception
+     * @throws InvalidRequestParameterException
      * @throws UnauthorizedDeletionException
+     * @throws UnknownSnapsException
      */
     #[DataProvider('sameUserIdSnapsProvider')]
     public function testItDeletesUserSnaps(Uuid $userId, array $snaps): void
@@ -125,9 +129,14 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
             ->method('deleteByIds')
             ->with($userId, $snapIds);
 
+        $invokedCount = $this->exactly(count($snapIds));
         $fileRepositoryMock
-            ->expects($this->exactly(count($snapIds)))
-            ->method('delete');
+            ->expects($invokedCount)
+            ->method('delete')
+            ->willReturnCallback(function ($snap) use ($invokedCount, $snaps) {
+                $expectedSnap = $snaps[$invokedCount->numberOfInvocations() - 1];
+                self::assertSame($expectedSnap, $snap);
+            });
 
         $useCase = new DeleteUserSnapsUseCase($snapRepositoryMock, $fileRepositoryMock);
         $useCase(new DeleteUserSnapsRequest($userId, $snapIds));
@@ -137,6 +146,9 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
      * @param list<Snap> $snaps
      *
      * @throws Exception
+     * @throws InvalidRequestParameterException
+     * @throws UnauthorizedDeletionException
+     * @throws UnknownSnapsException
      */
     #[DataProvider('differentUserIdsSnapsProvider')]
     public function testItFailsUnauthorizedDeletion(Uuid $userId, array $snaps): void
@@ -167,5 +179,75 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
 
         $useCase = new DeleteUserSnapsUseCase($snapRepositoryMock, $fileRepositoryMock);
         $useCase(new DeleteUserSnapsRequest($userId, $snapIds));
+    }
+
+    /**
+     * @throws UnauthorizedDeletionException
+     * @throws UnknownSnapsException
+     * @throws Exception
+     * @throws InvalidRequestParameterException
+     */
+    public function testItFailsInvalidRequestParameter(): void
+    {
+        $snapRepositoryMock = $this->createMock(SnapRepositoryInterface::class);
+        $fileRepositoryMock = $this->createMock(FileStorageInterface::class);
+
+        $snapRepositoryMock
+            ->expects($this->never())
+            ->method('findByIds');
+
+        $snapRepositoryMock
+            ->expects($this->never())
+            ->method('deleteByIds');
+
+        $fileRepositoryMock
+            ->expects($this->never())
+            ->method('delete');
+
+        $this->expectException(InvalidRequestParameterException::class);
+
+        $useCase = new DeleteUserSnapsUseCase($snapRepositoryMock, $fileRepositoryMock);
+        $useCase(new DeleteUserSnapsRequest(Uuid::v7(), []));
+    }
+
+    /**
+     * @param list<Snap> $snaps
+     *
+     * @throws Exception
+     * @throws InvalidRequestParameterException
+     * @throws UnauthorizedDeletionException
+     * @throws UnknownSnapsException
+     */
+    #[DataProvider('sameUserIdSnapsProvider')]
+    public function testItFailsUnknownSnaps(Uuid $userId, array $snaps): void
+    {
+        $snapIds = array_map(
+            static fn (Snap $snap) => $snap->getId(),
+            $snaps
+        );
+
+        $snapIdlistWithUnknownSnap = [...$snapIds, Uuid::v4()];
+
+        $snapRepositoryMock = $this->createMock(SnapRepositoryInterface::class);
+        $fileRepositoryMock = $this->createMock(FileStorageInterface::class);
+
+        $snapRepositoryMock
+            ->expects($this->once())
+            ->method('findByIds')
+            ->with($snapIdlistWithUnknownSnap)
+            ->willReturn($snaps);
+
+        $snapRepositoryMock
+            ->expects($this->never())
+            ->method('deleteByIds');
+
+        $fileRepositoryMock
+            ->expects($this->never())
+            ->method('delete');
+
+        $this->expectException(UnknownSnapsException::class);
+
+        $useCase = new DeleteUserSnapsUseCase($snapRepositoryMock, $fileRepositoryMock);
+        $useCase(new DeleteUserSnapsRequest($userId, $snapIdlistWithUnknownSnap));
     }
 }

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\EventSubscriber;
 
 use App\Application\Domain\Exception\DomainException;
+use App\Application\Domain\Exception\InvalidRequestParameterException;
 use App\Application\Domain\Snap\Exception\FileSizeTooBigException;
 use App\Application\Domain\Snap\Exception\SnapNotFoundException;
 use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\Domain\Snap\Exception\UnknownSnapsException;
 use App\Application\Domain\Snap\Exception\UnsupportedFileTypeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,8 +38,14 @@ final readonly class ExceptionSubscriber implements EventSubscriberInterface
 
         $statusCode = match ($throwable::class) {
             SnapNotFoundException::class => Response::HTTP_NOT_FOUND,
-            UnsupportedFileTypeException::class, FileSizeTooBigException::class => Response::HTTP_BAD_REQUEST,
+
+            UnsupportedFileTypeException::class,
+            FileSizeTooBigException::class,
+            InvalidRequestParameterException::class,
+            UnknownSnapsException::class => Response::HTTP_BAD_REQUEST,
+
             UnauthorizedDeletionException::class => Response::HTTP_FORBIDDEN,
+
             default => Response::HTTP_INTERNAL_SERVER_ERROR,
         };
 

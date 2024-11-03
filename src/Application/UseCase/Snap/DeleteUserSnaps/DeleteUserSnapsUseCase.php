@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Snap\DeleteUserSnaps;
 
+use App\Application\Domain\Exception\InvalidRequestParameterException;
 use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
+use App\Application\Domain\Snap\Exception\UnknownSnapsException;
 use App\Application\Domain\Snap\FileStorage\FileStorageInterface;
 use App\Application\Domain\Snap\Snap;
 use App\Application\Domain\Snap\SnapRepositoryInterface;
@@ -20,13 +22,35 @@ final readonly class DeleteUserSnapsUseCase
 
     /**
      * @throws UnauthorizedDeletionException
+     * @throws InvalidRequestParameterException
+     * @throws UnknownSnapsException
      */
     public function __invoke(DeleteUserSnapsRequest $request): void
     {
-        $snaps = $this->snapRepository->findByIds($request->getSnapIds());
+        $requestSnapIds = $request->getSnapIds();
+
+        if ($requestSnapIds === []) {
+            throw new InvalidRequestParameterException('SnapIds', 'Empty list');
+        }
+
+        $foundSnaps = $this->snapRepository->findByIds($requestSnapIds);
+
+        $foundSnapsIdsRfc = array_map(
+            static fn (Snap $snap): string => $snap->getId()->toRfc4122(),
+            $foundSnaps
+        );
+
+        $notFoundSnaps = array_filter(
+            $requestSnapIds,
+            static fn (Uuid $uuid): bool => in_array($uuid->toRfc4122(), $foundSnapsIdsRfc, true) === false
+        );
+
+        if ($notFoundSnaps !== []) {
+            throw new UnknownSnapsException(...$notFoundSnaps);
+        }
 
         $unauthorizedToDeleteSnaps = array_filter(
-            $snaps,
+            $foundSnaps,
             static fn (Snap $snap): bool => $snap->getUserId()->toRfc4122() !== $request->getUserId()->toRfc4122()
         );
 
@@ -43,12 +67,12 @@ final readonly class DeleteUserSnapsUseCase
             $request->getUserId(),
             array_map(
                 static fn (Snap $snap): Uuid => $snap->getId(),
-                $snaps
+                $foundSnaps
             )
         );
 
-        foreach ($snaps as $snap) {
-            $this->fileStorage->delete($snap);
+        foreach ($foundSnaps as $foundSnap) {
+            $this->fileStorage->delete($foundSnap);
         }
     }
 }

@@ -12,13 +12,13 @@
     {% if snaps|length > 0 %}
         <div class="mt-[70px] xl:mt-[72px] gallery-grid grid sm:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-9 gap-2 flex-grow px-2 pb-2">
             {% for snap in snaps %}
-                <div {{ stimulus_target('gallery', 'snap') }} data-snap-id="{{ snap.id }}" class="snap h-[220px] lg:min-h-[165px] lg:h-full">
+                <div {{ stimulus_target('gallery', 'snap') }} data-snap-id="{{ snap.id.toBase58 }}" class="snap h-[220px] lg:min-h-[165px] lg:h-full">
                     <style>
-                        [data-snap-id="{{ snap.id }}"] {
+                        [data-snap-id="{{ snap.id.toBase58 }}"] {
                             background-image: url({{ asset(path('client_snap_file_thumbnail', {'id': snap.id.toBase58})) }}), url({{ asset('spinner.gif') }});
-                            animation: bg-fade-in-{{ snap.id }} 500ms;
+                            animation: bg-{{ snap.id.toBase58 }} 500ms;
                         }
-                        @keyframes bg-fade-in-{{ snap.id }} {
+                        @keyframes bg-{{ snap.id.toBase58 }} {
                             0% {
                                 background-image: url({{ asset(path('client_snap_file_thumbnail', {'id': snap.id.toBase58})) }});
                             }

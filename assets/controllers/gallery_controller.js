@@ -33,7 +33,7 @@ export default class extends Controller {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({'ids': this.selectedIds})
+                body: JSON.stringify(this.selectedIds)
             })).text().then(async () => {
                 const goToPreviousPage = this.selectedIds.length === this.snapTargets.length
                 const url = new URL(window.location.href)

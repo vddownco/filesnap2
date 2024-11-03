@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class UuidFromBase58ValueResolver implements ValueResolverInterface
 {
     /**
-     * @return list<Uuid>
+     * @return array{0?:Uuid}
      */
     public function resolve(Request $request, ArgumentMetadata $argument): array
     {

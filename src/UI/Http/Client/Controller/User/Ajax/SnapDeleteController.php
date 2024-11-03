@@ -7,10 +7,10 @@ namespace App\UI\Http\Client\Controller\User\Ajax;
 use App\Application\Domain\Snap\Exception\UnauthorizedDeletionException;
 use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsRequest;
 use App\Application\UseCase\Snap\DeleteUserSnaps\DeleteUserSnapsUseCase;
+use App\Infrastructure\Symfony\Attribute\MapPayloadUuidsFromBase58;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
@@ -23,31 +23,18 @@ use Symfony\Component\Uid\Uuid;
 final class SnapDeleteController extends FilesnapAbstractController
 {
     /**
+     * @param list<Uuid> $ids
+     *
      * @throws UnauthorizedDeletionException
      */
     public function __invoke(
         DeleteUserSnapsUseCase $deleteUserSnapsUseCase,
         Request $request,
+        #[MapPayloadUuidsFromBase58] array $ids,
     ): Response {
-        $payloadIds = $request->getPayload()->all('ids');
-
-        $stringIds = array_filter(
-            $payloadIds,
-            static fn (mixed $id): bool => is_string($id) === true
-        );
-
-        if (count($payloadIds) !== count($stringIds)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST);
-        }
-
-        $snapIds = array_map(
-            static fn (string $id) => Uuid::fromString($id),
-            $stringIds
-        );
-
         ($deleteUserSnapsUseCase)(new DeleteUserSnapsRequest(
             $this->getAuthenticatedUser()->getId(),
-            $snapIds
+            $ids
         ));
 
         return $this->emptyResponse();
