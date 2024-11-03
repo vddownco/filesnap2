@@ -40,30 +40,31 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->instanceof(AbstractFormat::class)->tag('abstract-format');
 
+    // Avif format configuration
     $services
         ->set('converted-local-storage.extension.avif', ConvertedLocalStorage::class)
         ->arg('$extension', Avif::getExtension());
-
     $services
         ->set(Avif::class)
         ->bind(StorageInterface::class, service('converted-local-storage.extension.avif'));
 
+    // Thumbnail format configuration
     $services
         ->set(Thumbnail::class)
-        ->bind(StorageInterface::class, ThumbnailLocalStorage::class);
+        ->bind(StorageInterface::class, service(ThumbnailLocalStorage::class));
 
+    // Webm format configuration
     $services
         ->set('converted-local-storage.extension.webm', ConvertedLocalStorage::class)
         ->arg('$extension', Webm::getExtension());
-
     $services
         ->set(Webm::class)
         ->bind(StorageInterface::class, service('converted-local-storage.extension.avif'));
 
+    // Webp format configuration
     $services
         ->set('converted-local-storage.extension.webp', ConvertedLocalStorage::class)
         ->arg('$extension', Webp::getExtension());
-
     $services
         ->set(Webp::class)
         ->bind(StorageInterface::class, service('converted-local-storage.extension.webp'));

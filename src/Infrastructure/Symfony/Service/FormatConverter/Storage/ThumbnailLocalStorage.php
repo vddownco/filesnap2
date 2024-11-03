@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Symfony\Service\FormatConverter\Storage;
 
 use App\Application\Domain\Snap\Snap;
+use App\Infrastructure\Symfony\Service\FormatConverter\Format\Thumbnail;
 use App\Infrastructure\Symfony\Service\FormatConverter\StorageInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
@@ -43,6 +44,6 @@ final readonly class ThumbnailLocalStorage implements StorageInterface
 
     private function getFileAbsolutePath(Snap $snap): string
     {
-        return sprintf('%s/%s.thumbnail', $this->thumbnailDirectory, $snap->getId()->toBase58());
+        return sprintf('%s/%s.%s', $this->thumbnailDirectory, $snap->getId()->toBase58(), Thumbnail::getExtension());
     }
 }

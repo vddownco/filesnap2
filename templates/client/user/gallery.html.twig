@@ -12,7 +12,21 @@
     {% if snaps|length > 0 %}
         <div class="mt-[70px] xl:mt-[72px] gallery-grid grid sm:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-9 gap-2 flex-grow px-2 pb-2">
             {% for snap in snaps %}
-                <div {{ stimulus_target('gallery', 'snap') }} data-snap-id="{{ snap.id }}" class="snap h-[220px] lg:min-h-[165px] lg:h-full" style="background-image: url({{ asset(path('client_snap_file_thumbnail', {'id': snap.id.toBase58})) }}), url({{ asset('spinner.gif') }})">
+                <div {{ stimulus_target('gallery', 'snap') }} data-snap-id="{{ snap.id }}" class="snap h-[220px] lg:min-h-[165px] lg:h-full">
+                    <style>
+                        [data-snap-id="{{ snap.id }}"] {
+                            background-image: url({{ asset(path('client_snap_file_thumbnail', {'id': snap.id.toBase58})) }}), url({{ asset('spinner.gif') }});
+                            animation: bg-fade-in-{{ snap.id }} 500ms;
+                        }
+                        @keyframes bg-fade-in-{{ snap.id }} {
+                            0% {
+                                background-image: url({{ asset(path('client_snap_file_thumbnail', {'id': snap.id.toBase58})) }});
+                            }
+                            100% {
+                                background-image: url({{ asset(path('client_snap_file_thumbnail', {'id': snap.id.toBase58})) }}), url({{ asset('spinner.gif') }});
+                            }
+                        }
+                    </style>
                     <div {{ stimulus_action('gallery', 'select', 'click') }} class="z-10 absolute w-full h-full"></div>
                     <div class="snap-hover flex flex-col items-end justify-end p-2 space-y-2">
                         <div class="w-full flex justify-end">
