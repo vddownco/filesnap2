@@ -44,11 +44,8 @@ final class SnapThumbnailController extends AbstractSnapFileController
         return false;
     }
 
-    /**
-     * @return list<MimeType>
-     */
-    protected function supportedMimeTypes(): array
+    protected function supportsMimeType(MimeType $mimeType): bool
     {
-        return MimeType::cases();
+        return true;
     }
 }

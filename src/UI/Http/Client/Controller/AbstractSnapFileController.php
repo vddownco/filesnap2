@@ -29,7 +29,7 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
 
         if (
             $snap === null
-            || in_array($snap->getMimeType(), $this->supportedMimeTypes(), true) === false
+            || $this->supportsMimeType($snap->getMimeType()) === false
         ) {
             throw $this->createNotFoundException();
         }
@@ -48,18 +48,17 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
 
     protected function waitingForConversionResponse(Snap $snap, CommonFormat $format): Response
     {
-        return $this->render('client/waiting-for-conversion.html.twig', [
-            'snap' => $snap,
-            'format' => $format,
-        ]);
+        return $this
+            ->render('client/waiting-for-conversion.html.twig', [
+                'snap' => $snap,
+                'format' => $format,
+            ])
+            ->setStatusCode(Response::HTTP_NOT_FOUND);
     }
 
     abstract protected function response(Snap $snap): Response;
 
     abstract protected function updateSnapLastSeenDate(): bool;
 
-    /**
-     * @return list<MimeType>
-     */
-    abstract protected function supportedMimeTypes(): array;
+    abstract protected function supportsMimeType(MimeType $mimeType): bool;
 }

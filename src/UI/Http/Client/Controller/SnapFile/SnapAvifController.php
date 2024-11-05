@@ -50,11 +50,8 @@ final class SnapAvifController extends AbstractSnapFileController
         return true;
     }
 
-    /**
-     * @return list<MimeType>
-     */
-    protected function supportedMimeTypes(): array
+    protected function supportsMimeType(MimeType $mimeType): bool
     {
-        return MimeType::IMAGE_MIME_TYPES;
+        return $mimeType->isImage();
     }
 }

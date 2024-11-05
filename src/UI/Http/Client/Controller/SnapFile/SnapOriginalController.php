@@ -21,8 +21,6 @@ final class SnapOriginalController extends AbstractSnapFileController
 {
     protected function response(Snap $snap): BinaryFileResponse
     {
-        $this->getUser();
-
         return $this->file(
             $snap->getFile()->getAbsolutePath(),
             $snap->getOriginalFilename(),
@@ -35,11 +33,8 @@ final class SnapOriginalController extends AbstractSnapFileController
         return true;
     }
 
-    /**
-     * @return list<MimeType>
-     */
-    protected function supportedMimeTypes(): array
+    protected function supportsMimeType(MimeType $mimeType): bool
     {
-        return MimeType::cases();
+        return true;
     }
 }

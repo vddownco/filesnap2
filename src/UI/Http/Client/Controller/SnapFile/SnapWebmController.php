@@ -53,11 +53,8 @@ final class SnapWebmController extends AbstractSnapFileController
         return true;
     }
 
-    /**
-     * @return list<MimeType>
-     */
-    protected function supportedMimeTypes(): array
+    protected function supportsMimeType(MimeType $mimeType): bool
     {
-        return MimeType::VIDEO_MIME_TYPES;
+        return $mimeType->isVideo();
     }
 }
