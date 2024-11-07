@@ -8,9 +8,7 @@ use Symfony\Component\Uid\Uuid;
 
 interface UserRepositoryInterface
 {
-    public function save(User $user): void;
-
-    public function findOneById(Uuid $id): ?User;
+    public function create(User $user): void;
 
     public function findOneByEmail(string $email): ?User;
 

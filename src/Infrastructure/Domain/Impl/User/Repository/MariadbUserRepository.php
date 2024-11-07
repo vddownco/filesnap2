@@ -31,33 +31,20 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     /**
      * @throws Exception|\JsonException
      */
-    public function save(User $user): void
+    public function create(User $user): void
     {
-        $query = 'SELECT COUNT(id) FROM user WHERE id = :id';
-        $exists = (bool) $this->connection->fetchOne($query, ['id' => $user->getId()->toRfc4122()]);
+        $query = '
+            INSERT INTO user (id, email, password, roles, authorization_key)
+            VALUES (:id, :email, :password, :roles, :authorization_key)
+        ';
 
-        if ($exists === true) {
-            $this->update($user);
-        } else {
-            $this->insert($user);
-        }
-    }
-
-    /**
-     * @throws Exception|\JsonException
-     */
-    public function findOneById(Uuid $id): ?User
-    {
-        $query = 'SELECT id, email, password, roles, authorization_key FROM user WHERE id = :id';
-
-        /** @var DbResult|false $dbResult */
-        $dbResult = $this->connection->fetchAssociative($query, ['id' => $id->toRfc4122()]);
-
-        if ($dbResult === false) {
-            return null;
-        }
-
-        return $this->createUserEntity($dbResult);
+        $this->connection->executeQuery($query, [
+            'id' => $user->getId()->toRfc4122(),
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
+            'roles' => self::jsonEncodeRolesForInsert($user->getRoles()),
+            'authorization_key' => $user->getAuthorizationKey()->toRfc4122(),
+        ]);
     }
 
     /**
@@ -74,7 +61,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->createUserEntity($dbResult);
+        return self::toUser($dbResult);
     }
 
     /**
@@ -98,7 +85,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->createUserEntity($dbResult);
+        return self::toUser($dbResult);
     }
 
     /**
@@ -141,52 +128,12 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws \JsonException
-     * @throws Exception
-     */
-    private function insert(User $user): void
-    {
-        $query = '
-            INSERT INTO user (id, email, password, roles, authorization_key)
-            VALUES (:id, :email, :password, :roles, :authorization_key)
-        ';
-
-        $this->connection->executeQuery($query, [
-            'id' => $user->getId()->toRfc4122(),
-            'email' => $user->getEmail(),
-            'password' => $user->getPassword(),
-            'roles' => $this->jsonEncodeRolesForInsert($user->getRoles()),
-            'authorization_key' => $user->getAuthorizationKey()->toRfc4122(),
-        ]);
-    }
-
-    /**
-     * @throws \JsonException
-     * @throws Exception
-     */
-    private function update(User $user): void
-    {
-        $query = '
-            UPDATE user
-            SET (email, password, roles, authorization_key) = (:email, :password, :roles, :authorization_key)
-            WHERE id = :id
-        ';
-
-        $this->connection->executeQuery($query, [
-            'email' => $user->getEmail(),
-            'password' => $user->getPassword(),
-            'roles' => $this->jsonEncodeRolesForInsert($user->getRoles()),
-            'authorization_key' => $user->getAuthorizationKey()->toRfc4122(),
-        ]);
-    }
-
-    /**
      * @param DbResult $dbResult
      *
      * @throws \JsonException
      * @throws \Exception
      */
-    private function createUserEntity(array $dbResult): User
+    private static function toUser(array $dbResult): User
     {
         $rolesJson = json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR);
 
@@ -213,7 +160,7 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
      *
      * @throws \JsonException
      */
-    private function jsonEncodeRolesForInsert(array $roles): string
+    private static function jsonEncodeRolesForInsert(array $roles): string
     {
         return json_encode(
             array_map(

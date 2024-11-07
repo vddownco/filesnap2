@@ -86,7 +86,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
             return null;
         }
 
-        return $this->createSnapEntity($dbResult);
+        return $this->toSnap($dbResult);
     }
 
     /**
@@ -114,7 +114,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
         );
 
         return array_map(
-            fn (array $dbResult) => $this->createSnapEntity($dbResult),
+            fn (array $dbResult) => $this->toSnap($dbResult),
             $dbResults
         );
     }
@@ -152,7 +152,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
         );
 
         return array_map(
-            fn (array $dbResult) => $this->createSnapEntity($dbResult),
+            fn (array $dbResult) => $this->toSnap($dbResult),
             $dbResults
         );
     }
@@ -212,7 +212,7 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
      * @throws FileNotFoundException
      * @throws \Exception
      */
-    private function createSnapEntity(array $dbResult): Snap
+    private function toSnap(array $dbResult): Snap
     {
         return $this->snapFactory->create(
             id: Uuid::fromString($dbResult['id']),

@@ -47,7 +47,7 @@ final class CreateTest extends FilesnapTestCase
 
         $userRepositoryMock
             ->expects($this->once())
-            ->method('save')
+            ->method('create')
             ->with(self::callback(function ($user) use (&$capturedUserId): bool {
                 $isUser = $user instanceof User;
 

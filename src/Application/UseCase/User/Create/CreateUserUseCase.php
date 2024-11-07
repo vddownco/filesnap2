@@ -27,7 +27,7 @@ final readonly class CreateUserUseCase
             authorizationKey: Uuid::v4()
         );
 
-        $this->userRepository->save($user);
+        $this->userRepository->create($user);
 
         return new CreateUserResponse($user);
     }
