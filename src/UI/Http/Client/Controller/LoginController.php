@@ -7,7 +7,6 @@ namespace App\UI\Http\Client\Controller;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -20,10 +19,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 )]
 final class LoginController extends FilesnapAbstractController
 {
-    public function __invoke(
-        AuthenticationUtils $authenticationUtils,
-        #[MapQueryParameter(name: 'setup_finished')] ?bool $setupFinished,
-    ): Response {
+    public function __invoke(AuthenticationUtils $authenticationUtils): Response
+    {
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('client_user_gallery');
         }
@@ -34,7 +31,6 @@ final class LoginController extends FilesnapAbstractController
         return $this->view([
             'last_username' => $lastUsername,
             'error' => $error,
-            'setup_finished' => $setupFinished,
         ]);
     }
 }

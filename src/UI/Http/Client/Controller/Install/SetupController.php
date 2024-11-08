@@ -8,6 +8,7 @@ use App\Application\Domain\User\UserRole;
 use App\Application\UseCase\User\Create\CreateUserRequest;
 use App\Application\UseCase\User\Create\CreateUserUseCase;
 use App\Infrastructure\Symfony\Form\SetupType;
+use App\Infrastructure\Symfony\Security\AuthenticationService;
 use App\UI\Http\FilesnapAbstractController;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -38,6 +39,7 @@ final class SetupController extends FilesnapAbstractController
     public function __construct(
         private readonly CreateUserUseCase $createUserUseCase,
         private readonly KernelInterface $kernel,
+        private readonly AuthenticationService $authenticationService,
         private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         $this->application = new Application($this->kernel);
@@ -81,8 +83,9 @@ final class SetupController extends FilesnapAbstractController
 
             if ($this->error === null) {
                 $this->filesystem->remove($setupFile);
+                $this->authenticationService->login($postedData['adminEmail']);
 
-                return $this->redirectToRoute('client_login', ['setup_finished' => true]);
+                return $this->redirectToRoute('client_user_gallery');
             }
         }
 
