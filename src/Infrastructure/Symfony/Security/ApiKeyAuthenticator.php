@@ -73,7 +73,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         return new JsonResponse(['message' => $exception->getMessage()], Response::HTTP_UNAUTHORIZED);
     }

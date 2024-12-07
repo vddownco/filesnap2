@@ -14,6 +14,8 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
 {
     /**
      * @param list<SecurityUserRole> $securityRoles
+     * @param non-empty-string $email
+     * @param non-empty-string $password
      */
     public function __construct(
         private Uuid $id,
@@ -59,6 +61,9 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
     {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
         return $this->email;

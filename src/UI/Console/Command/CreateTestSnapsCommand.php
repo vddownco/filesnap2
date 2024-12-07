@@ -30,7 +30,7 @@ final class CreateTestSnapsCommand extends Command
     private const string ARGUMENT_QUANTITY = 'quantity';
 
     /**
-     * @var list<File>
+     * @var non-empty-list<File>
      */
     private array $files;
 
@@ -72,6 +72,10 @@ final class CreateTestSnapsCommand extends Command
             throw new \RuntimeException('An error occurred with the glob function');
         }
 
+        if ($filePaths === []) {
+            throw new \RuntimeException('No files were found');
+        }
+
         $this->files = array_map(
             static fn (string $filePath) => new File($filePath),
             $filePaths
@@ -110,12 +114,6 @@ final class CreateTestSnapsCommand extends Command
             $output->writeln(
                 'This command is for development purpose only. It will not execute outside of dev environment'
             );
-
-            return Command::FAILURE;
-        }
-
-        if ($this->files === []) {
-            $output->writeln(sprintf('No files in %s/create_test_snaps_files/', $this->projectDirectory));
 
             return Command::FAILURE;
         }
@@ -174,11 +172,9 @@ final class CreateTestSnapsCommand extends Command
      */
     private function getRandomTempFile(): File
     {
-        $filesArrayIndexes = array_keys($this->files);
-        $filesArrayMinIndex = min($filesArrayIndexes);
-        $filesArrayMaxIndex = max($filesArrayIndexes);
+        $filesArrayMaxIndex = max(array_keys($this->files));
 
-        $randomIndex = random_int($filesArrayMinIndex, $filesArrayMaxIndex);
+        $randomIndex = random_int(0, $filesArrayMaxIndex);
         $file = $this->files[$randomIndex];
 
         $tempPath = $this->filesystem->tempnam(sys_get_temp_dir(), 'test_snap_');

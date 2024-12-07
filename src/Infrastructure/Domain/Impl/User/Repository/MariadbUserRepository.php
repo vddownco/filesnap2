@@ -14,11 +14,11 @@ use Symfony\Component\Uid\Uuid;
 
 /**
  * @phpstan-type DbResult array{
- *      id:string,
- *      email:string,
- *      password:string,
- *      roles:string,
- *      authorization_key:string,
+ *      id:non-empty-string,
+ *      email:non-empty-string,
+ *      password:non-empty-string,
+ *      roles:non-empty-string,
+ *      authorization_key:non-empty-string,
  *  }
  */
 final readonly class MariadbUserRepository implements UserRepositoryInterface
@@ -135,11 +135,8 @@ final readonly class MariadbUserRepository implements UserRepositoryInterface
      */
     private static function toUser(array $dbResult): User
     {
+        /** @var list<string> $rolesJson */
         $rolesJson = json_decode($dbResult['roles'], true, 512, JSON_THROW_ON_ERROR);
-
-        if (is_array($rolesJson) === false) {
-            throw new \RuntimeException('Error at roles json decode.');
-        }
 
         $roles = array_map(
             static fn (string $role): UserRole => SecurityUserRole::valueToUserRole($role),

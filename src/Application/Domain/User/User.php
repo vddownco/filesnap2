@@ -10,6 +10,8 @@ final readonly class User
 {
     /**
      * @param list<UserRole> $roles
+     * @param non-empty-string $email
+     * @param non-empty-string $password
      */
     public function __construct(
         private Uuid $id,
@@ -25,11 +27,17 @@ final readonly class User
         return $this->id;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getPassword(): string
     {
         return $this->password;

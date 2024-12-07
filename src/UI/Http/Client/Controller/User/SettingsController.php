@@ -56,6 +56,8 @@ final class SettingsController extends FilesnapAbstractController
         $updateEmailForm = $this->createForm(UpdateEmailType::class);
         $updatePasswordForm = $this->createForm(UpdatePasswordType::class);
 
+        dump($updateEmailForm);
+
         $this->addForm('updateEmailForm', $updateEmailForm);
         $this->addForm('updatePasswordForm', $updatePasswordForm);
 

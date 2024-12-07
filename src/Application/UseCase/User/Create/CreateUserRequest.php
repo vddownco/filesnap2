@@ -9,6 +9,8 @@ use App\Application\Domain\User\UserRole;
 final readonly class CreateUserRequest
 {
     /**
+     * @param non-empty-string $email
+     * @param non-empty-string $plainPassword
      * @param list<UserRole> $roles
      */
     public function __construct(
@@ -18,6 +20,9 @@ final readonly class CreateUserRequest
     ) {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getEmail(): string
     {
         return $this->email;

@@ -12,12 +12,19 @@ final class SymfonyPasswordHasher implements PasswordHasherInterface
 {
     private static ?PasswordHasherFactoryInterface $factory = null;
 
+    /**
+     * @param string $plainPassword
+     * @return non-empty-string
+     */
     public function hash(string $plainPassword): string
     {
-        return $this
+        /** @var non-empty-string $hashedPassword */
+        $hashedPassword = $this
             ->getFactory()
             ->getPasswordHasher('default')
             ->hash($plainPassword);
+
+        return $hashedPassword;
     }
 
     private function getFactory(): PasswordHasherFactoryInterface

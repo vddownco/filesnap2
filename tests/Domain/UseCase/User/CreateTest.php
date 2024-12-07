@@ -73,7 +73,6 @@ final class CreateTest extends FilesnapTestCase
         self::assertSame($capturedUserId, $user->getId());
         self::assertMatchesRegularExpression('/^.+@\S+\.\S+$/', $user->getEmail());
         self::assertSame($request->getEmail(), $user->getEmail());
-        self::assertIsString($user->getPassword());
         self::assertContainsOnlyInstancesOf(UserRole::class, $user->getRoles());
         self::assertSameSize($userRoles, $user->getRoles());
 

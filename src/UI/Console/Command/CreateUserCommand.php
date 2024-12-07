@@ -57,8 +57,8 @@ final class CreateUserCommand extends Command
         $isAdminArgument = $input->getArgument(self::ARGUMENT_IS_ADMIN);
 
         if (
-            is_string($isAdminArgument) === true
-            && in_array($isAdminArgument, self::ARGUMENT_IS_ADMIN_VALUES, true) === false
+            is_string($isAdminArgument) === false
+            || in_array($isAdminArgument, self::ARGUMENT_IS_ADMIN_VALUES, true) === false
         ) {
             $output->writeln(sprintf(
                 'The %s argument is invalid. It must be one of theses values : %s.',
@@ -71,7 +71,7 @@ final class CreateUserCommand extends Command
 
         $roles = [UserRole::User];
 
-        if ($isAdminArgument == 'true') {
+        if ($isAdminArgument === 'true') {
             $roles[] = UserRole::Admin;
         }
 
@@ -84,8 +84,20 @@ final class CreateUserCommand extends Command
             return Command::FAILURE;
         }
 
+        if (strlen($emailArgument) === 0) {
+            $output->writeln('The email parameter must not be empty');
+
+            return Command::FAILURE;
+        }
+
         if (is_string($passwordArgument) === false) {
             $output->writeln('The password parameter must be a string.');
+
+            return Command::FAILURE;
+        }
+
+        if (strlen($passwordArgument) === 0) {
+            $output->writeln('The password parameter must not be empty');
 
             return Command::FAILURE;
         }

@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * @implements UserProviderInterface<SecurityUser>
+ * @implements PasswordUpgraderInterface<SecurityUser>
  */
 final readonly class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
@@ -59,10 +60,6 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if ($user instanceof SecurityUser === false) {
-            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
-        }
-
         try {
             ($this->updateUserPasswordByIdUseCase)(
                 new UpdateUserPasswordByIdRequest($user->getId(), $newHashedPassword, true)

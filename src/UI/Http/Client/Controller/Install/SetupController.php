@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -71,7 +72,7 @@ final class SetupController extends FilesnapAbstractController
                 define('STDIN', fopen('php://stdin', 'rb'));
             }
 
-            /** @var array{adminEmail:string, adminPlainPassword:string, dbAlreadyCreated:bool} $postedData */
+            /** @var array{adminEmail:non-empty-string, adminPlainPassword:non-empty-string, dbAlreadyCreated:bool} $postedData */
             $postedData = $form->getData();
 
             if ($postedData['dbAlreadyCreated'] === false) {
@@ -113,6 +114,11 @@ final class SetupController extends FilesnapAbstractController
         }
     }
 
+    /**
+     * @param non-empty-string $email
+     * @param non-empty-string $plainPassword
+     * @return void
+     */
     private function createAdminUser(string $email, string $plainPassword): void
     {
         if ($this->error !== null) {
