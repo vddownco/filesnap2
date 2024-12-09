@@ -34,7 +34,9 @@ final class VersionDev extends AbstractMigration
                 last_seen_date DATETIME NULL,
                 PRIMARY KEY (id),
                 FOREIGN KEY (user_id) REFERENCES user(id),
-                INDEX index_user_id (user_id)
+                INDEX index_user_id (user_id),
+                INDEX index_creation_date (creation_date),
+                INDEX index_last_seen_date (last_seen_date)
             );
         ');
     }

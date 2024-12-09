@@ -12,6 +12,7 @@ final readonly class FindSnapsByUserRequest
         private Uuid $userId,
         private int $offset,
         private int $limit,
+        private ?\DateTimeInterface $expirationCheckDate = null
     ) {
     }
 
@@ -28,5 +29,10 @@ final readonly class FindSnapsByUserRequest
     public function getLimit(): int
     {
         return $this->limit;
+    }
+
+    public function getExpirationCheckDate(): ?\DateTimeInterface
+    {
+        return $this->expirationCheckDate;
     }
 }

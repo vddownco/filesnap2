@@ -127,7 +127,7 @@ final class DeleteUserSnapsTest extends FilesnapTestCase
         $snapRepositoryMock
             ->expects($this->once())
             ->method('deleteByIds')
-            ->with($userId, $snapIds);
+            ->with($snapIds);
 
         $invokedCount = $this->exactly(count($snapIds));
         $fileRepositoryMock

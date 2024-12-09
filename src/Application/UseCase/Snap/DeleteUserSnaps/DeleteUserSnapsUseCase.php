@@ -64,7 +64,6 @@ final readonly class DeleteUserSnapsUseCase
         }
 
         $this->snapRepository->deleteByIds(
-            $request->getUserId(),
             array_map(
                 static fn (Snap $snap): Uuid => $snap->getId(),
                 $foundSnaps

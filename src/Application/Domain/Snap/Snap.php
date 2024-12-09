@@ -9,6 +9,8 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class Snap
 {
+    public const string EXPIRATION_INTERVAL = 'P1M';
+
     public function __construct(
         private Uuid $id,
         private Uuid $userId,
@@ -63,5 +65,17 @@ final readonly class Snap
     public function isVideo(): bool
     {
         return $this->getMimeType()->isVideo();
+    }
+
+    public function isExpired(\DateTimeInterface $date): bool
+    {
+        $date = \DateTimeImmutable::createFromInterface($date);
+        $date = $date->sub(new \DateInterval(self::EXPIRATION_INTERVAL));
+
+        if ($this->lastSeenDate === null) {
+            return $date->getTimestamp() > $this->creationDate->getTimestamp();
+        }
+
+        return $date->getTimestamp() > $this->lastSeenDate->getTimestamp();
     }
 }

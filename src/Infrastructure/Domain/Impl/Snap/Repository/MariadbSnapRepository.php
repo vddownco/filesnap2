@@ -125,31 +125,49 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
      * @throws Exception
      * @throws \Exception
      */
-    public function findByUser(Uuid $userId, int $offset, int $limit): array
+    public function findByUser(Uuid $userId, int $offset, int $limit, ?\DateTimeInterface $expirationCheckDate = null): array
     {
+        $parameters = [
+            'user_id' => $userId->toRfc4122(),
+            'limit' => $limit,
+            'offset' => $offset,
+        ];
+
+        $types = [
+            'user_id' => ParameterType::STRING,
+            'limit' => ParameterType::INTEGER,
+            'offset' => ParameterType::INTEGER,
+        ];
+
         $query = '
             SELECT id, user_id, original_filename, mime_type, creation_date, last_seen_date
             FROM snap
             WHERE user_id = :user_id
+        ';
+
+        if ($expirationCheckDate !== null) {
+            $query .= '
+                AND (
+                    last_seen_date > :date
+                    OR (
+                        last_seen_date IS NULL
+                        AND creation_date > :date
+                    )
+                )
+            ';
+
+            $parameters['date'] = $expirationCheckDate->format(MariadbTools::DATETIME_FORMAT);
+            $types['date'] = ParameterType::STRING;
+        }
+
+        $query .= '
             ORDER BY creation_date DESC
             LIMIT :limit
             OFFSET :offset
         ';
 
         /** @var list<DbResult> $dbResults */
-        $dbResults = $this->connection->fetchAllAssociative(
-            $query,
-            [
-                'user_id' => $userId->toRfc4122(),
-                'limit' => $limit,
-                'offset' => $offset,
-            ],
-            [
-                'user_id' => ParameterType::STRING,
-                'limit' => ParameterType::INTEGER,
-                'offset' => ParameterType::INTEGER,
-            ]
-        );
+        $dbResults = $this->connection->fetchAllAssociative($query, $parameters, $types);
 
         return array_map(
             fn (array $dbResult) => $this->toSnap($dbResult),
@@ -161,10 +179,27 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
      * @throws Exception
      * @throws \Exception
      */
-    public function countByUser(Uuid $userId): int
+    public function countByUser(Uuid $userId, ?\DateTimeInterface $expirationCheckDate = null): int
     {
+        $parameters = ['user_id' => $userId->toRfc4122()];
+
         $query = 'SELECT COUNT(id) FROM snap WHERE user_id = :user_id';
-        $count = $this->connection->fetchOne($query, ['user_id' => $userId->toRfc4122()]);
+
+        if ($expirationCheckDate !== null) {
+            $query .= '
+                AND (
+                    last_seen_date > :date
+                    OR (
+                        last_seen_date IS NULL
+                        AND creation_date > :date
+                    )
+                )
+            ';
+
+            $parameters['date'] = $expirationCheckDate->format(MariadbTools::DATETIME_FORMAT);
+        }
+
+        $count = $this->connection->fetchOne($query, $parameters);
 
         if (is_int($count) === false) {
             throw new \RuntimeException(sprintf('%s doctrine returns is not a correct count value.', __FUNCTION__));
@@ -186,14 +221,13 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
     /**
      * @throws Exception
      */
-    public function deleteByIds(Uuid $userId, array $ids): void
+    public function deleteByIds(array $ids): void
     {
-        $query = 'DELETE FROM snap WHERE user_id = :user_id AND id IN (:ids)';
+        $query = 'DELETE FROM snap WHERE id IN (:ids)';
 
         $this->connection->executeQuery(
             $query,
             [
-                'user_id' => $userId->toRfc4122(),
                 'ids' => array_map(
                     static fn (Uuid $id) => $id->toRfc4122(),
                     $ids
@@ -203,6 +237,36 @@ final readonly class MariadbSnapRepository implements SnapRepositoryInterface
                 'user_id' => ParameterType::STRING,
                 'ids' => ArrayParameterType::STRING,
             ]
+        );
+    }
+
+    /**
+     * @return list<Snap>
+     * @throws Exception
+     * @throws FileNotFoundException
+     */
+    public function findExpiredSnaps(\DateTimeInterface $date): array
+    {
+        $query = '
+            SELECT id, user_id, original_filename, mime_type, creation_date, last_seen_date
+            FROM snap
+            WHERE
+                last_seen_date < :date
+                OR (
+                    last_seen_date IS NULL
+                    AND creation_date < :date
+                )
+            ORDER BY creation_date ASC
+        ';
+
+        /** @var list<DbResult> $dbResults */
+        $dbResults = $this->connection->fetchAllAssociative($query, [
+            'date' => $date->format(MariadbTools::DATETIME_FORMAT)
+        ]);
+
+        return array_map(
+            fn (array $dbResult) => $this->toSnap($dbResult),
+            $dbResults
         );
     }
 

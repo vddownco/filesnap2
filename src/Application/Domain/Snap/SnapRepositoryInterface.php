@@ -24,14 +24,19 @@ interface SnapRepositoryInterface
     /**
      * @return list<Snap>
      */
-    public function findByUser(Uuid $userId, int $offset, int $limit): array;
+    public function findByUser(Uuid $userId, int $offset, int $limit, ?\DateTimeInterface $expirationCheckDate = null): array;
 
-    public function countByUser(Uuid $userId): int;
+    public function countByUser(Uuid $userId, ?\DateTimeInterface $expirationCheckDate = null): int;
 
     public function deleteOneById(Uuid $id): void;
 
     /**
      * @param list<Uuid> $ids
      */
-    public function deleteByIds(Uuid $userId, array $ids): void;
+    public function deleteByIds(array $ids): void;
+
+    /**
+     * @return list<Snap>
+     */
+    public function findExpiredSnaps(\DateTimeInterface $date): array;
 }

@@ -29,6 +29,7 @@ abstract class AbstractSnapFileController extends FilesnapAbstractController
 
         if (
             $snap === null
+            || $snap->isExpired(new \DateTimeImmutable()) === true
             || $this->supportsMimeType($snap->getMimeType()) === false
         ) {
             throw $this->createNotFoundException();

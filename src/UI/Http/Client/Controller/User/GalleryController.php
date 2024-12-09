@@ -31,24 +31,27 @@ final class GalleryController extends FilesnapAbstractController
             throw $this->createNotFoundException();
         }
 
-        $useCaseResponse = $findSnapsByUserUseCase(new FindSnapsByUserRequest(
-            $this->getAuthenticatedUser()->getId(),
-            self::MAX_SNAPS_BY_PAGE * ($page - 1),
-            self::MAX_SNAPS_BY_PAGE
-        ));
+        $useCaseResponse = $findSnapsByUserUseCase(
+            new FindSnapsByUserRequest(
+                userId: $this->getAuthenticatedUser()->getId(),
+                offset: self::MAX_SNAPS_BY_PAGE * ($page - 1),
+                limit: self::MAX_SNAPS_BY_PAGE,
+                expirationCheckDate: new \DateTimeImmutable()
+            )
+        );
 
         $snaps = $useCaseResponse->getSnaps();
-        $snapsCount = $useCaseResponse->getTotalCount();
+        $snapsTotalCount = $useCaseResponse->getTotalCount();
 
         if (
-            ($snaps === [] && $snapsCount > 0)
-            || ($page > 1 && $snapsCount === 0)
+            ($snaps === [] && $snapsTotalCount > 0)
+            || ($page > 1 && $snapsTotalCount === 0)
         ) {
             throw $this->createNotFoundException();
         }
 
-        $pageCount = (int) ceil($snapsCount / self::MAX_SNAPS_BY_PAGE);
-        $nextPage = $page === $pageCount || $snapsCount === 0 ? null : $page + 1;
+        $pageCount = (int) ceil($snapsTotalCount / self::MAX_SNAPS_BY_PAGE);
+        $nextPage = $page === $pageCount || $snapsTotalCount === 0 ? null : $page + 1;
         $previousPage = $page === 1 ? null : $page - 1;
         $emptySpaceCount = count($snaps) < self::MAX_SNAPS_BY_PAGE ? self::MAX_SNAPS_BY_PAGE - count($snaps) : 0;
 
