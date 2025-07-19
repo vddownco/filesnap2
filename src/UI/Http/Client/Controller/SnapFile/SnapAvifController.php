@@ -9,6 +9,7 @@ use App\Application\Domain\Snap\Snap;
 use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
 use App\Infrastructure\Symfony\Service\FormatConverter\Format\Avif;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -23,6 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SnapAvifController extends AbstractSnapFileController
 {
     public function __construct(
+        #[Autowire(env: 'ENABLE_QUEUED_CONVERSION')] private readonly bool $queuedConversion,
         private readonly Avif $avif,
     ) {
     }
@@ -35,7 +37,16 @@ final class SnapAvifController extends AbstractSnapFileController
         $avifFile = $this->avif->get($snap);
 
         if ($avifFile === null) {
-            return $this->waitingForConversionResponse($snap, CommonFormat::Avif);
+            if ($this->queuedConversion === true) {
+                return $this->waitingForConversionResponse($snap, CommonFormat::Avif);
+            }
+
+            $this->avif->convert($snap);
+            $avifFile = $this->avif->get($snap);
+
+            if ($avifFile === null) {
+                throw $this->createNotFoundException();
+            }
         }
 
         return $this->file(

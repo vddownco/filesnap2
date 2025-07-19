@@ -9,6 +9,7 @@ use App\Application\Domain\Snap\Snap;
 use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
 use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webp;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -24,6 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SnapWebpController extends AbstractSnapFileController
 {
     public function __construct(
+        #[Autowire(env: 'ENABLE_QUEUED_CONVERSION')] private readonly bool $queuedConversion,
         private readonly Webp $webp,
     ) {
     }
@@ -36,7 +38,16 @@ final class SnapWebpController extends AbstractSnapFileController
         $webpFile = $this->webp->get($snap);
 
         if ($webpFile === null) {
-            return $this->waitingForConversionResponse($snap, CommonFormat::Webp);
+            if ($this->queuedConversion === true) {
+                return $this->waitingForConversionResponse($snap, CommonFormat::Webp);
+            }
+
+            $this->webp->convert($snap);
+            $webpFile = $this->webp->get($snap);
+
+            if ($webpFile === null) {
+                throw $this->createNotFoundException();
+            }
         }
 
         return $this->file(

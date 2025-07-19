@@ -12,12 +12,14 @@ use App\Application\UseCase\Snap\Create\CreateSnapResponse;
 use App\Application\UseCase\Snap\Create\CreateSnapUseCase;
 use App\Infrastructure\Symfony\Message\ConversionMessage;
 use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class CreateSnapUseCaseDispatcher
 {
     public function __construct(
+        #[Autowire(env: 'ENABLE_QUEUED_CONVERSION')] private bool $queuedConversion,
         private MessageBusInterface $bus,
         private CreateSnapUseCase $useCase,
     ) {
@@ -32,6 +34,11 @@ final readonly class CreateSnapUseCaseDispatcher
     public function __invoke(CreateSnapRequest $request): CreateSnapResponse
     {
         $response = ($this->useCase)($request);
+
+        if ($this->queuedConversion === false) {
+            return $response;
+        }
+
         $snap = $response->getSnap();
 
         $formats = CommonFormat::getFormats($snap->getMimeType());

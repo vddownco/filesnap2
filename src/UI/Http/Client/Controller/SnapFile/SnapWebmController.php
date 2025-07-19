@@ -9,6 +9,7 @@ use App\Application\Domain\Snap\Snap;
 use App\Infrastructure\Symfony\Service\FormatConverter\CommonFormat;
 use App\Infrastructure\Symfony\Service\FormatConverter\Format\Webm;
 use App\UI\Http\Client\Controller\AbstractSnapFileController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -26,6 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SnapWebmController extends AbstractSnapFileController
 {
     public function __construct(
+        #[Autowire(env: 'ENABLE_QUEUED_CONVERSION')] private readonly bool $queuedConversion,
         private readonly Webm $webm,
     ) {
     }
@@ -38,7 +40,16 @@ final class SnapWebmController extends AbstractSnapFileController
         $webmFile = $this->webm->get($snap);
 
         if ($webmFile === null) {
-            return $this->waitingForConversionResponse($snap, CommonFormat::Webm);
+            if ($this->queuedConversion === true) {
+                return $this->waitingForConversionResponse($snap, CommonFormat::Webm);
+            }
+
+            $this->webm->convert($snap);
+            $webmFile = $this->webm->get($snap);
+
+            if ($webmFile === null) {
+                throw $this->createNotFoundException();
+            }
         }
 
         return $this->file(
