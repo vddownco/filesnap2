@@ -35,5 +35,8 @@ WORKDIR /var/www
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www
 
+# Install Node.js dependencies
+RUN npm install
+
 # Change current user to www
 USER www-data
