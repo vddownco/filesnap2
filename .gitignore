@@ -36,3 +36,4 @@ phpstan.neon
 .cache
 .local
 .config
+.env
